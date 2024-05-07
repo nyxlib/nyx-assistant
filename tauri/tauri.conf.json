@@ -1,0 +1,52 @@
+{
+    "productName": "indiassistant",
+    "version": "1.0.0",
+    "identifier": "io.odier.indiassistant",
+    "build": {
+        "beforeDevCommand": "npm run app-prod",
+        "beforeBuildCommand": "npm run app-prod",
+        "devUrl": "http://localhost:5173/",
+        "frontendDist": "../app/dist/"
+    },
+    "app": {
+        "windows": [
+            {
+                "label": "main",
+                "height": 768,
+                "width": 1024,
+                "minHeight": 600,
+                "minWidth": 800,
+                "maximized": true,
+                "title": "INDI Assistant",
+                "titleBarStyle": "Overlay",
+                "decorations": true,
+                "hiddenTitle": true,
+                "url": "index.html"
+            }
+        ],
+        "security": {
+            "csp": {
+                "default-src": "'self' https: http: ipc: data:",
+                "connect-src": "'self' https: http: wss: ws: data:",
+                "script-src": "'self' 'unsafe-eval' https: http:",
+                "style-src": "'self' 'unsafe-inline' https: http:"
+            }
+        },
+        "withGlobalTauri": true
+    },
+    "bundle": {
+        "active": true,
+        "targets": [
+            "app",
+            "appimage",
+            "updater"
+        ],
+        "icon": [
+            "icons/32x32.png",
+            "icons/128x128.png",
+            "icons/128x128@2x.png",
+            "icons/icon.icns",
+            "icons/icon.ico"
+        ]
+    }
+}
