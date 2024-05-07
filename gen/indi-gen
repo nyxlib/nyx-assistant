@@ -296,8 +296,12 @@ def generateDevices(driverPath, descr):
                 optionList.append(f'.group = "{vector['group']}"')
             if vector['group']:
                 optionList.append(f'.timeout = {vector['timeout']}')
+            if vector['message']:
+                optionList.append(f'.message = {vector['message']}')
 
             optionList.append('/**/')
+
+            ############################################################################################################
 
             defsAndOpts = f'''
     {'\n    '.join(vectorDefList2)}
