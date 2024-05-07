@@ -24,7 +24,6 @@ const DEFAULT_GLOBALS = {
     /* NODE */
     nodeName: '',
     nodeTimeout: 1000,
-    singleFile: false,
     /* CONNECTIVITY */
     enableMQTT: false,
     mqttPort: 1883,
@@ -236,11 +235,6 @@ onMounted(() => {
                                         </div>
 
                                     </div>
-                                </div>
-
-                                <div class="form-check form-switch mb-0">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="B8C30ADF" v-model="state.globals.singleFile" :true-value="true" :false-value="false" />
-                                    <label class="form-check-label" for="B8C30ADF">Single file</label>
                                 </div>
 
                             </div>
