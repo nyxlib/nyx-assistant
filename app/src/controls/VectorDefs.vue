@@ -185,7 +185,7 @@ const defUp = (def1) => {
                             <div class="row">
                                 <div class="col-md-6">
 
-                                    <div :class="['row'], {'mb-2': type !== 'number'}">
+                                    <div :class="['row', {'mb-2': type !== 'number'}]">
                                         <label class="col-form-label col-sm-2 py-1" for="C12596CE">Value</label>
                                         <div class="col-sm-10">
 

@@ -12,8 +12,6 @@ import TabPane from './controls/TabPane.vue';
 import Devices from './controls/Devices.vue';
 import DeviceDescr from './controls/DeviceDescr.vue';
 
-import Vector from "./controls/VectorDescr.vue";
-
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
