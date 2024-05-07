@@ -97,7 +97,7 @@ defineProps({
                                 </select>
                             </div>
 
-                            <div class="mb-0">
+                            <div class="mb-3">
                                 <label class="form-label" for="E9BE4567">Rule</label>
                                 <select class="form-select form-select-sm" id="E9BE4567" v-model="vector.rule" :disabled="vector.type !== 'switch'">
                                     <option value="INDI_RULE_ONE_OF_MANY">One of many</option>
@@ -107,6 +107,13 @@ defineProps({
                             </div>
 
                         </div>
+                    </div>
+
+                    <!-- ******************************************************************************************* -->
+
+                    <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" role="switch" id="B8C30ADF" v-model="vector.callback" :true-value="true" :false-value="false" />
+                        <label class="form-check-label" for="B8C30ADF">Implement callback</label>
                     </div>
 
                     <!-- ******************************************************************************************* -->

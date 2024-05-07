@@ -142,7 +142,7 @@ const deviceUp = (device1) => {
                                 <i class="bi bi-trash2 text-danger"></i>
                             </button>
                         </td>
-                        <td class="text-center">
+                        <td class="text-start">
                             <input class="form-control form-control-sm" type="text" v-model="device.name" />
                         </td>
                     </tr>

@@ -51,6 +51,7 @@ const vectorAppend = () => {
         rule: 'INDI_RULE_ONE_OF_MANY',
         timeout: null,
         message: '',
+        callback: true,
         defs: {},
     };
 
@@ -153,10 +154,10 @@ const vectorUp = (vector1) => {
                                 <i class="bi bi-trash2 text-danger"></i>
                             </button>
                         </td>
-                        <td class="text-center">
+                        <td class="text-start">
                             <input class="form-control form-control-sm" type="text" v-model="vector.name" />
                         </td>
-                        <td class="text-center">
+                        <td class="text-start">
                             <select class="form-select form-select-sm" v-model="vector.type">
                                 <option value="number">Number</option>
                                 <option value="text">Text</option>
