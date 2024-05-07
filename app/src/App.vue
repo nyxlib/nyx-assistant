@@ -24,6 +24,7 @@ const DEFAULT_GLOBALS = {
     /* NODE */
     nodeName: '',
     nodeTimeout: 1000,
+    hardcoded: true,
     /* CONNECTIVITY */
     enableMQTT: false,
     mqttPort: 1883,
@@ -237,6 +238,8 @@ onMounted(() => {
                             </div>
                             <div class="card-body">
 
+                                <!-- ******************************************************************************* -->
+
                                 <div class="row">
                                     <div class="col-md-6">
 
@@ -256,6 +259,15 @@ onMounted(() => {
                                     </div>
                                 </div>
 
+                                <!-- ******************************************************************************* -->
+
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="A313C013" v-model="state.globals.hardcoded" :true-value="true" :false-value="false" />
+                                    <label class="form-check-label" for="A313C013">Hardcoded configuration</label>
+                                </div>
+
+                                <!-- ******************************************************************************* -->
+
                             </div>
                         </div>
 
@@ -266,6 +278,8 @@ onMounted(() => {
                                 Connectivity
                             </div>
                             <div class="card-body">
+
+                                <!-- ******************************************************************************* -->
 
                                 <div class="row">
                                     <div class="col-md-4">
@@ -296,7 +310,11 @@ onMounted(() => {
                                     </div>
                                 </div>
 
+                                <!-- ******************************************************************************* -->
+
                                 <hr />
+
+                                <!-- ******************************************************************************* -->
 
                                 <div class="row">
                                     <div class="col-md-4">
@@ -316,6 +334,8 @@ onMounted(() => {
 
                                     </div>
                                 </div>
+
+                                <!-- ******************************************************************************* -->
 
                             </div>
                         </div>
