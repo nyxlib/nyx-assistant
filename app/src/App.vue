@@ -25,12 +25,12 @@ const DEFAULT_GLOBALS = {
     nodeName: '',
     nodeTimeout: 1000,
     hardcoded: true,
-    /* CONNECTIVITY */
+    /* MQTT */
     enableMQTT: false,
-    mqttPort: 1883,
     mqttURI: '',
     mqttUsername: '',
     mqttPassword: '',
+    /* TCP */
     enableTCP: false,
     tcpURI: '',
     /* DEVICES */
