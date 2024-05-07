@@ -11,7 +11,11 @@ import argparse
 
 def generateCMakeLists(driverPath, descr):
 
+    ####################################################################################################################
+
     fileList = [os.path.join('.', 'src', f'device_{device['name'].lower()}.c') for device in descr['devices'].values()]
+
+    ####################################################################################################################
 
     template = f'''
 ########################################################################################################################
@@ -59,6 +63,8 @@ target_link_libraries({descr['nodeName'].lower()} ${{LIBINDINODE_LIBRARIES}} ${{
 
 def generateHeader(driverPath, descr):
 
+    ####################################################################################################################
+
     deviceList = []
     vectorList = []
 
@@ -69,6 +75,8 @@ def generateHeader(driverPath, descr):
         for vector in device['vectors'].values():
 
             vectorList.append(f'extern indi_dict_t *vector_{device['name'].lower()}_{vector['name'].lower()};')
+
+    ####################################################################################################################
 
     template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -99,6 +107,8 @@ def generateHeader(driverPath, descr):
 
 def generateMain(driverPath, descr):
 
+    ####################################################################################################################
+
     deviceList = []
     vectorList = []
 
@@ -111,6 +121,8 @@ def generateMain(driverPath, descr):
             vectorList.append(f'vector_{device['name'].lower()}_{vector['name'].lower()},')
 
     vectorList.append('NULL,')
+
+    ####################################################################################################################
 
     template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
