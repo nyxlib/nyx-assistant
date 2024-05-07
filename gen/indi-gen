@@ -1,11 +1,248 @@
 #!/usr/bin/env python
 ########################################################################################################################
 
+import os
 import sys
+import json
+import shutil
+import argparse
 
 ########################################################################################################################
 
-def main(args):
+def generateCMakeLists(driverPath, descr):
+
+    fileList = [os.path.join('.', 'src', f'device_{device['name'].lower()}.c') for device in descr['devices'].values()]
+
+    template = f'''
+########################################################################################################################
+
+cmake_minimum_required(VERSION 3.5)
+
+########################################################################################################################
+
+project({descr['nodeName'].lower()} C)
+
+set(CMAKE_C_STANDARD 99)
+
+add_compile_options(-Wall -Wno-unknown-pragmas -O3)
+
+########################################################################################################################
+
+find_package(LibXml2 REQUIRED)
+#find_package(LibIndiNode REQUIRED)
+set(LIBINDINODE_INCLUDE_DIR "/home/jodier/workspace/indi-node/src")
+set(LIBINDINODE_LIBRARIES "/home/jodier/workspace/indi-node/build/libindi-node.a")
+
+########################################################################################################################
+
+set(SOURCE_FILES
+    {'\n    '.join(fileList)}
+    ./src/main.c
+)
+
+########################################################################################################################
+
+add_executable({descr['nodeName'].lower()} ${{SOURCE_FILES}})
+
+target_include_directories({descr['nodeName'].lower()} PRIVATE ${{LIBINDINODE_INCLUDE_DIR}})
+
+target_link_libraries({descr['nodeName'].lower()} ${{LIBINDINODE_LIBRARIES}} ${{LIBXML2_LIBRARIES}})
+
+########################################################################################################################
+'''[1:]
+
+    with open(os.path.join(driverPath, 'CMakeLists.txt'), 'wt') as f:
+
+        f.write(template)
+
+########################################################################################################################
+
+def generateHeader(driverPath, descr):
+
+    template = f'''
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+/* TODO */
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+'''[1:]
+
+    with open(os.path.join(driverPath, 'src', 'internal.h'), 'wt') as f:
+
+        f.write(template)
+
+########################################################################################################################
+
+def generateMain(driverPath, descr):
+
+    template = f'''
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+
+#include <indi_node.h>
+
+#include "internal.h"
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static int volatile s_signo = 0;
+
+static void signal_handler(int signo)
+{{
+    s_signo = signo;
+}}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+int main()
+{{
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    indi_memory_initialize();
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    if(indi_validation_initialize() == false)
+    {{
+        printf("Error initializing validation\\n");
+
+        goto _err;
+    }}
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    indi_dict_t *vector_list[] = {{NULL}};
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
+
+    indi_node_t *node = indi_node_init(
+        {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'NULL'},
+        {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'NULL'},
+        {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'},
+        {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'},
+        "{descr['nodeName']}",
+        vector_list,
+        3000,
+        true,
+        true
+    );
+
+    while(s_signo == 0)
+    {{
+        indi_node_pool(node, {descr['nodeTimeout']});
+    }}
+
+    indi_node_free(node, true);
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    if(indi_validation_finalize() == false)
+    {{
+        printf("Error finalizing validation\\n");
+
+        goto _err;
+    }}
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+_err:
+    indi_memory_finalize();
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    printf("Bye.\\n");
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    return 0;
+}}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+'''[1:]
+
+    with open(os.path.join(driverPath, 'src', 'main.c'), 'wt') as f:
+
+        f.write(template)
+
+########################################################################################################################
+
+def generateDevices(driverPath, descr):
+
+    for device in descr['devices'].values():
+
+       template = f'''
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+#include "internal.h"
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+/* TODO */
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+'''[1:]
+
+    with open(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c'), 'wt') as f:
+
+        f.write(template)
+
+########################################################################################################################
+
+def main():
+
+    ####################################################################################################################
+
+    parser = argparse.ArgumentParser(description = 'Generate an INDI driver skeleton from a description file')
+
+    parser.add_argument('--override', action = 'store_true', help = 'Override the output path')
+
+    parser.add_argument('--output', type = str, default = '.', help = 'Skeleton output path')
+
+    parser.add_argument('--descr', type = str, required = True, help = 'Driver description file')
+
+    args = parser.parse_args()
+
+    ####################################################################################################################
+
+    try:
+
+        with open(args.descr, 'rt') as f:
+
+            descr = json.load(f)
+
+    except IOError as e:
+
+        return 1
+
+    ####################################################################################################################
+
+    driverPath = os.path.join(args.output, descr['nodeName'])
+
+    if args.override and os.path.isdir(driverPath):
+
+        shutil.rmtree(driverPath)
+
+    ####################################################################################################################
+
+    os.makedirs(os.path.join(driverPath, 'src'))
+
+    ####################################################################################################################
+
+    generateCMakeLists(driverPath, descr)
+
+    generateHeader(driverPath, descr)
+
+    generateMain(driverPath, descr)
+
+    generateDevices(driverPath, descr)
+
+    ####################################################################################################################
 
     return 0
 
@@ -13,6 +250,6 @@ def main(args):
 
 if __name__ == "__main__":
 
-    sys.exit(main(sys.argv))
+    sys.exit(main())
 
 ########################################################################################################################
