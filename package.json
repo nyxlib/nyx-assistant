@@ -1,0 +1,40 @@
+{
+    "name": "indi-assistant",
+    "description": "INDI Assistant",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "app-dev": "cd ./app/ && ../node_modules/vite/bin/vite.js dev",
+        "app-prod": "cd ./app/ && ../node_modules/vite/bin/vite.js build",
+        "app-preview": "cd ./app/ && ../node_modules/vite/bin/vite.js preview",
+        "tauri-dev": "cd ./tauri/ && ../node_modules/@tauri-apps/cli/tauri.js dev",
+        "tauri-prod": "cd ./tauri/ && ../node_modules/@tauri-apps/cli/tauri.js build"
+    },
+    "dependencies": {
+        "@vueform/multiselect": "^2.6.7",
+        "@tauri-apps/api": "^2.0.0-beta.11",
+        "@tauri-apps/plugin-dialog": "^2.0.0-beta.3",
+        "@tauri-apps/plugin-fs": "^2.0.0-beta.3",
+        "@tauri-apps/plugin-notification": "^2.0.0-beta.3",
+        "@tauri-apps/plugin-shell": "^2.0.0-beta.3",
+        "bootstrap": "^5.3.3",
+        "bootstrap-icons": "^1.11.3",
+        "uuid": "^9.0.1",
+        "vue": "^3.4.26"
+    },
+    "devDependencies": {
+        "@tauri-apps/cli": "^2.0.0-beta.15",
+        "@vitejs/plugin-vue": "^5.0.4",
+        "@vue/eslint-config-prettier": "^9.0.0",
+        "eslint": "^9.1.1",
+        "eslint-plugin-vue": "^9.25.0",
+        "sass": "^1.76.0",
+        "vite": "^5.2.10"
+    },
+    "author": "Jérôme Odier",
+    "license": "CeCILL",
+    "repository": {
+        "type": "git",
+        "url": "https://gitlab.in2p3.fr/lpsc-kid/indi-dashboard"
+    }
+}
