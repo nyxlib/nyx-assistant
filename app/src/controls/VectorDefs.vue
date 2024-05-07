@@ -109,11 +109,11 @@ const defUp = (def1) => {
     <div class="card">
         <div class="card-header px-3 py-2">
             <i class="bi bi-code"></i>
-            Defs
+            Vector defs
             [
             <button class="btn btn-xs btn-primary" type="button" @click="defAppend">
                 <i class="bi bi-plus-lg"></i>
-                Add def
+                Add vector def
             </button>
             ]
         </div>
