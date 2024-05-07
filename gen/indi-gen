@@ -59,10 +59,34 @@ target_link_libraries({descr['nodeName'].lower()} ${{LIBINDINODE_LIBRARIES}} ${{
 
 def generateHeader(driverPath, descr):
 
+    deviceList = []
+    vectorList = []
+
+    for device in descr['devices'].values():
+
+        deviceList.append(f'extern void device_{device['name'].lower()}_initialize(void);')
+
+        for vector in device['vectors'].values():
+
+            vectorList.append(f'extern indi_dict_t *vector_{device['name'].lower()}_{vector['name'].lower()};')
+
     template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-/* TODO */
+#ifndef INDI_NODE_{descr['nodeName'].upper()}_H
+#define INDI_NODE_{descr['nodeName'].upper()}_H
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+{'\n'.join(vectorList)}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+{'\n'.join(deviceList)}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+#endif /* INDI_NODE_{descr['nodeName'].upper()}_H */
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
@@ -74,6 +98,19 @@ def generateHeader(driverPath, descr):
 ########################################################################################################################
 
 def generateMain(driverPath, descr):
+
+    deviceList = []
+    vectorList = []
+
+    for device in descr['devices'].values():
+
+        deviceList.append(f'device_{device['name'].lower()}_initialize();')
+
+        for vector in device['vectors'].values():
+
+            vectorList.append(f'vector_{device['name'].lower()}_{vector['name'].lower()},')
+
+    vectorList.append('NULL,')
 
     template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -114,14 +151,20 @@ int main()
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    indi_dict_t *vector_list[] = {{NULL}};
+    {'\n    '.join(deviceList)}
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    indi_dict_t *vector_list[] = {{
+        {'\n        '.join(vectorList)}
+    }};
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 
-    indi_node_t *node = indi_node_init(
+    indi_node_t *node = indi_node_initialize(
         {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'NULL'},
         {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'NULL'},
         {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'},
@@ -176,21 +219,184 @@ def generateDevices(driverPath, descr):
 
     for device in descr['devices'].values():
 
-       template = f'''
+        ################################################################################################################
+
+        vectorList1 = []
+        vectorList2 = []
+        vectorDefList1 = []
+        vectorDefList2 = []
+
+        for vector in device['vectors'].values():
+
+            for vectorDef in vector['defs'].values():
+
+                ########################################################################################################
+
+                vectorList1.append(f'indi_dict_t *vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = NULL;')
+
+                vectorDefList1.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()},')
+
+                ########################################################################################################
+                # NUMBER                                                                                               #
+                ########################################################################################################
+
+                if vector['type'] == 'number':
+
+                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = indi_number_def_new("{vectorDef['name']}", "{vectorDef['label']}", "{vectorDef['format']}", {vectorDef['min']}, {vectorDef['max']}, {vectorDef['step']}, {vectorDef['value']});')
+
+                ########################################################################################################
+                # TEXT                                                                                                 #
+                ########################################################################################################
+
+                if vector['type'] == 'text':
+
+                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = indi_text_def_new("{vectorDef['name']}", "{vectorDef['label']}", "{vectorDef['value']}");')
+
+                ########################################################################################################
+                # LIGHT                                                                                                #
+                ########################################################################################################
+
+                if vector['type'] == 'light':
+
+                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = indi_light_def_new("{vectorDef['name']}", "{vectorDef['label']}", {vectorDef['value']});')
+
+                ########################################################################################################
+                # SWITCH                                                                                               #
+                ########################################################################################################
+
+                if vector['type'] == 'switch':
+
+                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = indi_switch_def_new("{vectorDef['name']}", "{vectorDef['label']}", {vectorDef['value']});')
+
+                ########################################################################################################
+
+            vectorDefList1.append('NULL,')
+
+            ############################################################################################################
+
+            vectorList1.append(f'indi_dict_t *vector_{device['name'].lower()}_{vector['name'].lower()} = NULL;')
+
+            ############################################################################################################
+            # OPTIONS AND DEFINITIONS                                                                                  #
+            ############################################################################################################
+
+            optionList = []
+
+            if vector['label']:
+                optionList.append(f'.label = "{vector['label']}"')
+            if vector['group']:
+                optionList.append(f'.group = "{vector['group']}"')
+            if vector['group']:
+                optionList.append(f'.timeout = {vector['timeout']}')
+
+            optionList.append('/**/')
+
+            defsAndOpts = f'''
+    {'\n    '.join(vectorDefList2)}
+
+    indi_dict_t *{device['name'].lower()}_{vector['name'].lower()}_defs[] = {{
+        {'\n        '.join(vectorDefList1)}
+    }};
+
+    indi_opts_t {device['name'].lower()}_{vector['name'].lower()}_opts = {{
+        {'\n        '.join(optionList)}
+    }};
+'''
+
+            ############################################################################################################
+            # NUMBER                                                                                                   #
+            ############################################################################################################
+
+            if vector['type'] == 'number':
+
+                vectorList2.append(f'''{defsAndOpts}
+    vector_{device['name'].lower()}_{vector['name'].lower()} = indi_number_def_vector_new(
+        "{device['name']}",
+        "{vector['name']}",
+        {vector['state']},
+        {vector['perm']},
+        {device['name'].lower()}_{vector['name'].lower()}_defs,
+        &{device['name'].lower()}_{vector['name'].lower()}_opts
+    );
+'''[1:])
+
+            ############################################################################################################
+            # TEXT                                                                                                     #
+            ############################################################################################################
+
+            elif vector['type'] == 'text':
+
+                vectorList2.append(f'''{defsAndOpts}
+    vector_{device['name'].lower()}_{vector['name'].lower()} = indi_text_def_vector_new(
+        "{device['name']}",
+        "{vector['name']}",
+        {vector['state']},
+        {vector['perm']},
+        {device['name'].lower()}_{vector['name'].lower()}_defs,
+        &{device['name'].lower()}_{vector['name'].lower()}_opts
+    );
+'''[1:])
+
+            ############################################################################################################
+            # LIGHT                                                                                                    #
+            ############################################################################################################
+
+            elif vector['type'] == 'light':
+
+                vectorList2.append(f'''{defsAndOpts}
+    vector_{device['name'].lower()}_{vector['name'].lower()} = indi_light_def_vector_new(
+        "{device['name']}",
+        "{vector['name']}",
+        {vector['state']},
+        {device['name'].lower()}_{vector['name'].lower()}_defs,
+        &{device['name'].lower()}_{vector['name'].lower()}_opts
+    );
+'''[1:])
+
+            ############################################################################################################
+            # SWITCH                                                                                                   #
+            ############################################################################################################
+
+            elif vector['type'] == 'switch':
+
+                vectorList2.append(f'''{defsAndOpts}
+    vector_{device['name'].lower()}_{vector['name'].lower()} = indi_switch_def_vector_new(
+        "{device['name']}",
+        "{vector['name']}",
+        {vector['state']},
+        {vector['perm']},
+        {vector['rule']},
+        {device['name'].lower()}_{vector['name'].lower()}_defs,
+        &{device['name'].lower()}_{vector['name'].lower()}_opts
+    );
+'''[1:])
+
+        ################################################################################################################
+
+        template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
+
+#include <indi_node.h>
 
 #include "internal.h"
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-/* TODO */
+{'\n'.join(vectorList1)}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+void device_{device['name'].lower()}_initialize(void)
+{{
+{'\n    '.join(vectorList2).rstrip()}
+}}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-    with open(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c'), 'wt') as f:
+        with open(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c'), 'wt') as f:
 
-        f.write(template)
+            f.write(template)
 
 ########################################################################################################################
 
