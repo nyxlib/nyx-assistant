@@ -269,6 +269,14 @@ def generateDevices(driverPath, descr):
                     vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = indi_switch_def_new("{vectorDef['name']}", "{vectorDef['label']}", {vectorDef['value']});')
 
                 ########################################################################################################
+                # BLOB                                                                                                 #
+                ########################################################################################################
+
+                if vector['type'] == 'blob':
+
+                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = indi_blob_def_new("{vectorDef['name']}", "{vectorDef['label']}", {vectorDef['value']});')
+
+                ########################################################################################################
 
             vectorDefList1.append('NULL,')
 
@@ -366,6 +374,23 @@ def generateDevices(driverPath, descr):
         {vector['state']},
         {vector['perm']},
         {vector['rule']},
+        {device['name'].lower()}_{vector['name'].lower()}_defs,
+        &{device['name'].lower()}_{vector['name'].lower()}_opts
+    );
+'''[1:])
+
+            ############################################################################################################
+            # BLOB                                                                                                     #
+            ############################################################################################################
+
+            elif vector['type'] == 'blob':
+
+                vectorList2.append(f'''{defsAndOpts}
+    vector_{device['name'].lower()}_{vector['name'].lower()} = indi_blob_def_vector_new(
+        "{device['name']}",
+        "{vector['name']}",
+        {vector['state']},
+        {vector['perm']},
         {device['name'].lower()}_{vector['name'].lower()}_defs,
         &{device['name'].lower()}_{vector['name'].lower()}_opts
     );
