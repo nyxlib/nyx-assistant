@@ -2,13 +2,14 @@
 .DS_Store
 
 dist
+build
 target
 node_modules
 
-/tauri/gen
-/tauri/icons
+/tauri/gen/
+/tauri/icons/
+/gen/TestNode/
 
+*.spec
 Cargo.lock
 package-lock.json
-
-/gen/TestNode/
