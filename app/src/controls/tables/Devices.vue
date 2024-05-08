@@ -43,6 +43,7 @@ const deviceAppend = () => {
         id: id,
         rank: rank,
         name: '',
+        disabled: false,
         vectors: {},
     };
 

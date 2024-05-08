@@ -51,6 +51,7 @@ const vectorAppend = () => {
         rule: 'INDI_RULE_ONE_OF_MANY',
         timeout: null,
         message: '',
+        disabled: false,
         callback: true,
         defs: {},
     };

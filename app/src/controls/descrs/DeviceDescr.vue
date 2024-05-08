@@ -41,10 +41,22 @@ defineProps({
                         </div>
                         <div class="card-body">
 
-                            <div class="mb-0">
+                            <!-- *********************************************************************************** -->
+
+                            <div class="mb-3">
                                 <label class="form-label" for="C29507AB">Device name</label>
                                 <input class="form-control form-control-sm" type="text" id="C29507AB" placeholder="Device name" v-model="device.name" />
                             </div>
+
+
+                            <!-- *********************************************************************************** -->
+
+                            <div class="form-check form-switch mb-0">
+                                <input class="form-check-input" type="checkbox" role="switch" id="E5C4DAF2" v-model="device.disabled" :true-value="true" :false-value="false" />
+                                <label class="form-check-label" for="E5C4DAF2">Disabled</label>
+                            </div>
+
+                            <!-- *********************************************************************************** -->
 
                         </div>
                     </div>
