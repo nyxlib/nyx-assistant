@@ -88,7 +88,7 @@ defineProps({
                                 <div class="col-md-4">
 
                                     <div class="form-check form-switch mb-3">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="DE177D55" v-model="globals.enableMQTT" :true-value="true" :false-value="false" :disabled="!globals.hardcoded" />
+                                        <input class="form-check-input" type="checkbox" role="switch" id="DE177D55" v-model="globals.enableMQTT" :true-value="true" :false-value="false" />
                                         <label class="form-check-label" for="DE177D55">Enable MQTT</label>
                                     </div>
 
@@ -97,17 +97,17 @@ defineProps({
 
                                     <div class="mb-3">
                                         <label class="form-label" for="F23468E8">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" v-model="globals.mqttURI" :disabled="!globals.hardcoded || !globals.enableMQTT" />
+                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" v-model="globals.mqttURI" :disabled="!globals.enableMQTT" />
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label" for="C8A2E5EB">Username<sup class="text-secondary">opt</sup></label>
-                                        <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" v-model="globals.mqttUsername" :disabled="!globals.hardcoded || !globals.enableMQTT" />
+                                        <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" v-model="globals.mqttUsername" :disabled="!globals.enableMQTT" />
                                     </div>
 
                                     <div class="mb-0">
                                         <label class="form-label" for="CC00EA1C">Password<sup class="text-secondary">opt</sup></label>
-                                        <input class="form-control form-control-sm" type="text" id="CC00EA1C" placeholder="Password" v-model="globals.mqttPassword" :disabled="!globals.hardcoded || !globals.enableMQTT" />
+                                        <input class="form-control form-control-sm" type="text" id="CC00EA1C" placeholder="Password" v-model="globals.mqttPassword" :disabled="!globals.enableMQTT" />
                                     </div>
 
                                 </div>
@@ -123,7 +123,7 @@ defineProps({
                                 <div class="col-md-4">
 
                                     <div class="form-check form-switch mb-3">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="A925CE04" v-model="globals.enableTCP" :true-value="true" :false-value="false" :disabled="!globals.hardcoded" />
+                                        <input class="form-check-input" type="checkbox" role="switch" id="A925CE04" v-model="globals.enableTCP" :true-value="true" :false-value="false" />
                                         <label class="form-check-label" for="A925CE04">Enable TCP</label>
                                     </div>
 
@@ -132,7 +132,7 @@ defineProps({
 
                                     <div class="mb-0">
                                         <label class="form-label" for="B6FB4EA2">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" v-model="globals.tcpURI" :disabled="!globals.hardcoded || !globals.enableTCP" />
+                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" v-model="globals.tcpURI" :disabled="!globals.enableTCP" />
                                     </div>
 
                                 </div>
