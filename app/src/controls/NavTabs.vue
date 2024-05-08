@@ -37,7 +37,7 @@ provide('addTab', (tabId, tabTitle, tabIcon, onShow, onShown, onHide, onHidden) 
         onHidden: onHidden,
     };
 
-   return Object.keys(tabs.value).length === 1;
+    return Object.keys(tabs.value).length === 1;
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
