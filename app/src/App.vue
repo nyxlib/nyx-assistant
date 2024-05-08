@@ -93,6 +93,25 @@ const confDup = (src, def) => {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+const resetDrv = () => {
+
+    dialog.confirm('Lost modifications?').then((ok) => {
+
+        if(ok)
+        {
+            state.globals = confDup(DEFAULT_GLOBALS, DEFAULT_GLOBALS);
+
+            dialog.success();
+        }
+        else
+        {
+            dialog.error();
+        }
+    })
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 const importDrv = () => {
 
     try
@@ -179,6 +198,10 @@ onMounted(() => {
             <!-- *************************************************************************************************** -->
 
             <div class="d-flex ms-auto py-1">
+
+                <button class="btn btn-sm btn-primary me-2" type="button" @click="resetDrv">
+                    <i class="bi bi-trash3"></i> Reset
+                </button>
 
                 <button class="btn btn-sm btn-primary me-2" type="button" @click="importDrv">
                     <i class="bi bi-upload"></i> Import

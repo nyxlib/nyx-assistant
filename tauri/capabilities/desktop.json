@@ -6,6 +6,7 @@
     "permissions": [
         "window:allow-start-dragging",
         "dialog:allow-message",
+        "dialog:allow-confirm",
         "dialog:allow-open",
         "dialog:allow-save",
         "notification:allow-notify",
