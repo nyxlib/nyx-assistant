@@ -2,10 +2,10 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import TabPane from './TabPane.vue';
-import NavTabs from './NavTabs.vue';
+import TabPane from '../TabPane.vue';
+import NavTabs from '../NavTabs.vue';
 
-import Vectors from './Vectors.vue';
+import Vectors from '../tables/Vectors.vue';
 import VectorDescr from './VectorDescr.vue';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
