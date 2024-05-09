@@ -79,7 +79,7 @@ defineProps({
 
         <!-- ******************************************************************************************************* -->
 
-        <tab-pane :title="`${vector.name} (${vector.type})`" icon="braces" v-for="(vector, id) in device.vectors" :key="id">
+        <tab-pane :title="`${vector.name || 'noname'} (${vector.type || 'notype'})`" icon="braces" v-for="(vector, id) in device.vectors" :key="id">
 
             <vector-descr :vector="vector" v-if="vector.type" />
 

@@ -161,7 +161,7 @@ defineProps({
 
         <!-- ******************************************************************************************************* -->
 
-        <tab-pane :title="device.name" icon="cpu" v-for="(device, id) in globals.devices" :key="id">
+        <tab-pane :title="device.name || 'noname'" icon="cpu" v-for="(device, id) in globals.devices" :key="id">
 
             <device-descr :device="device" />
 

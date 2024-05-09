@@ -6,43 +6,33 @@
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-@import url("@vueform/multiselect/themes/default.css");
+html, body,
+#indi_assistant {
+
+    background-color: transparent;
+
+    height: 100%;
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-:root {
+#indi_assistant {
 
-    --bs-border-radius: 0.75rem;
-    --bs-border-radius-sm: 0.75rem;
+    display: flex;
 
-    /**/
+    flex-direction: column;
+}
 
-    --ms-px: calc(0.6rem - var(--bs-border-width));
-    --ms-tag-my: 0.125rem;
+/*--------------------------------------------------------------------------------------------------------------------*/
 
-    --ms-py: calc(0.25rem - var(--bs-border-width));
-    --ms-tag-py: 0.125rem;
+body[data-environment="tauri"] > div > nav {
 
-    --ms-font-size: 0.875rem;
-    --ms-tag-font-size: 0.875rem;
-
-    --ms-line-height: 1.5;
-    --ms-tag-line-height: 1.5;
-
-    --ms-bg: var(--bs-body-bg);
-    --ms-dropdown-bg: var(--bs-body-bg);
-
-    --ms-ring-color: rgba(13, 110, 253, 0.25);
-    --ms-border-color: var(--bs-border-color);
-    --ms-border-color-active: rgba(134, 183, 254, 1.0);
-    --ms-dropdown-border-color: rgba(134, 183, 254, 1.0);
-
-    --ms-ring-width: 0.25rem;
-    --ms-border-width: var(--bs-border-width);
-    --ms-dropdown-border-width: var(--bs-border-width);
-
-    --ms-radius: var(--bs-border-radius-sm);
-    --ms-tag-radius: var(--bs-border-radius-lg);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -59,13 +49,6 @@
     line-height: 0.8;
     font-size: 0.875rem;
     padding: 0.25rem 0.4rem;
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-.multiselect-tags-search {
-
-    background-color: transparent;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
