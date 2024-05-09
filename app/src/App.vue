@@ -160,6 +160,8 @@ onMounted(() => {
 
     state.theme = localStorage.getItem('indi-dashboard-theme') || 'dark';
 
+    themeSet();
+
     /*----------------------------------------------------------------------------------------------------------------*/
 
     if(typeof window['__TAURI__'] !== 'undefined') {
@@ -170,14 +172,7 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', () => {
-
-        getCurrent().toggleMaximize();
-    });
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    themeSet();
+    document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', getCurrent().toggleMaximize);
 
     /*----------------------------------------------------------------------------------------------------------------*/
 });
@@ -240,15 +235,15 @@ onMounted(() => {
 
             <div class="d-flex ms-2 py-1">
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrent().minimize()">
+                <button class="btn btn-sm btn-primary me-1" type="button" @click="getCurrent().minimize">
                     <i class="bi bi-dash-lg"></i>
                 </button>
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrent().toggleMaximize()">
+                <button class="btn btn-sm btn-primary me-1" type="button" @click="getCurrent().toggleMaximize">
                     <i class="bi bi-collection"></i>
                 </button>
 
-                <button class="btn btn-sm btn-primary me-0" type="button" @click="() => getCurrent().close(   )">
+                <button class="btn btn-sm btn-primary me-0" type="button" @click="getCurrent().close">
                     <i class="bi bi-x-lg"></i>
                 </button>
 
@@ -277,14 +272,6 @@ onMounted(() => {
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 @import url(assets/app.css);
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-body[data-environment="tauri"] > div > nav {
-
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </style>
