@@ -97,7 +97,7 @@ const confDup = (src, def) => {
 
 const resetDrv = () => {
 
-    dialog.confirm('Lost modifications?').then((ok) => {
+    dialog.confirm('Loose modifications?').then((ok) => {
 
         if(ok)
         {
