@@ -13,7 +13,7 @@ def generateCMakeLists(driverPath, descr):
 
     ####################################################################################################################
 
-    fileList = [os.path.join('.', 'src', f'device_{device['name'].lower()}.c') for device in descr['devices'].values()]
+    fileList = [os.path.join('.', 'src', f'device_{device['name'].lower()}.c') for device in sorted(descr['devices'].values(), key = lambda x: x['rank'])]
 
     ####################################################################################################################
 
@@ -70,14 +70,14 @@ def generateHeader(driverPath, descr):
     dtorList = []
     vectorList = []
 
-    for device in descr['devices'].values():
+    for device in sorted(descr['devices'].values(), key = lambda x: x['rank']):
 
         ctorList.append(f'void device_{device['name'].lower()}_initialize();')
         dtorList.append(f'void device_{device['name'].lower()}_finalize();')
 
-        for vector in device['vectors'].values():
+        for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
 
-            for vectorDef in vector['defs'].values():
+            for vectorDef in sorted(vector['defs'].values() ,key = lambda x: x['rank']):
 
                 vectorList.append(f'extern indi_dict_t *vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()};')
 
@@ -131,9 +131,9 @@ def generateMain(driverPath, descr):
 
     vectorList = []
 
-    for device in descr['devices'].values():
+    for device in sorted(descr['devices'].values(), key = lambda x: x['rank']):
 
-        for vector in device['vectors'].values():
+        for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
 
             vectorList.append(f'vector_{device['name'].lower()}_{vector['name'].lower()},')
 
@@ -256,7 +256,7 @@ def generateDevices(driverPath, descr):
 
     ####################################################################################################################
 
-    for device in descr['devices'].values():
+    for device in sorted(descr['devices'].values(), key = lambda x: x['rank']):
 
         callbackList1 = []
         callbackList2 = []
@@ -271,9 +271,9 @@ def generateDevices(driverPath, descr):
 
         ################################################################################################################
 
-        for vector in device['vectors'].values():
+        for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
 
-            for vectorDef in vector['defs'].values():
+            for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
 
                 ########################################################################################################
                 # NUMBER                                                                                               #
