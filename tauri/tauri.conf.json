@@ -12,9 +12,9 @@
         "windows": [
             {
                 "label": "main",
-                "height": 720,
+                "height": 750,
                 "width": 1280,
-                "minHeight": 720,
+                "minHeight": 750,
                 "minWidth": 1280,
                 "maximized": false,
                 "title": "INDI Assistant",

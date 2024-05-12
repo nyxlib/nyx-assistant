@@ -4,7 +4,7 @@
 
 import {inject, reactive, onMounted} from 'vue';
 
-import { getCurrent } from '@tauri-apps/api/window';
+import {getCurrent} from '@tauri-apps/api/window';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -172,7 +172,10 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', getCurrent().toggleMaximize);
+    document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', () => {
+
+        getCurrent().toggleMaximize();
+    });
 
     /*----------------------------------------------------------------------------------------------------------------*/
 });
@@ -235,15 +238,15 @@ onMounted(() => {
 
             <div class="d-flex ms-2 py-1">
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="getCurrent().minimize">
+                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrent().minimize()">
                     <i class="bi bi-dash-lg"></i>
                 </button>
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="getCurrent().toggleMaximize">
+                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrent().toggleMaximize()">
                     <i class="bi bi-collection"></i>
                 </button>
 
-                <button class="btn btn-sm btn-primary me-0" type="button" @click="getCurrent().close">
+                <button class="btn btn-sm btn-primary me-0" type="button" @click="() => getCurrent().close()">
                     <i class="bi bi-x-lg"></i>
                 </button>
 
@@ -258,11 +261,11 @@ onMounted(() => {
     <!-- BODY                                                                                                        -->
     <!-- *********************************************************************************************************** -->
 
-    <div class="border border-top-0 p-3" style="background-color: var(--bs-body-bg); flex-grow: 1; overflow-y: scroll;">
+    <form class="border border-top-0 p-3" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem - 1px); overflow-y: scroll;">
 
         <node-descr :globals="state.globals" />
 
-    </div>
+    </form>
 
     <!-- *********************************************************************************************************** -->
 

@@ -48,7 +48,7 @@ defineProps({
 
                                     <div class="mb-3">
                                         <label class="form-label" for="F7F2361C">Node name</label>
-                                        <input class="form-control form-control-sm" type="text" id="F7F2361C" placeholder="Node name" v-model="globals.nodeName" />
+                                        <input class="form-control form-control-sm" type="text" id="F7F2361C" placeholder="Node name" required="required" v-model="globals.nodeName" />
                                     </div>
 
                                 </div>
@@ -56,7 +56,7 @@ defineProps({
 
                                     <div class="mb-3">
                                         <label class="form-label" for="A75F14A0">Node timeout [ms]</label>
-                                        <input class="form-control form-control-sm" type="number" min="1" step="1" id="A75F14A0" placeholder="Node timeout" v-model="globals.nodeTimeout" />
+                                        <input class="form-control form-control-sm" type="number" min="1" step="1" id="A75F14A0" placeholder="Node timeout" required="required" v-model="globals.nodeTimeout" />
                                     </div>
 
                                 </div>
@@ -97,7 +97,7 @@ defineProps({
 
                                     <div class="mb-3">
                                         <label class="form-label" for="F23468E8">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" v-model="globals.mqttURI" :disabled="!globals.enableMQTT" />
+                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" required="required" v-model="globals.mqttURI" :disabled="!globals.enableMQTT" />
                                     </div>
 
                                     <div class="mb-3">
@@ -132,7 +132,7 @@ defineProps({
 
                                     <div class="mb-0">
                                         <label class="form-label" for="B6FB4EA2">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" v-model="globals.tcpURI" :disabled="!globals.enableTCP" />
+                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" required="required" v-model="globals.tcpURI" :disabled="!globals.enableTCP" />
                                     </div>
 
                                 </div>

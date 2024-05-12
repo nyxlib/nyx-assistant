@@ -45,7 +45,7 @@ defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="C29507AB">Device name</label>
-                                <input class="form-control form-control-sm" type="text" id="C29507AB" placeholder="Device name" v-model="device.name" />
+                                <input class="form-control form-control-sm" type="text" id="C29507AB" placeholder="Device name" required="required" v-model="device.name" />
                             </div>
 
 

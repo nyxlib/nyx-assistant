@@ -2,7 +2,7 @@
 
 import {createApp} from 'vue';
 
-import {Tooltip} from 'bootstrap/dist/js/bootstrap.esm';
+import 'bootstrap/dist/js/bootstrap.esm';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -17,26 +17,6 @@ const app = createApp(App);
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 app.use(dialog);
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-app.directive('tooltip', {
-
-    mounted(el)
-    {
-        const title = el.getAttribute('title');
-
-        if(title)
-        {
-            new Tooltip(el, {
-                fallbackPlacements: ['right'],
-                placement: 'right',
-                trigger: 'hover',
-                title: title,
-            });
-        }
-    }
-});
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
