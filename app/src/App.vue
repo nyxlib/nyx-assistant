@@ -193,7 +193,7 @@ onMounted(() => {
 
     <!-- *********************************************************************************************************** -->
 
-    <nav class="navbar navbar-expand bg-primary border-bottom py-0">
+    <nav class="navbar navbar-expand bg-primary border py-0">
         <div class="container-fluid px-3" data-tauri-drag-region>
 
             <!-- *************************************************************************************************** -->
