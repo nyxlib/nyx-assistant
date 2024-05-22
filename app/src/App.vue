@@ -158,24 +158,44 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    state.theme = localStorage.getItem('indi-dashboard-theme') || 'dark';
+    document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', () => {
 
-    themeSet();
+        getCurrent().toggleMaximize();
+    });
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    if(typeof window['__TAURI__'] !== 'undefined') {
+    if(typeof window.__TAURI__ !== 'undefined') {
         document.body.setAttribute('data-environment', 'tauri');
     } else {
         document.body.setAttribute('data-environment', 'browser');
     }
 
+    const updateWindow = () => getCurrent().isMaximized().then((maximized) => {
+
+        if(maximized) {
+            document.body.setAttribute('data-maximized', 'true');
+        } else {
+            document.body.setAttribute('data-maximized', 'false');
+        }
+
+    }).catch(() => {
+
+        /* IGNORE */
+    });
+
+    window.addEventListener('resize', () => {
+
+        updateWindow();
+    });
+
+    updateWindow();
+
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', () => {
+    state.theme = localStorage.getItem('indi-dashboard-theme') || 'dark';
 
-        getCurrent().toggleMaximize();
-    });
+    themeSet();
 
     /*----------------------------------------------------------------------------------------------------------------*/
 });
@@ -261,7 +281,7 @@ onMounted(() => {
     <!-- BODY                                                                                                        -->
     <!-- *********************************************************************************************************** -->
 
-    <form class="border border-top-0 p-3" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem - 1px); overflow-y: scroll;">
+    <form class="border border-top-0 p-3" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem - 1px); overflow-y: auto;">
 
         <node-descr :globals="state.globals" />
 

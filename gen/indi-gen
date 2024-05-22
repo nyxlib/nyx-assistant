@@ -240,9 +240,11 @@ _err:
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-    with open(os.path.join(driverPath, 'src', 'main.c'), 'wt') as f:
+    if not os.path.isfile(os.path.join(driverPath, 'src', 'main.c')):
 
-        f.write(template)
+        with open(os.path.join(driverPath, 'src', 'main.c'), 'wt') as f:
+
+            f.write(template)
 
 ########################################################################################################################
 
@@ -498,9 +500,11 @@ void device_{device['name'].lower()}_finalize(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-        with open(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c'), 'wt') as f:
+        if not os.path.isfile(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c')):
 
-            f.write(template)
+            with open(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c'), 'wt') as f:
+
+                f.write(template)
 
     ####################################################################################################################
 
