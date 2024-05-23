@@ -118,7 +118,7 @@ const importDrv = () => {
 
     try
     {
-        dialog.open('driver.json', 'text/plain;charset=utf-8', 'JSON Files', ['json']).catch(dialog.error).then((json) => {
+        dialog.open('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json']).catch(dialog.error).then((json) => {
 
             state.globals = confDup(JSON.parse(json), DEFAULT_GLOBALS);
 
@@ -139,7 +139,7 @@ const exportDrv = () => {
     {
         const config = confDup(state.globals, DEFAULT_GLOBALS);
 
-        dialog.save(JSON.stringify(config, null, 2), 'driver.json', 'text/plain;charset=utf-8', 'JSON Files', ['json']).catch(dialog.error).then(() => {
+        dialog.save(JSON.stringify(config, null, 2), 'driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json']).catch(dialog.error).then(() => {
 
             dialog.success();
         });

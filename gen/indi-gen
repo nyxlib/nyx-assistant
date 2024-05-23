@@ -125,7 +125,7 @@ void indi_glue_finalize(void);
 
 ########################################################################################################################
 
-def generateMain(driverPath, descr):
+def generateMain(driverPath, descr, override_main):
 
     ####################################################################################################################
 
@@ -240,7 +240,7 @@ _err:
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-    if not os.path.isfile(os.path.join(driverPath, 'src', 'main.c')):
+    if override_main or not os.path.isfile(os.path.join(driverPath, 'src', 'main.c')):
 
         with open(os.path.join(driverPath, 'src', 'main.c'), 'wt') as f:
 
@@ -248,7 +248,7 @@ _err:
 
 ########################################################################################################################
 
-def generateDevices(driverPath, descr):
+def generateDevices(driverPath, descr, override_device):
 
     ctorList = []
     dtorList = []
@@ -500,7 +500,7 @@ void device_{device['name'].lower()}_finalize(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-        if not os.path.isfile(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c')):
+        if override_device or not os.path.isfile(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c')):
 
             with open(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c'), 'wt') as f:
 
@@ -565,7 +565,11 @@ def main():
 
     parser = argparse.ArgumentParser(description = 'Generate an INDI driver skeleton from a description file')
 
-    parser.add_argument('--override', action = 'store_true', help = 'Override the output path')
+    parser.add_argument('--override-project', action = 'store_true', help = 'Override the project output folder')
+
+    parser.add_argument('--override-device', action = 'store_true', help = 'Override the device files')
+
+    parser.add_argument('--override-main', action = 'store_true', help = 'Override main.c')
 
     parser.add_argument('--output', type = str, default = '.', help = 'Skeleton output path')
 
@@ -589,7 +593,7 @@ def main():
 
     driverPath = os.path.join(args.output, descr['nodeName'])
 
-    if args.override and os.path.isdir(driverPath):
+    if args.override_project and os.path.isdir(driverPath):
 
         shutil.rmtree(driverPath)
 
@@ -603,9 +607,9 @@ def main():
 
     generateHeader(driverPath, descr)
 
-    generateMain(driverPath, descr)
+    generateMain(driverPath, descr, args.override_main)
 
-    generateDevices(driverPath, descr)
+    generateDevices(driverPath, descr, args.override_device)
 
     ####################################################################################################################
 
