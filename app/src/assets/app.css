@@ -28,10 +28,23 @@ html, body,
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-body[data-environment="tauri"][data-maximized="false"] > div > nav {
+body[data-environment="tauri"][data-maximized="false"] > #indi_assistant {
 
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border: 1px var(--bs-secondary-border-subtle) solid;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+body[data-environment="tauri"][data-maximized="false"] > #indi_assistant {
+
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+body[data-environment="tauri"][data-maximized="false"] > #indi_assistant > nav {
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/

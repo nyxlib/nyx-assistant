@@ -215,7 +215,7 @@ onMounted(() => {
 
     <!-- *********************************************************************************************************** -->
 
-    <nav class="navbar navbar-expand bg-primary border py-0">
+    <nav class="navbar navbar-expand bg-primary border-bottom py-0">
         <div class="container-fluid px-3" data-tauri-drag-region>
 
             <!-- *************************************************************************************************** -->
@@ -283,7 +283,7 @@ onMounted(() => {
     <!-- BODY                                                                                                        -->
     <!-- *********************************************************************************************************** -->
 
-    <form class="border border-top-0 p-3" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem - 1px); overflow-y: auto;">
+    <form class="p-3" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem); overflow-y: auto;">
 
         <node-descr :globals="state.globals" />
 
