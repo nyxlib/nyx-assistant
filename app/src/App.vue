@@ -4,7 +4,7 @@
 
 import {inject, reactive, onMounted} from 'vue';
 
-import {getCurrent} from '@tauri-apps/api/window';
+import {getCurrentWindow} from '@tauri-apps/api/window';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -160,7 +160,7 @@ onMounted(() => {
 
     document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', () => {
 
-        getCurrent().toggleMaximize();
+        getCurrentWindow().toggleMaximize();
     });
 
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -175,7 +175,7 @@ onMounted(() => {
 
         if(typeof window.__TAURI__ !== 'undefined')
         {
-            getCurrent().isMaximized().catch(() => {}).then((maximized) => {
+            getCurrentWindow().isMaximized().catch(() => {}).then((maximized) => {
 
                 if(maximized) {
                     document.body.setAttribute('data-maximized', 'true');
@@ -260,15 +260,15 @@ onMounted(() => {
 
             <div class="d-flex ms-2 py-1">
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrent().minimize()">
+                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrentWindow().minimize()">
                     <i class="bi bi-dash-lg"></i>
                 </button>
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrent().toggleMaximize()">
+                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrentWindow().toggleMaximize()">
                     <i class="bi bi-collection"></i>
                 </button>
 
-                <button class="btn btn-sm btn-primary me-0" type="button" @click="() => getCurrent().close()">
+                <button class="btn btn-sm btn-primary me-0" type="button" @click="() => getCurrentWindow().close()">
                     <i class="bi bi-x-lg"></i>
                 </button>
 
