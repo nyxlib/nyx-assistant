@@ -143,7 +143,7 @@ const vectorUp = (vector1) => {
                 <!-- *********************************************************************************************** -->
 
                 <tbody>
-                    <tr v-for="vector in vectors">
+                    <tr v-for="vector in vectors" :key="vector">
                         <td class="text-center">
                             <button class="btn btn-sm btn-link" type="button" @click="vectorDw(vector)">
                                 <i class="bi bi-caret-up-fill"></i>
