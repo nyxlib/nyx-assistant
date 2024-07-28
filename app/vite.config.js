@@ -11,6 +11,7 @@ import eslintPlugin from 'vite-plugin-eslint';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+// noinspection JSUnusedGlobalSymbols
 export default defineConfig({
     plugins: [vuePlugin(), eslintPlugin({cache: false})],
     base: './',
