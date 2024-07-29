@@ -8,7 +8,9 @@ import pluginVue from 'eslint-plugin-vue';
 export default [
     ...pluginVue.configs['flat/recommended'],
     {
-        files: ['src/**/*.js', 'src/**/*.vue'],
+        ignores: ['dist/**', 'node_modules/**', 'src/pollux-skymap.js'],
+    },
+    {
         rules: {
             'vue/html-indent': 'off',
             'vue/attributes-order': 'off',
