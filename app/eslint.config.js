@@ -8,7 +8,7 @@ import pluginVue from 'eslint-plugin-vue';
 export default [
     ...pluginVue.configs['flat/recommended'],
     {
-        ignores: ['dist/**', 'node_modules/**', 'src/pollux-skymap.js'],
+        ignores: ['dist/**', 'node_modules/**'],
     },
     {
         rules: {
