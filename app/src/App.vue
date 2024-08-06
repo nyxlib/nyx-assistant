@@ -139,7 +139,7 @@ const exportDrv = () => {
     {
         const config = confDup(state.globals, DEFAULT_GLOBALS);
 
-        dialog.save(JSON.stringify(config, null, 2), 'driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json']).catch(dialog.error).then(() => {
+        dialog.save('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json'], JSON.stringify(config, null, 2)).catch(dialog.error).then(() => {
 
             dialog.success();
         });
@@ -156,26 +156,23 @@ const exportDrv = () => {
 
 onMounted(() => {
 
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', () => {
-
-        getCurrentWindow().toggleMaximize();
-    });
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    if(typeof window.__TAURI__ !== 'undefined') {
-        document.body.setAttribute('data-environment', 'tauri');
-    } else {
+    if(typeof window['__TAURI__'] === 'undefined')
+    {
         document.body.setAttribute('data-environment', 'browser');
     }
+    else
+    {
+        document.body.setAttribute('data-environment', 'tauri');
 
-    const updateWindow = () => {
+        /*------------------------------------------------------------------------------------------------------------*/
 
-        if(typeof window.__TAURI__ !== 'undefined')
-        {
-            getCurrentWindow().isMaximized().catch(() => {}).then((maximized) => {
+        const mainWindow = Window.getByLabel('main');
+
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        const updateWindow = () => {
+
+            mainWindow.isMaximized().catch(() => {}).then((maximized) => {
 
                 if(maximized) {
                     document.body.setAttribute('data-maximized', 'true');
@@ -183,15 +180,24 @@ onMounted(() => {
                     document.body.setAttribute('data-maximized', 'false');
                 }
             });
-        }
-    };
+        };
 
-    window.addEventListener('resize', () => {
+        window.addEventListener('resize', () => {
+
+            updateWindow();
+        });
 
         updateWindow();
-    });
 
-    updateWindow();
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', () => {
+
+            mainWindow.toggleMaximize();
+        });
+
+        /*------------------------------------------------------------------------------------------------------------*/
+    }
 
     /*----------------------------------------------------------------------------------------------------------------*/
 

@@ -13,6 +13,7 @@ export default [
     {
         rules: {
             'vue/html-indent': 'off',
+            'vue/v-slot-style': 'off',
             'vue/attributes-order': 'off',
             'vue/html-self-closing': 'off',
             'vue/no-mutating-props': 'off',
