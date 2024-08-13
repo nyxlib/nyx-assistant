@@ -81,28 +81,28 @@ defineProps({
                             <div class="mb-3">
                                 <label class="form-label" for="B318D314">State</label>
                                 <select class="form-select form-select-sm" id="B318D314" v-model="vector.state">
-                                    <option value="INDI_STATE_IDLE">Idle</option>
-                                    <option value="INDI_STATE_OK">Ok</option>
-                                    <option value="INDI_STATE_BUSY">Busy</option>
-                                    <option value="INDI_STATE_ALERT">Alert</option>
+                                    <option value="NYX_STATE_IDLE">Idle</option>
+                                    <option value="NYX_STATE_OK">Ok</option>
+                                    <option value="NYX_STATE_BUSY">Busy</option>
+                                    <option value="NYX_STATE_ALERT">Alert</option>
                                 </select>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label" for="C3E07382">Permission</label>
                                 <select class="form-select form-select-sm" id="C3E07382" v-model="vector.perm" :disabled="vector.type === 'light'">
-                                    <option value="INDI_PERM_RO">RO</option>
-                                    <option value="INDI_PERM_WO">WO</option>
-                                    <option value="INDI_PERM_RW">RW</option>
+                                    <option value="NYX_PERM_RO">RO</option>
+                                    <option value="NYX_PERM_WO">WO</option>
+                                    <option value="NYX_PERM_RW">RW</option>
                                 </select>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label" for="E9BE4567">Rule</label>
                                 <select class="form-select form-select-sm" id="E9BE4567" v-model="vector.rule" :disabled="vector.type !== 'switch'">
-                                    <option value="INDI_RULE_ONE_OF_MANY">One of many</option>
-                                    <option value="INDI_RULE_AT_MOST_ONE">At most one</option>
-                                    <option value="INDI_RULE_ANY_OF_MANY">Any of many</option>
+                                    <option value="NYX_RULE_ONE_OF_MANY">One of many</option>
+                                    <option value="NYX_RULE_AT_MOST_ONE">At most one</option>
+                                    <option value="NYX_RULE_ANY_OF_MANY">Any of many</option>
                                 </select>
                             </div>
 

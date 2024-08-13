@@ -196,15 +196,15 @@ const defUp = (def1) => {
                                             <input class="form-control form-control-sm" type="text" :id="`C12596CE_${idx}`" v-model="def.value" v-if="type === 'text'" />
 
                                             <select class="form-select form-select-sm" :id="`C12596CE_${idx}`" v-model="def.value" v-if="type === 'light'">
-                                                <option value="INDI_STATE_IDLE">Idle</option>
-                                                <option value="INDI_STATE_OK">Ok</option>
-                                                <option value="INDI_STATE_BUSY">Busy</option>
-                                                <option value="INDI_STATE_ALERT">Alert</option>
+                                                <option value="NYX_STATE_IDLE">Idle</option>
+                                                <option value="NYX_STATE_OK">Ok</option>
+                                                <option value="NYX_STATE_BUSY">Busy</option>
+                                                <option value="NYX_STATE_ALERT">Alert</option>
                                             </select>
 
                                             <select class="form-select form-select-sm" :id="`C12596CE_${idx}`" v-model="def.value" v-if="type === 'switch'">
-                                                <option value="INDI_ONOFF_ON">On</option>
-                                                <option value="INDI_ONOFF_OFF">Off</option>
+                                                <option value="NYX_ONOFF_ON">On</option>
+                                                <option value="NYX_ONOFF_OFF">Off</option>
                                             </select>
 
                                         </div>

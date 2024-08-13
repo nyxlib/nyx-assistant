@@ -1,7 +1,7 @@
 {
-    "productName": "indiassistant",
+    "productName": "nyx-assistant",
     "version": "1.0.0",
-    "identifier": "io.odier.indiassistant",
+    "identifier": "org.nyxlib.assistant",
     "build": {
         "beforeDevCommand": "npm run app-prod",
         "beforeBuildCommand": "npm run app-prod",
@@ -17,7 +17,7 @@
                 "minHeight": 750,
                 "minWidth": 1280,
                 "maximized": false,
-                "title": "INDI Assistant",
+                "title": "Nyx Assistant",
                 "decorations": false,
                 "transparent": true,
                 "url": "index.html"

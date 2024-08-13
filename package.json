@@ -1,6 +1,6 @@
 {
-    "name": "indi-assistant",
-    "description": "INDI Assistant",
+    "name": "nyx-assistant",
+    "description": "Nyx Assistant",
     "version": "1.0.0",
     "type": "module",
     "private": true,
@@ -13,23 +13,23 @@
         "lint": "cd ./app/ && ../node_modules/eslint/bin/eslint.js"
     },
     "dependencies": {
-        "@tauri-apps/api": "^2.0.0-beta.15",
-        "@tauri-apps/plugin-dialog": "^2.0.0-beta.7",
-        "@tauri-apps/plugin-fs": "^2.0.0-beta.7",
-        "@tauri-apps/plugin-notification": "^2.0.0-beta.7",
+        "@tauri-apps/api": "^2.0.0-rc.0",
+        "@tauri-apps/plugin-dialog": "^2.0.0-rc.0",
+        "@tauri-apps/plugin-fs": "^2.0.0-rc.0",
+        "@tauri-apps/plugin-notification": "^2.0.0-rc.0",
         "bootstrap": "^5.3.3",
         "bootstrap-icons": "^1.11.3",
         "uuid": "^10.0.0",
-        "vue": "^3.4.34"
+        "vue": "^3.4.37"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "^2.0.0-beta.22",
-        "@vitejs/plugin-vue": "^5.1.1",
+        "@tauri-apps/cli": "^2.0.0-rc.3",
+        "@vitejs/plugin-vue": "^5.1.2",
         "@vue/eslint-config-prettier": "^9.0.0",
-        "eslint": "^9.8.0",
+        "eslint": "^9.9.0",
         "eslint-plugin-vue": "^9.27.0",
         "sass": "^1.77.8",
-        "vite": "^5.3.5",
+        "vite": "^5.4.0",
         "vite-plugin-eslint": "^1.8.1"
     },
     "author": "Jérôme Odier",

@@ -2,9 +2,9 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {inject, reactive, onMounted} from 'vue';
+import {Window, getCurrentWindow} from '@tauri-apps/api/window';
 
-import {getCurrentWindow} from '@tauri-apps/api/window';
+import {inject, reactive, onMounted} from 'vue';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -48,7 +48,7 @@ const state = reactive({
 
 const about = () => {
 
-    dialog.show('INDI Assistant\n\nAuthor: Jérôme ODIER\nEmail: jerome.odier@lpsc.in2p3.fr', 'About', 'success');
+    dialog.show('Nyx Assistant\n\nAuthor: Jérôme ODIER\nEmail: jerome.odier@lpsc.in2p3.fr', 'About', 'success');
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ const themeSet = () => {
     {
         document.documentElement.setAttribute('data-bs-theme', 'dark');
 
-        localStorage.setItem('indi-dashboard-theme', 'dark');
+        localStorage.setItem('nyx-assistant-theme', 'dark');
 
         label.classList.add   ('bi-moon-stars');
         label.classList.remove('bi-sun');
@@ -70,7 +70,7 @@ const themeSet = () => {
     {
         document.documentElement.setAttribute('data-bs-theme', 'light');
 
-        localStorage.setItem('indi-dashboard-theme', 'light');
+        localStorage.setItem('nyx-assistant-theme', 'light');
 
         label.classList.remove('bi-moon-stars');
         label.classList.add   ('bi-sun');
@@ -191,9 +191,12 @@ onMounted(() => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', () => {
+        document.querySelector('[data-tauri-drag-region]').addEventListener('dblclick', (e) => {
 
-            mainWindow.toggleMaximize();
+            if(e.target.tagName.toLowerCase() === 'div')
+            {
+                mainWindow.toggleMaximize();
+            }
         });
 
         /*------------------------------------------------------------------------------------------------------------*/
@@ -201,7 +204,7 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    state.theme = localStorage.getItem('indi-dashboard-theme') || 'dark';
+    state.theme = localStorage.getItem('nyx-assistant-theme') || 'dark';
 
     themeSet();
 
