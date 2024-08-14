@@ -1,4 +1,4 @@
-<!--suppress HtmlUnknownAttribute -->
+<!--suppress HtmlUnknownTag, HtmlUnknownAttribute, VueMissingComponentImportInspection -->
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -325,11 +325,23 @@ onMounted(() => {
 
     <form class="p-3" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem); overflow-y: auto;">
 
+        <!-- ******************************************************************************************************* -->
+
         <node-descr :globals="state.globals" v-if="state.appMode !== 'preview'" />
 
-        <div v-else>
-            TODO
-        </div>
+        <!-- ******************************************************************************************************* -->
+
+        <template v-else>
+
+            <tab-pane class="align-items-center justify-content-center" :title="deviceName" icon="command" v-for="(deviceInfo, deviceName, deviceIndex) in {}" :key="deviceName">
+
+                <nyx-device :device-name="deviceName" :device-info="deviceInfo" :device-index="deviceIndex" />
+
+            </tab-pane>
+
+        </template>
+
+        <!-- ******************************************************************************************************* -->
 
     </form>
 
