@@ -4,11 +4,15 @@
 
 import {Window, getCurrentWindow} from '@tauri-apps/api/window';
 
-import {inject, reactive, onMounted} from 'vue';
+import {ref, inject, reactive, onMounted} from 'vue';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+import NyxDevice from './controls/preview/NyxDevice.vue';
 import NodeDescr from './controls/descrs/NodeDescr.vue';
+
+import NavTabs from './controls/NavTabs.vue';
+import TabPane from './controls/TabPane.vue';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
@@ -62,7 +66,7 @@ const themeSet = () => {
     {
         document.documentElement.setAttribute('data-bs-theme', 'dark');
 
-        localStorage.setItem('nyx-assistant-theme', 'dark');
+        localStorage.setItem('preview-assistant-theme', 'dark');
 
         label.classList.add   ('bi-moon-stars');
         label.classList.remove('bi-sun');
@@ -71,7 +75,7 @@ const themeSet = () => {
     {
         document.documentElement.setAttribute('data-bs-theme', 'light');
 
-        localStorage.setItem('nyx-assistant-theme', 'light');
+        localStorage.setItem('preview-assistant-theme', 'light');
 
         label.classList.remove('bi-moon-stars');
         label.classList.add   ('bi-sun');
@@ -166,6 +170,10 @@ const previewDrv = () => {
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
+
+const kk = ref({'Telescope Simulator':{'Test':{'foo':{'<>':'defSwitchVector','children':[{'<>':'defSwitch','@name':'button1_on','@label':'Turn ON','$':'On','@orig':'On'},{'<>':'defSwitch','@name':'button2_off','@label':'Turn OFF','$':'Off','@orig':'Off'}],'@client':'TOTO','@device':'Telescope Simulator','@name':'foo','@state':'Ok','@perm':'rw','@rule':'AtMostOne','@timestamp':'2024-08-12T16:05:51','@group':'Test'},'bar':{'<>':'defSwitchVector','children':[{'<>':'defSwitch','@name':'foo_on','@label':'Foo ON','$':'On','@orig':'On'},{'<>':'defSwitch','@name':'foo_off','@label':'Foo OFF','$':'Off','@orig':'Off'}],'@client':'TOTO','@device':'Telescope Simulator','@name':'bar','@state':'Ok','@perm':'rw','@rule':'AtMostOne','@timestamp':'2024-08-12T16:05:51','@group':'Test'},'qux':{'<>':'defNumberVector','children':[{'<>':'defNumber','@name':'qux1','@label':'Qux 1','@format':'%.1f','@min':0,'@max':1,'@step':0.1,'$':'0.5','@orig':'0.5'},{'<>':'defNumber','@name':'qux2','@label':'Qux 2','@format':'%.1f','@min':0,'@max':1,'@step':0.1,'$':'0.5','@orig':'0.5'}],'@client':'TOTO','@device':'Telescope Simulator','@name':'qux','@state':'Ok','@perm':'rw','@timestamp':'2024-08-12T16:05:51','@group':'Test'}}}});
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 /* INITIALIZATION                                                                                                     */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -227,7 +235,7 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    state.theme = localStorage.getItem('nyx-assistant-theme') || 'dark';
+    state.theme = localStorage.getItem('preview-assistant-theme') || 'dark';
 
     themeSet();
 
@@ -320,30 +328,43 @@ onMounted(() => {
     </nav>
 
     <!-- *********************************************************************************************************** -->
-    <!-- BODY                                                                                                        -->
-    <!-- *********************************************************************************************************** -->
 
-    <form class="p-3" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem); overflow-y: auto;">
+    <div class="d-flex" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem);">
 
         <!-- ******************************************************************************************************* -->
-
-        <node-descr :globals="state.globals" v-if="state.appMode !== 'preview'" />
-
+        <!-- BODY MODE 'ASSISTANT'                                                                                   -->
         <!-- ******************************************************************************************************* -->
 
-        <template v-else>
+        <form class="p-3" style="height: 100%; width: 100%; overflow-y: auto;" v-if="state.appMode !== 'preview'">
 
-            <tab-pane class="align-items-center justify-content-center" :title="deviceName" icon="command" v-for="(deviceInfo, deviceName, deviceIndex) in {}" :key="deviceName">
+            <node-descr :globals="state.globals" />
 
-                <nyx-device :device-name="deviceName" :device-info="deviceInfo" :device-index="deviceIndex" />
-
-            </tab-pane>
-
-        </template>
+        </form>
 
         <!-- ******************************************************************************************************* -->
+        <!-- BODY MODE 'PREVIEW'                                                                                     -->
+        <!-- ******************************************************************************************************* -->
 
-    </form>
+        <div class="p-3" style="height: 100%; width: 100%; overflow-y: auto;" v-if="state.appMode === 'preview'">
+
+            <div class="h-100 d-flex flex-column">
+
+                <nav-tabs margin="mb-4">
+
+                    <tab-pane class="d-flex align-items-center justify-content-center" :title="deviceName" icon="command" v-for="(deviceInfo, deviceName, deviceIndex) in kk" :key="deviceName">
+
+                        <nyx-device :device-name="deviceName" :device-info="deviceInfo" :device-index="deviceIndex" />
+
+                    </tab-pane>
+
+                </nav-tabs>
+
+            </div>
+
+        </div>
+
+        <!-- ******************************************************************************************************* -->
+    </div>
 
     <!-- *********************************************************************************************************** -->
 
