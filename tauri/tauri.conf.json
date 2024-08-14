@@ -12,15 +12,29 @@
         "windows": [
             {
                 "label": "main",
-                "height": 750,
-                "width": 1280,
-                "minHeight": 750,
-                "minWidth": 1280,
+                "height": 800,
+                "width": 1200,
+                "minHeight": 800,
+                "minWidth": 1200,
+                "visible": true,
                 "maximized": false,
                 "title": "Nyx Assistant",
                 "decorations": false,
                 "transparent": true,
                 "url": "index.html"
+            },
+            {
+                "label": "preview",
+                "height": 800,
+                "width": 1200,
+                "minHeight": 800,
+                "minWidth": 1200,
+                "visible": false,
+                "maximized": false,
+                "title": "Preview",
+                "decorations": false,
+                "transparent": true,
+                "url": "index.html#/preview/"
             }
         ],
         "security": {

@@ -38,6 +38,7 @@ const DEFAULT_GLOBALS = {
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const state = reactive({
+    appMode: window.location.hash === '#/preview/' ? 'preview' : '',
     globals: Object.assign({}, DEFAULT_GLOBALS),
     theme: 'light',
 });
@@ -151,6 +152,20 @@ const exportDrv = () => {
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
+
+const previewDrv = () => {
+
+    if(typeof window['__TAURI__'] !== 'undefined')
+    {
+        Window.getByLabel('preview')?.show();
+    }
+    else
+    {
+        window.open('index.html#/preview/', 'Preview', 'width=1200,height=800,menubar=no,location=no,status=no,scrollbars=yes,resizable=yes');
+    }
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 /* INITIALIZATION                                                                                                     */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -167,6 +182,7 @@ onMounted(() => {
         /*------------------------------------------------------------------------------------------------------------*/
 
         const mainWindow = Window.getByLabel('main');
+        const previewWindow = Window.getByLabel('preview');
 
         /*------------------------------------------------------------------------------------------------------------*/
 
@@ -197,6 +213,13 @@ onMounted(() => {
             {
                 mainWindow.toggleMaximize();
             }
+        });
+
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        previewWindow.listen('tauri://close-requested', () => {
+
+            previewWindow.hide();
         });
 
         /*------------------------------------------------------------------------------------------------------------*/
@@ -237,17 +260,25 @@ onMounted(() => {
 
             <div class="d-flex ms-auto py-1">
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="resetDrv">
-                    <i class="bi bi-recycle"></i> Reset
-                </button>
+                <template v-if="state.appMode !== 'preview'">
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="importDrv">
-                    <i class="bi bi-upload"></i> Import
-                </button>
+                    <button class="btn btn-sm btn-primary me-1" type="button" @click="resetDrv">
+                        <i class="bi bi-recycle"></i> Reset
+                    </button>
 
-                <button class="btn btn-sm btn-primary me-0" type="button" @click="exportDrv">
-                    <i class="bi bi-download"></i> Export
-                </button>
+                    <button class="btn btn-sm btn-primary me-1" type="button" @click="importDrv">
+                        <i class="bi bi-upload"></i> Import
+                    </button>
+
+                    <button class="btn btn-sm btn-primary me-0" type="button" @click="exportDrv">
+                        <i class="bi bi-download"></i> Export
+                    </button>
+
+                    <button class="btn btn-sm btn-primary me-1" type="button" @click="previewDrv">
+                        <i class="bi bi-window"></i> Preview
+                    </button>
+
+                </template>
 
             </div>
 
@@ -294,7 +325,11 @@ onMounted(() => {
 
     <form class="p-3" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem); overflow-y: auto;">
 
-        <node-descr :globals="state.globals" />
+        <node-descr :globals="state.globals" v-if="state.appMode !== 'preview'" />
+
+        <div v-else>
+            TODO
+        </div>
 
     </form>
 
