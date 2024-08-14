@@ -5,9 +5,8 @@
     "type": "module",
     "private": true,
     "scripts": {
-        "app-dev": "cd ./app/ && ../node_modules/vite/bin/vite.js dev",
-        "app-prod": "cd ./app/ && ../node_modules/vite/bin/vite.js build",
-        "app-preview": "cd ./app/ && ../node_modules/vite/bin/vite.js preview",
+        "app-dev": "npm i --update vue-nyx && cd ./app/ && ../node_modules/vite/bin/vite.js dev",
+        "app-prod": "npm i --update vue-nyx && cd ./app/ && ../node_modules/vite/bin/vite.js build",
         "tauri-dev": "cd ./tauri/ && ../node_modules/@tauri-apps/cli/tauri.js dev",
         "tauri-prod": "cd ./tauri/ && ../node_modules/@tauri-apps/cli/tauri.js build",
         "lint": "cd ./app/ && ../node_modules/eslint/bin/eslint.js"
@@ -20,7 +19,8 @@
         "bootstrap": "^5.3.3",
         "bootstrap-icons": "^1.11.3",
         "uuid": "^10.0.0",
-        "vue": "^3.4.37"
+        "vue": "^3.4.37",
+        "vue-nyx": "file:../nyx-vue"
     },
     "devDependencies": {
         "@tauri-apps/cli": "^2.0.0-rc.3",
