@@ -2,9 +2,11 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+import {ref, watch, inject, reactive, onMounted, onUnmounted} from 'vue';
+
 import {Window, getCurrentWindow} from '@tauri-apps/api/window';
 
-import {ref, inject, reactive, onMounted} from 'vue';
+import {listen} from '@tauri-apps/api/event';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -13,6 +15,8 @@ import NodeDescr from './controls/descrs/NodeDescr.vue';
 
 import NavTabs from './controls/NavTabs.vue';
 import TabPane from './controls/TabPane.vue';
+
+import convert from './nyx.js';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
@@ -46,6 +50,10 @@ const state = reactive({
     globals: Object.assign({}, DEFAULT_GLOBALS),
     theme: 'light',
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+let previewWindow = null;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
@@ -161,23 +169,43 @@ const previewDrv = () => {
 
     if(typeof window['__TAURI__'] !== 'undefined')
     {
-        Window.getByLabel('preview')?.show();
+        previewWindow?.show();
     }
     else
     {
-        window.open('index.html#/preview/', 'Preview', 'width=1200,height=800,menubar=no,location=no,status=no,scrollbars=yes,resizable=yes');
+        previewWindow = window.open('index.html#/preview/', 'Preview', 'width=1200,height=800,menubar=no,location=no,status=no,scrollbars=yes,resizable=yes');
     }
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const kk = ref({'Telescope Simulator':{'Test':{'foo':{'<>':'defSwitchVector','children':[{'<>':'defSwitch','@name':'button1_on','@label':'Turn ON','$':'On','@orig':'On'},{'<>':'defSwitch','@name':'button2_off','@label':'Turn OFF','$':'Off','@orig':'Off'}],'@client':'TOTO','@device':'Telescope Simulator','@name':'foo','@state':'Ok','@perm':'rw','@rule':'AtMostOne','@timestamp':'2024-08-12T16:05:51','@group':'Test'},'bar':{'<>':'defSwitchVector','children':[{'<>':'defSwitch','@name':'foo_on','@label':'Foo ON','$':'On','@orig':'On'},{'<>':'defSwitch','@name':'foo_off','@label':'Foo OFF','$':'Off','@orig':'Off'}],'@client':'TOTO','@device':'Telescope Simulator','@name':'bar','@state':'Ok','@perm':'rw','@rule':'AtMostOne','@timestamp':'2024-08-12T16:05:51','@group':'Test'},'qux':{'<>':'defNumberVector','children':[{'<>':'defNumber','@name':'qux1','@label':'Qux 1','@format':'%.1f','@min':0,'@max':1,'@step':0.1,'$':'0.5','@orig':'0.5'},{'<>':'defNumber','@name':'qux2','@label':'Qux 2','@format':'%.1f','@min':0,'@max':1,'@step':0.1,'$':'0.5','@orig':'0.5'}],'@client':'TOTO','@device':'Telescope Simulator','@name':'qux','@state':'Ok','@perm':'rw','@timestamp':'2024-08-12T16:05:51','@group':'Test'}}}});
+const updatePreview = (devices) => {
+
+    if(typeof window['__TAURI__'] !== 'undefined')
+    {
+        previewWindow.emit('preview', convert(devices));
+    }
+    else
+    {
+        previewWindow.postMessage(convert(devices));
+    }
+};
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* INITIALIZATION                                                                                                     */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-onMounted(() => {
+const tauriMessageHandler = (e) => devices.value = e.payload;
+
+const htmlMessageHandler = (e) => devices.value = e.data;
+
+const devices = ref({});
+
+let unlisten;
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+onMounted(async () => {
 
     if(typeof window['__TAURI__'] === 'undefined')
     {
@@ -190,7 +218,7 @@ onMounted(() => {
         /*------------------------------------------------------------------------------------------------------------*/
 
         const mainWindow = Window.getByLabel('main');
-        const previewWindow = Window.getByLabel('preview');
+        /*-*/ previewWindow = Window.getByLabel('preview');
 
         /*------------------------------------------------------------------------------------------------------------*/
 
@@ -225,7 +253,7 @@ onMounted(() => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        previewWindow.listen('tauri://close-requested', () => {
+        await previewWindow.listen('tauri://close-requested', () => {
 
             previewWindow.hide();
         });
@@ -240,6 +268,40 @@ onMounted(() => {
     themeSet();
 
     /*----------------------------------------------------------------------------------------------------------------*/
+
+    watch(() => state.globals.devices, (devices) => {
+
+        updatePreview(devices);
+    }, {
+        deep: true
+    });
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    if(typeof window['__TAURI__'] !== 'undefined')
+    {
+        unlisten = await listen('preview', tauriMessageHandler);
+    }
+    else
+    {
+        window.addEventListener('message', htmlMessageHandler);
+    }
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+});
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+onUnmounted(() => {
+
+    if(typeof window['__TAURI__'] !== 'undefined')
+    {
+        if(unlisten) unlisten(/*- 'preview', tauriMessageHandler -*/);
+    }
+    else
+    {
+        window.removeEventListener('message', htmlMessageHandler);
+    }
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -329,13 +391,13 @@ onMounted(() => {
 
     <!-- *********************************************************************************************************** -->
 
-    <div class="d-flex" style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem);">
+    <div style="background-color: var(--bs-body-bg); height: calc(100% - 2.5rem);">
 
         <!-- ******************************************************************************************************* -->
         <!-- BODY MODE 'ASSISTANT'                                                                                   -->
         <!-- ******************************************************************************************************* -->
 
-        <form class="p-3" style="height: 100%; width: 100%; overflow-y: auto;" v-if="state.appMode !== 'preview'">
+        <form class="d-flex flex-column overflow-y-auto h-100 p-3" v-if="state.appMode !== 'preview'">
 
             <node-descr :globals="state.globals" />
 
@@ -345,25 +407,29 @@ onMounted(() => {
         <!-- BODY MODE 'PREVIEW'                                                                                     -->
         <!-- ******************************************************************************************************* -->
 
-        <div class="p-3" style="height: 100%; width: 100%; overflow-y: auto;" v-if="state.appMode === 'preview'">
+        <div class="d-flex flex-column overflow-y-auto h-100 p-3" v-if="state.appMode === 'preview'">
 
-            <div class="h-100 d-flex flex-column">
+            <nav-tabs margin="mb-4">
 
-                <nav-tabs margin="mb-4">
+                <tab-pane :title="deviceName" icon="command" v-for="(deviceInfo, deviceName, deviceIndex) in devices" :key="deviceName">
 
-                    <tab-pane class="d-flex align-items-center justify-content-center" :title="deviceName" icon="command" v-for="(deviceInfo, deviceName, deviceIndex) in kk" :key="deviceName">
+                    <div class="d-flex align-items-center justify-content-center h-100">
 
-                        <nyx-device :device-name="deviceName" :device-info="deviceInfo" :device-index="deviceIndex" />
+                        <nyx-device :device-name="deviceName"
+                                    :device-info="deviceInfo"
+                                    :device-index="deviceIndex"
+                        />
 
-                    </tab-pane>
+                    </div>
 
-                </nav-tabs>
+                </tab-pane>
 
-            </div>
+            </nav-tabs>
 
         </div>
 
         <!-- ******************************************************************************************************* -->
+
     </div>
 
     <!-- *********************************************************************************************************** -->
