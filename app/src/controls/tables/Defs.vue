@@ -187,7 +187,7 @@ const defUp = (def1) => {
                             <div class="row">
                                 <div class="col-md-6">
 
-                                    <div class="row mb-2">
+                                    <div class="row mb-2" v-if="type !== 'blob'">
                                         <label class="col-form-label col-sm-3 py-1" :for="`C12596CE_${idx}`">Value</label>
                                         <div class="col-sm-9">
 
