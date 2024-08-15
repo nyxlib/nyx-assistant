@@ -34,7 +34,7 @@
                 "title": "Preview",
                 "decorations": false,
                 "transparent": true,
-                "url": "index.html#/preview/"
+                "url": "/#/preview/"
             }
         ],
         "security": {

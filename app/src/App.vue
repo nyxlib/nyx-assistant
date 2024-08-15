@@ -173,7 +173,7 @@ const previewDrv = () => {
     }
     else
     {
-        previewWindow = window.open('index.html#/preview/', 'Preview', 'width=1200,height=800,menubar=no,location=no,status=no,scrollbars=yes,resizable=yes');
+        previewWindow = window.open(`${window.location.origin}${window.location.pathname}#/preview/`, 'Preview', 'width=1200,height=800,menubar=no,location=no,status=no,scrollbars=yes,resizable=yes');
     }
 };
 
