@@ -247,7 +247,7 @@ onMounted(async () => {
 
             if(e.target.tagName.toLowerCase() === 'div')
             {
-                mainWindow.toggleMaximize();
+                getCurrentWindow().toggleMaximize();
             }
         });
 
@@ -330,6 +330,8 @@ onUnmounted(() => {
 
             <div class="d-flex ms-auto py-1">
 
+                <!-- *********************************************************************************************** -->
+
                 <template v-if="state.appMode !== 'preview'">
 
                     <button class="btn btn-sm btn-primary me-1" type="button" @click="resetDrv">
@@ -349,6 +351,16 @@ onUnmounted(() => {
                     </button>
 
                 </template>
+
+                <!-- *********************************************************************************************** -->
+
+                <template v-if="state.appMode === 'preview'">
+
+                    <span class="badge rounded-pill text-bg-warning">interface preview</span>
+
+                </template>
+
+                <!-- *********************************************************************************************** -->
 
             </div>
 

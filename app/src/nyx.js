@@ -37,6 +37,11 @@ const RULE_DICT = {
     'NYX_RULE_ANY_OF_MANY': 'AnyOfMany',
 };
 
+const ONOFF_DICT = {
+    'NYX_ONOFF_ON': 'On',
+    'NYX_ONOFF_OFF': 'Off',
+};
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const convert = (devices) => {
@@ -51,85 +56,120 @@ const convert = (devices) => {
 
             /*--------------------------------------------------------------------------------------------------------*/
 
-            const xmlVector = xmlDevice[vector.name] = {
-                '<>': VECTOR_DICT[vector.type],
-                '@device': device.name,
-                '@name': vector.name,
-            };
+            const group = vector.group || 'Main Control';
 
             /*--------------------------------------------------------------------------------------------------------*/
 
-            if(vector.label) {
-                xmlVector['@label'] = vector.label;
-            }
+            let xmlGroup;
 
-            if(vector.group) {
-                xmlVector['@group'] = vector.group;
+            if(group in xmlDevice) {
+                xmlGroup = xmlDevice[group] ; //;
             }
-
-            if(vector.state) {
-                xmlVector['@state'] = STATE_DICT[vector.state];
-            }
-
-            if(vector.perm) {
-                xmlVector['@perm'] = PERM_DICT[vector.perm];
-            }
-
-            if(vector.rule) {
-                xmlVector['@rule'] = RULE_DICT[vector.rule];
-            }
-
-            if(vector.timeout) {
-                xmlVector['@timeout'] = vector.timeout;
-            }
-
-            if(vector.message) {
-                xmlVector['@message'] = vector.message;
+            else {
+                xmlGroup = xmlDevice[group] = {};
             }
 
             /*--------------------------------------------------------------------------------------------------------*/
 
-            const xmlDefs = xmlVector['children'] = [];
-
-            /*--------------------------------------------------------------------------------------------------------*/
-
-            Object.values(vector.defs).forEach((def) => {
-
+            try
+            {
                 /*----------------------------------------------------------------------------------------------------*/
 
-                const xmlDef = {
-                    '<>': VEC_DICT[vector.type],
-                    '@name': def.name,
+                const xmlVector = {
+                    '<>': VECTOR_DICT[vector.type],
+                    '@device': device.name,
+                    '@name': vector.name,
                 };
 
                 /*----------------------------------------------------------------------------------------------------*/
 
-                if(def.label) {
-                    xmlDef['@label'] = def.label;
+                if(vector.label) {
+                    xmlVector['@label'] = vector.label;
                 }
 
-                if(def.format) {
-                    xmlDef['@format'] = def.format;
+                if(vector.group) {
+                    xmlVector['@group'] = vector.group;
                 }
 
-                if(def.min) {
-                    xmlDef['@min'] = def.min;
+                if(vector.state) {
+                    xmlVector['@state'] = STATE_DICT[vector.state];
                 }
 
-                if(def.max) {
-                    xmlDef['@max'] = def.max;
+                if(vector.perm) {
+                    xmlVector['@perm'] = PERM_DICT[vector.perm];
                 }
 
-                if(def.step) {
-                    xmlDef['@step'] = def.step;
+                if(vector.rule) {
+                    xmlVector['@rule'] = RULE_DICT[vector.rule];
+                }
+
+                if(vector.timeout) {
+                    xmlVector['@timeout'] = vector.timeout;
+                }
+
+                if(vector.message) {
+                    xmlVector['@message'] = vector.message;
                 }
 
                 /*----------------------------------------------------------------------------------------------------*/
 
-                xmlDefs.push(xmlDef);
+                // noinspection JSMismatchedCollectionQueryUpdate
+                const xmlDefs = xmlVector['children'] = [];
 
                 /*----------------------------------------------------------------------------------------------------*/
-            });
+
+                Object.values(vector.defs).forEach((def) => {
+
+                    /*------------------------------------------------------------------------------------------------*/
+
+                    const xmlDef = {
+                        '<>': VEC_DICT[vector.type],
+                        '@name': def.name,
+                    };
+
+                    /*------------------------------------------------------------------------------------------------*/
+
+                    if(def.label) {
+                        xmlDef['@label'] = def.label;
+                    }
+
+                    if(def.format) {
+                        xmlDef['@format'] = def.format;
+                    }
+
+                    if(def.min) {
+                        xmlDef['@min'] = def.min;
+                    }
+
+                    if(def.max) {
+                        xmlDef['@max'] = def.max;
+                    }
+
+                    if(def.step) {
+                        xmlDef['@step'] = def.step;
+                    }
+
+                    if(def.value) {
+                        xmlDef['$'] = vector.type === 'switch' ? ONOFF_DICT[def.value] : def.value;
+                    }
+
+                    /*------------------------------------------------------------------------------------------------*/
+
+                    xmlDefs.push(xmlDef);
+
+                    /*------------------------------------------------------------------------------------------------*/
+                });
+
+                /*----------------------------------------------------------------------------------------------------*/
+
+                xmlGroup[vector.name] = xmlVector;
+
+                /*----------------------------------------------------------------------------------------------------*/
+            }
+            catch(e)
+            {
+                console.error(e);
+            }
         });
     });
 
