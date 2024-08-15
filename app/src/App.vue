@@ -217,14 +217,9 @@ onMounted(async () => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        const mainWindow = Window.getByLabel('main');
-        /*-*/ previewWindow = Window.getByLabel('preview');
-
-        /*------------------------------------------------------------------------------------------------------------*/
-
         const updateWindow = () => {
 
-            mainWindow.isMaximized().catch(() => {}).then((maximized) => {
+            getCurrentWindow().isMaximized().catch(() => {}).then((maximized) => {
 
                 if(maximized) {
                     document.body.setAttribute('data-maximized', 'true');
@@ -252,6 +247,8 @@ onMounted(async () => {
         });
 
         /*------------------------------------------------------------------------------------------------------------*/
+
+        previewWindow = Window.getByLabel('preview');
 
         await previewWindow.listen('tauri://close-requested', () => {
 
