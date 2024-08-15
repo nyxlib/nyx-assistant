@@ -48,15 +48,15 @@ const convert = (devices) => {
 
     const xmlDevices = {};
 
-    Object.values(devices).forEach((device) => {
+    Object.values(devices).filter((device) => (device.id || '').startsWith('device:')).forEach((device) => {
 
         const xmlDevice = xmlDevices[device.name] = {};
 
-        Object.values(device.vectors).forEach((vector) => {
+        Object.values(device.vectors).filter((vector) => (vector.id || '').startsWith('vector:')).forEach((vector) => {
 
             /*--------------------------------------------------------------------------------------------------------*/
 
-            const group = vector.group || 'Main Control';
+            const group = vector.group || 'Main';
 
             /*--------------------------------------------------------------------------------------------------------*/
 
@@ -118,7 +118,7 @@ const convert = (devices) => {
 
                 /*----------------------------------------------------------------------------------------------------*/
 
-                Object.values(vector.defs).forEach((def) => {
+                Object.values(vector.defs).filter((def) => (def.id || '').startsWith('def:')).forEach((def) => {
 
                     /*------------------------------------------------------------------------------------------------*/
 

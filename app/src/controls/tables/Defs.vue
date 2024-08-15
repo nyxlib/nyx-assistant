@@ -42,7 +42,7 @@ let rank = 0;
 
 const defAppend = () => {
 
-    const id = uuid.v4();
+    const id = `def:${uuid.v4()}`;
 
     props.defs[id] = {
         id: id,

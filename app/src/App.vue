@@ -185,13 +185,16 @@ const previewDrv = () => {
 
 const updatePreview = (devices) => {
 
-    if(HAS_TAURI)
+    if(previewWindow)
     {
-        previewWindow.emit('preview', convert(devices));
-    }
-    else
-    {
-        previewWindow.postMessage(convert(devices));
+        if(HAS_TAURI)
+        {
+            previewWindow.emit('preview', convert(devices));
+        }
+        else
+        {
+            previewWindow.postMessage(convert(devices));
+        }
     }
 };
 

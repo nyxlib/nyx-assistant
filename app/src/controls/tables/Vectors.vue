@@ -37,7 +37,7 @@ let rank = 0;
 
 const vectorAppend = () => {
 
-    const id = uuid.v4();
+    const id = `vector:${uuid.v4()}`;
 
     props.vectors[id] = {
         id: id,

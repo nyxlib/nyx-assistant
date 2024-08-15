@@ -37,7 +37,7 @@ let rank = 0;
 
 const deviceAppend = () => {
 
-    const id = uuid.v4();
+    const id = `device:${uuid.v4()}`;
 
     props.devices[id] = {
         id: id,
