@@ -176,11 +176,7 @@ const exportDrv = () => {
 
 const previewDrv = () => {
 
-    if(HAS_TAURI)
-    {
-        previewWindow?.show();
-    }
-    else
+    if(!HAS_TAURI)
     {
         previewWindow = window.open(`${window.location.origin}${window.location.pathname}#/preview/`, 'Preview', 'width=1200,height=800,menubar=no,location=no,status=no,scrollbars=yes,resizable=yes');
 
@@ -188,6 +184,10 @@ const previewDrv = () => {
 
             updatePreview(state.globals.devices);
         });
+    }
+    else
+    {
+        previewWindow.show();
     }
 };
 
@@ -197,13 +197,13 @@ const updatePreview = (devices) => {
 
     if(previewWindow)
     {
-        if(HAS_TAURI)
+        if(!HAS_TAURI)
         {
-            previewWindow.emit('preview', convert(devices));
+            previewWindow.postMessage(convert(devices));
         }
         else
         {
-            previewWindow.postMessage(convert(devices));
+            previewWindow.emit('preview', convert(devices));
         }
     }
 };
@@ -267,15 +267,16 @@ onMounted(async () => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        if(state.appMode === 'assistant')
+        previewWindow = Window.getByLabel('preview');
+
+        if(state.appMode !== 'preview')
         {
             const mainWindow = Window.getByLabel('main');
-            /*-*/ previewWindow = Window.getByLabel('preview');
 
             await mainWindow.listen('tauri://close-requested', () => {
 
-                previewWindow.close();
-                mainWindow.close();
+                previewWindow.destroy();
+                mainWindow.destroy();
             });
 
             await previewWindow.listen('tauri://close-requested', () => {
