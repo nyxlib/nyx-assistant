@@ -144,7 +144,7 @@ const deviceUp = (device1) => {
                             </button>
                         </td>
                         <td class="text-start">
-                            <input class="form-control form-control-sm" type="text" v-model="device.name" />
+                            <input class="form-control form-control-sm" type="text" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="device.name" />
                         </td>
                     </tr>
                 </tbody>

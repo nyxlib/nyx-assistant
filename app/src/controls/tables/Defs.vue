@@ -163,7 +163,7 @@ const defUp = (def1) => {
                                     <div class="row mb-2">
                                         <label class="col-form-label col-sm-3 py-1" :for="`D18B255D_${idx}`">Name</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`D18B255D_${idx}`" v-model="def.name" />
+                                            <input class="form-control form-control-sm" type="text" :id="`D18B255D_${idx}`" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="def.name" />
                                         </div>
                                     </div>
 
@@ -191,9 +191,9 @@ const defUp = (def1) => {
                                         <label class="col-form-label col-sm-3 py-1" :for="`C12596CE_${idx}`">Value</label>
                                         <div class="col-sm-9">
 
-                                            <input class="form-control form-control-sm" type="number" :id="`C12596CE_${idx}`" v-model="def.value" v-if="type === 'number'" />
+                                            <input class="form-control form-control-sm" type="number" :id="`C12596CE_${idx}`" required="required" v-model="def.value" v-if="type === 'number'" />
 
-                                            <input class="form-control form-control-sm" type="text" :id="`C12596CE_${idx}`" v-model="def.value" v-if="type === 'text'" />
+                                            <input class="form-control form-control-sm" type="text" :id="`C12596CE_${idx}`" xxxxxxxx="xxxxxxxx" v-model="def.value" v-if="type === 'text'" />
 
                                             <select class="form-select form-select-sm" :id="`C12596CE_${idx}`" v-model="def.value" v-if="type === 'light'">
                                                 <option value="NYX_STATE_IDLE">Idle</option>
@@ -216,7 +216,7 @@ const defUp = (def1) => {
                                     <div class="row mb-2" v-if="type === 'number'">
                                         <label class="col-form-label col-sm-3 py-1" :for="`A5704230_${idx}`">Format</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`A5704230_${idx}`" v-model="def.format" />
+                                            <input class="form-control form-control-sm" type="text" :id="`A5704230_${idx}`" required="required" v-model="def.format" />
                                         </div>
                                     </div>
 
@@ -231,21 +231,21 @@ const defUp = (def1) => {
                                     <div class="row mb-2">
                                         <label class="col-form-label col-sm-3 py-1" :for="`D18B255D_${idx}`">Min</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`D18B255D_${idx}`" v-model="def.min" />
+                                            <input class="form-control form-control-sm" type="text" :id="`D18B255D_${idx}`" required="required" v-model="def.min" />
                                         </div>
                                     </div>
 
                                     <div class="row mb-2">
                                         <label class="col-form-label col-sm-3 py-1" :for="`F340D803_${idx}`">Max</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`F340D803_${idx}`" v-model="def.max" />
+                                            <input class="form-control form-control-sm" type="text" :id="`F340D803_${idx}`" required="required" v-model="def.max" />
                                         </div>
                                     </div>
 
                                     <div class="row mb-2">
                                         <label class="col-form-label col-sm-3 py-1" :for="`CF0F2894_${idx}`">Step</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`CF0F2894_${idx}`" v-model="def.step" />
+                                            <input class="form-control form-control-sm" type="text" :id="`CF0F2894_${idx}`" required="required" v-model="def.step" />
                                         </div>
                                     </div>
 

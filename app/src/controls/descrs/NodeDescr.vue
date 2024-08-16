@@ -116,7 +116,7 @@ const generate = (mode = null) => {
 
                                     <div class="mb-3">
                                         <label class="form-label" for="F7F2361C">Node name</label>
-                                        <input class="form-control form-control-sm" type="text" id="F7F2361C" placeholder="Node name" required="required" v-model="globals.nodeName" />
+                                        <input class="form-control form-control-sm" type="text" id="F7F2361C" placeholder="Node name" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="globals.nodeName" />
                                     </div>
 
                                 </div>
@@ -159,17 +159,17 @@ const generate = (mode = null) => {
 
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <button class="dropdown-item" type="button" @click="generate('override-main')" :disabled="!path || !globals.nodeName">
+                                                <button class="dropdown-item" type="button" :disabled="!path || !globals.nodeName" @click="generate('override-main')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c
                                                 </button>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" type="button" @click="generate('override-device')" :disabled="!path || !globals.nodeName">
+                                                <button class="dropdown-item" type="button" :disabled="!path || !globals.nodeName" @click="generate('override-device')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override devices
                                                 </button>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" type="button" @click="generate('override-project')" :disabled="!path || !globals.nodeName">
+                                                <button class="dropdown-item" type="button" :disabled="!path || !globals.nodeName" @click="generate('override-project')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override project
                                                 </button>
                                             </li>
@@ -210,17 +210,17 @@ const generate = (mode = null) => {
 
                                     <div class="mb-3">
                                         <label class="form-label" for="F23468E8">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" required="required" v-model="globals.mqttURI" :disabled="!globals.enableMQTT" />
+                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" required="required" :disabled="!globals.enableMQTT" v-model="globals.mqttURI" />
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label" for="C8A2E5EB">Username<sup class="text-secondary">opt</sup></label>
-                                        <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" v-model="globals.mqttUsername" :disabled="!globals.enableMQTT" />
+                                        <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" :disabled="!globals.enableMQTT" v-model="globals.mqttUsername" />
                                     </div>
 
                                     <div class="mb-0">
                                         <label class="form-label" for="CC00EA1C">Password<sup class="text-secondary">opt</sup></label>
-                                        <input class="form-control form-control-sm" type="text" id="CC00EA1C" placeholder="Password" v-model="globals.mqttPassword" :disabled="!globals.enableMQTT" />
+                                        <input class="form-control form-control-sm" type="text" id="CC00EA1C" placeholder="Password" :disabled="!globals.enableMQTT" v-model="globals.mqttPassword" />
                                     </div>
 
                                 </div>
@@ -245,7 +245,7 @@ const generate = (mode = null) => {
 
                                     <div class="mb-0">
                                         <label class="form-label" for="B6FB4EA2">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" required="required" v-model="globals.tcpURI" :disabled="!globals.enableTCP" />
+                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" required="required" :disabled="!globals.enableTCP" v-model="globals.tcpURI" />
                                     </div>
 
                                 </div>

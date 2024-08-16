@@ -61,7 +61,7 @@ defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="CB4E3E4D">Timeout<sup class="text-secondary">opt</sup> [ms]</label>
-                                <input class="form-control form-control-sm" type="number" min="1" step="1" id="CB4E3E4D" placeholder="Timeout" v-model="vector.timeout" :disabled="vector.type === 'light'" />
+                                <input class="form-control form-control-sm" type="number" min="1" step="1" id="CB4E3E4D" placeholder="Timeout" :disabled="vector.type === 'light'" v-model="vector.timeout" />
                             </div>
 
                         </div>
@@ -92,7 +92,7 @@ defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="C3E07382">Permission</label>
-                                <select class="form-select form-select-sm" id="C3E07382" v-model="vector.perm" :disabled="vector.type === 'light'">
+                                <select class="form-select form-select-sm" id="C3E07382" :disabled="vector.type === 'light'" v-model="vector.perm">
                                     <option value="NYX_PERM_RO">RO</option>
                                     <option value="NYX_PERM_WO">WO</option>
                                     <option value="NYX_PERM_RW">RW</option>
@@ -101,7 +101,7 @@ defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="E9BE4567">Rule</label>
-                                <select class="form-select form-select-sm" id="E9BE4567" v-model="vector.rule" :disabled="vector.type !== 'switch'">
+                                <select class="form-select form-select-sm" id="E9BE4567" :disabled="vector.type !== 'switch'" v-model="vector.rule">
                                     <option value="NYX_RULE_ONE_OF_MANY">One of many</option>
                                     <option value="NYX_RULE_AT_MOST_ONE">At most one</option>
                                     <option value="NYX_RULE_ANY_OF_MANY">Any of many</option>
