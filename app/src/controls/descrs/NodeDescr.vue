@@ -9,6 +9,12 @@ import Devices from '../tables/Devices.vue';
 import DeviceDescr from './DeviceDescr.vue';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
+/* VARIABLES                                                                                                          */
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const HAS_TAURI = typeof window['__TAURI__'] !== 'undefined';
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 
 defineProps({
     globals: {
@@ -64,9 +70,22 @@ defineProps({
 
                             <!-- *********************************************************************************** -->
 
-                            <div class="form-check form-switch mb-0">
-                                <input class="form-check-input" type="checkbox" role="switch" id="A313C013" v-model="globals.hardcoded" :true-value="true" :false-value="false" />
-                                <label class="form-check-label" for="A313C013">Hardcoded configuration</label>
+                            <div class="row">
+                                <div class="col-md-6">
+
+                                    <div class="form-check form-switch mb-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="A313C013" v-model="globals.hardcoded" :true-value="true" :false-value="false" />
+                                        <label class="form-check-label" for="A313C013">Hardcoded configuration</label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+
+                                    <button class="btn btn-sm btn-success w-100" type="button" :disabled="!HAS_TAURI">
+                                        <i class="bi bi-tornado"></i> Generate
+                                    </button>
+
+                                </div>
                             </div>
 
                             <!-- *********************************************************************************** -->
