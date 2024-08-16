@@ -16,7 +16,7 @@ const HAS_TAURI = typeof window['__TAURI__'] !== 'undefined';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-defineProps({
+const props = defineProps({
     globals: {
         type: Object,
         required: true,
@@ -26,6 +26,15 @@ defineProps({
         required: false,
     }
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+/* FUNCTIONS                                                                                                          */
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const generate = () => {
+
+    alert(props.path);
+};
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
@@ -85,7 +94,7 @@ defineProps({
                                 </div>
                                 <div class="col-md-6">
 
-                                    <button class="btn btn-sm btn-success w-100" type="button" :title="path" :disabled="!HAS_TAURI || !path">
+                                    <button class="btn btn-sm btn-success w-100" type="button" :title="path" :disabled="!HAS_TAURI || !path" @click="generate">
                                         <i class="bi bi-tornado"></i> Generate
                                     </button>
 
