@@ -267,12 +267,23 @@ onMounted(async () => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        previewWindow = Window.getByLabel('preview');
+        if(state.appMode === 'assistant')
+        {
+            const mainWindow = Window.getByLabel('main');
+            /*-*/ previewWindow = Window.getByLabel('preview');
 
-        await previewWindow.listen('tauri://close-requested', () => {
+            await mainWindow.listen('tauri://close-requested', () => {
 
-            previewWindow.hide();
-        });
+                previewWindow.close();
+                mainWindow.close();
+            });
+
+            await previewWindow.listen('tauri://close-requested', () => {
+
+                previewWindow.hide();
+                mainWindow.show();
+            });
+        }
 
         /*------------------------------------------------------------------------------------------------------------*/
     }
