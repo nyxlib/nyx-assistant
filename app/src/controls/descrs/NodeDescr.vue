@@ -145,6 +145,8 @@ const generate = (mode = null) => {
 
                                     <div class="btn-group btn-group-sm w-100" :hidden="!HAS_TAURI">
 
+                                        <!-- *********************************************************************** -->
+
                                         <button class="btn btn-success" type="button" :title="path" :disabled="!path || !globals.nodeName" @click="generate()">
                                             <i class="bi bi-tornado"></i> Generate
                                         </button>
@@ -152,6 +154,8 @@ const generate = (mode = null) => {
                                         <button class="btn btn-success dropdown-toggle dropdown-toggle-split border-start" type="button" data-bs-toggle="dropdown">
                                             <span class="visually-hidden">Toggle Dropdown</span>
                                         </button>
+
+                                        <!-- *********************************************************************** -->
 
                                         <ul class="dropdown-menu">
                                             <li>
@@ -170,6 +174,8 @@ const generate = (mode = null) => {
                                                 </button>
                                             </li>
                                         </ul>
+
+                                        <!-- *********************************************************************** -->
 
                                     </div>
 
