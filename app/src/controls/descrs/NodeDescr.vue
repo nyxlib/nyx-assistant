@@ -21,7 +21,11 @@ defineProps({
         type: Object,
         required: true,
     },
-})
+    path: {
+        type: String,
+        required: false,
+    }
+});
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
@@ -81,7 +85,7 @@ defineProps({
                                 </div>
                                 <div class="col-md-6">
 
-                                    <button class="btn btn-sm btn-success w-100" type="button" :disabled="!HAS_TAURI">
+                                    <button class="btn btn-sm btn-success w-100" type="button" :title="path" :disabled="!HAS_TAURI || !path">
                                         <i class="bi bi-tornado"></i> Generate
                                     </button>
 

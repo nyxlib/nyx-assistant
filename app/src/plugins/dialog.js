@@ -180,7 +180,7 @@ const _open = (defaultPath, typeMime, typeName, typeExts) => {
                 {
                     fs.readTextFile(file.path).then((text) => {
 
-                        resolve(text);
+                        resolve([text, file.path]);
 
                     }).catch(() => {
 
@@ -221,7 +221,7 @@ const _open = (defaultPath, typeMime, typeName, typeExts) => {
 
                     reader.onload = (e) => {
 
-                        resolve(e.target.result);
+                        resolve([e.target.result, null]);
                     };
 
                     reader.onabort = reject;
@@ -272,7 +272,7 @@ const _save = (defaultPath, typeMime, typeName, typeExts, contents) => {
                 {
                     fs.writeTextFile(path, contents).then(() => {
 
-                        resolve();
+                        resolve(path);
 
                     }).catch(() => {
 
@@ -307,7 +307,7 @@ const _save = (defaultPath, typeMime, typeName, typeExts, contents) => {
             el.click();
             document.body.removeChild(el);
 
-            resolve();
+            resolve(null);
 
             /*--------------------------------------------------------------------------------------------------------*/
         }

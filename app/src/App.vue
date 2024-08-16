@@ -50,8 +50,9 @@ const DEFAULT_GLOBALS = {
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const state = reactive({
-    appMode: window.location.hash === '#/preview/' ? 'preview' : '',
+    appMode: window.location.hash === '#/preview/' ? 'preview' : 'assistant',
     globals: Object.assign({}, DEFAULT_GLOBALS),
+    path: null,
     theme: 'light',
 });
 
@@ -135,9 +136,11 @@ const importDrv = () => {
 
     try
     {
-        dialog.open('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json']).catch(dialog.error).then((json) => {
+        dialog.open('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json']).catch(dialog.error).then(([json, path]) => {
 
             state.globals = confDup(JSON.parse(json), DEFAULT_GLOBALS);
+
+            state.path = path;
 
             dialog.success();
         });
@@ -156,7 +159,9 @@ const exportDrv = () => {
     {
         const config = confDup(state.globals, DEFAULT_GLOBALS);
 
-        dialog.save('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json'], JSON.stringify(config, null, 2)).catch(dialog.error).then(() => {
+        dialog.save('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json'], JSON.stringify(config, null, 2)).catch(dialog.error).then((path) => {
+
+            state.path = path;
 
             dialog.success();
         });
@@ -422,7 +427,7 @@ onUnmounted(() => {
 
         <form class="d-flex flex-column overflow-y-auto h-100 p-3" v-if="state.appMode !== 'preview'">
 
-            <node-descr :globals="state.globals" />
+            <node-descr :globals="state.globals" :path="state.path" />
 
         </form>
 
