@@ -2,17 +2,28 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+import {inject} from 'vue';
+
+import {Command} from '@tauri-apps/plugin-shell';
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 import TabPane from '../TabPane.vue';
 import NavTabs from '../NavTabs.vue';
 
 import Devices from '../tables/Devices.vue';
 import DeviceDescr from './DeviceDescr.vue';
+import {message} from "@tauri-apps/plugin-dialog";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const HAS_TAURI = typeof window['__TAURI__'] !== 'undefined';
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const dialog = inject('dialog');
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -31,9 +42,47 @@ const props = defineProps({
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const generate = () => {
+const generate = (mode = null) => {
 
-    alert(props.path);
+    if(props.path)
+    {
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        const args = [
+            '--output', props.path.replace('.json', ''),
+            '--descr', props.path
+        ];
+
+        if(mode === 'override-main') {
+            args.push('--override-main');
+        }
+
+        if(mode === 'override-device') {
+            args.push('--override-device');
+        }
+
+        if(mode === 'override-project') {
+            args.push('--override-project');
+        }
+
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        Command.sidecar('binaries/nyx-gen', args).execute().then((output) => {
+
+            if(output.code === 0)
+            {
+                dialog.success(output.stdout);
+                console.log(output.stdout);
+            }
+            else
+            {
+                dialog.error(output.stderr);
+                console.log(output.stderr);
+            }
+        });
+
+        /*------------------------------------------------------------------------------------------------------------*/
+    }
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -92,11 +141,37 @@ const generate = () => {
                                     </div>
 
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-6 text-end">
 
-                                    <button class="btn btn-sm btn-success w-100" type="button" :title="path" :disabled="!HAS_TAURI || !path" @click="generate">
-                                        <i class="bi bi-tornado"></i> Generate
-                                    </button>
+                                    <div class="btn-group btn-group-sm w-100" :hidden="!HAS_TAURI">
+
+                                        <button class="btn btn-success" type="button" :title="path" :disabled="!path || !globals.nodeName" @click="generate()">
+                                            <i class="bi bi-tornado"></i> Generate
+                                        </button>
+
+                                        <button class="btn btn-success dropdown-toggle dropdown-toggle-split border-start" type="button" data-bs-toggle="dropdown">
+                                            <span class="visually-hidden">Toggle Dropdown</span>
+                                        </button>
+
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <button class="dropdown-item" type="button" @click="generate('override-main')" :disabled="!path || !globals.nodeName">
+                                                    <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item" type="button" @click="generate('override-device')" :disabled="!path || !globals.nodeName">
+                                                    <i class="bi bi-exclamation-triangle text-danger"></i> Override devices
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="dropdown-item" type="button" @click="generate('override-project')" :disabled="!path || !globals.nodeName">
+                                                    <i class="bi bi-exclamation-triangle text-danger"></i> Override project
+                                                </button>
+                                            </li>
+                                        </ul>
+
+                                    </div>
 
                                 </div>
                             </div>

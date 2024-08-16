@@ -1,5 +1,9 @@
-all:
-	pyinstaller --noconfirm indi-gen
+HOST := $(shell rustc -Vv | grep '^host:' | cut -f 2 -d ' ')
 
+.PHONY: all
+all:
+	pyinstaller --noconfirm --onefile --distpath ../tauri/binaries/ --name nyx-gen-$(HOST) ./nyx-gen
+
+.PHONY: clean
 clean:
-	rm -fr ./build/ ./dist/
+	rm -rf ./*.spec ./build/ ../tauri/binaries/nyx-gen-$(HOST)

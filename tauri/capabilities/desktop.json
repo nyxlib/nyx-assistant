@@ -28,6 +28,17 @@
         "fs:allow-app-write",
         "notification:allow-notify",
         "notification:allow-request-permission",
-        "notification:allow-is-permission-granted"
+        "notification:allow-is-permission-granted",
+        {
+            "identifier": "shell:allow-execute",
+            "allow": [
+                {
+                    "name": "binaries/nyx-gen",
+                    "cmd": "binaries/nyx-gen",
+                    "args": true,
+                    "sidecar": true
+                }
+            ]
+        }
     ]
 }

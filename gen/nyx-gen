@@ -563,7 +563,7 @@ def main():
 
     ####################################################################################################################
 
-    parser = argparse.ArgumentParser(description = 'Generate an INDI driver skeleton from a description file')
+    parser = argparse.ArgumentParser(description = 'Generate an Nyx driver skeleton from a description file')
 
     parser.add_argument('--override-project', action = 'store_true', help = 'Override the project output folder')
 
@@ -593,13 +593,19 @@ def main():
 
     driverPath = os.path.join(args.output, descr['nodeName'])
 
-    if args.override_project and os.path.isdir(driverPath):
-
-        shutil.rmtree(driverPath)
-
     ####################################################################################################################
 
-    os.makedirs(os.path.join(driverPath, 'src'))
+    if os.path.isdir(driverPath):
+
+        if args.override_project:
+
+            shutil.rmtree(driverPath)
+
+            os.makedirs(os.path.join(driverPath, 'src'))
+
+    else:
+
+        os.makedirs(os.path.join(driverPath, 'src'))
 
     ####################################################################################################################
 
