@@ -67,7 +67,7 @@ let previewWindow = null;
 
 const about = () => {
 
-    dialog.show('Nyx Assistant\n\nAuthor: Jérôme ODIER\nEmail: jerome.odier@lpsc.in2p3.fr', 'About', 'success');
+    dialog.show('Nyx Assistant\nhttps://nyxlib.org/\n\nAuthor: Jérôme ODIER\nEmail: jerome.odier@lpsc.in2p3.fr', 'About');
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
