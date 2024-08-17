@@ -280,12 +280,11 @@ onMounted(async () => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        previewWindow = Window.getByLabel('preview');
+        /*-*/ previewWindow = Window.getByLabel('preview');
+        const mainWindow = Window.getByLabel('main');
 
         if(state.appMode !== 'preview')
         {
-            const mainWindow = Window.getByLabel('main');
-
             await mainWindow.listen('tauri://close-requested', () => {
 
                 if(state.changed)
