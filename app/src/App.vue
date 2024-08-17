@@ -323,9 +323,9 @@ onMounted(async () => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    watch(() => state.globals, (devices) => {
+    watch(() => state.globals, (globals) => {
 
-        updatePreview(devices);
+        updatePreview(globals.devices);
 
         state.changed = true;
     }, {
