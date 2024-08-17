@@ -1,4 +1,4 @@
-<!--suppress HtmlUnknownTag, HtmlUnknownAttribute, VueMissingComponentImportInspection -->
+<!--suppress HtmlUnknownAttribute -->
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -290,7 +290,7 @@ onMounted(async () => {
 
                 if(state.changed)
                 {
-                    dialog.confirm('Are you sure you want to close?').then((choice) => {
+                    dialog.confirm('Are you sure you want to close?', 'Nyx Assistant').then((choice) => {
 
                         if(choice)
                         {
