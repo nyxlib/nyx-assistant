@@ -50,10 +50,11 @@ const DEFAULT_GLOBALS = {
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const state = reactive({
+    theme: 'light',
     appMode: window.location.hash === '#/preview/' ? 'preview' : 'assistant',
     globals: Object.assign({}, DEFAULT_GLOBALS),
+    changed: false,
     path: null,
-    theme: 'light',
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -140,7 +141,13 @@ const importDrv = () => {
 
             state.globals = confDup(JSON.parse(json), DEFAULT_GLOBALS);
 
-            state.path = path;
+            setTimeout(() => {
+
+                state.changed = false;
+
+                state.path = path;
+
+            }, 500);
 
             dialog.success();
         });
@@ -161,7 +168,13 @@ const exportDrv = () => {
 
         dialog.save('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json'], JSON.stringify(config, null, 2)).catch(dialog.error).then((path) => {
 
-            state.path = path;
+            setTimeout(() => {
+
+                state.changed = false;
+
+                state.path = path;
+
+            }, 500);
 
             dialog.success();
         });
@@ -275,8 +288,22 @@ onMounted(async () => {
 
             await mainWindow.listen('tauri://close-requested', () => {
 
-                previewWindow.destroy();
-                mainWindow.destroy();
+                if(state.changed)
+                {
+                    dialog.confirm('Are you sure you want to close?').then((choice) => {
+
+                        if(choice)
+                        {
+                            previewWindow.destroy();
+                            mainWindow.destroy();
+                        }
+                    });
+                }
+                else
+                {
+                    previewWindow.destroy();
+                    mainWindow.destroy();
+                }
             });
 
             await previewWindow.listen('tauri://close-requested', () => {
@@ -297,9 +324,11 @@ onMounted(async () => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    watch(() => state.globals.devices, (devices) => {
+    watch(() => state.globals, (devices) => {
 
         updatePreview(devices);
+
+        state.changed = true;
     }, {
         deep: true
     });
@@ -439,7 +468,7 @@ onUnmounted(() => {
 
         <form class="d-flex flex-column overflow-y-auto h-100 p-3" v-if="state.appMode !== 'preview'">
 
-            <node-descr :globals="state.globals" :path="state.path" />
+            <node-descr :globals="state.globals" :changed="state.changed" :path="state.path" />
 
         </form>
 

@@ -13,7 +13,6 @@ import NavTabs from '../NavTabs.vue';
 
 import Devices from '../tables/Devices.vue';
 import DeviceDescr from './DeviceDescr.vue';
-import {message} from "@tauri-apps/plugin-dialog";
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
@@ -30,6 +29,10 @@ const dialog = inject('dialog');
 const props = defineProps({
     globals: {
         type: Object,
+        required: true,
+    },
+    changed: {
+        type: Boolean,
         required: true,
     },
     path: {
@@ -147,7 +150,7 @@ const generate = (mode = null) => {
 
                                         <!-- *********************************************************************** -->
 
-                                        <button class="btn btn-success" type="button" :title="path" :disabled="!path || !globals.nodeName" @click="generate()">
+                                        <button class="btn btn-success" type="button" :title="path" :disabled="!globals.nodeName || changed || !path" @click="generate()">
                                             <i class="bi bi-tornado"></i> Generate
                                         </button>
 
@@ -159,17 +162,17 @@ const generate = (mode = null) => {
 
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <button class="dropdown-item" type="button" :disabled="!path || !globals.nodeName" @click="generate('override-main')">
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-main')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c
                                                 </button>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" type="button" :disabled="!path || !globals.nodeName" @click="generate('override-device')">
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-device')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override devices
                                                 </button>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" type="button" :disabled="!path || !globals.nodeName" @click="generate('override-project')">
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-project')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override project
                                                 </button>
                                             </li>
