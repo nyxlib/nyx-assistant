@@ -110,11 +110,11 @@ const deviceUp = (device1) => {
             <i class="bi bi-cpu"></i>
             Devices
             [
-            <button class="btn btn-xs btn-primary" type="button" @click="deviceAppend()">
+            <button class="btn btn-xs btn-primary me-1" type="button" @click="deviceAppend()">
                 <i class="bi bi-plus-lg"></i>
                 Add device
             </button>
-            <button class="btn btn-xs btn-primary" type="button" @click="templateAppend()">
+            <button class="btn btn-xs btn-primary me-0" type="button" @click="templateAppend()">
                 <i class="bi bi-plus-lg"></i>
                 Add template
             </button>

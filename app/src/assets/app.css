@@ -24,6 +24,8 @@ html, body,
 
     margin: 0;
     padding: 0;
+
+    overflow: hidden;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -31,20 +33,9 @@ html, body,
 body[data-environment="tauri"][data-maximized="false"] > #nyx_assistant {
 
     border: 1px var(--bs-secondary-border-subtle) solid;
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-body[data-environment="tauri"][data-maximized="false"] > #nyx_assistant {
 
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
-}
-
-body[data-environment="tauri"][data-maximized="false"] > #nyx_assistant > nav {
-
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/

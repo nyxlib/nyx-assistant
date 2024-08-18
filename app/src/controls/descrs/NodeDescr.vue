@@ -70,17 +70,21 @@ const generate = (mode = null) => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
+        dialog.lock();
+
         Command.sidecar('binaries/nyx-gen', args).execute().then((output) => {
 
             if(output.code === 0)
             {
                 dialog.success(output.stdout);
-                console.log(output.stdout);
+
+                dialog.unlock();
             }
             else
             {
                 dialog.error(output.stderr);
-                console.log(output.stderr);
+
+                dialog.unlock();
             }
         });
 
