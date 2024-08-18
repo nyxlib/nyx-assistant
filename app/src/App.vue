@@ -280,37 +280,41 @@ onMounted(async () => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        /*-*/ previewWindow = Window.getByLabel('preview');
-        const mainWindow = Window.getByLabel('main');
+        Window.getByLabel('main').then((mainWindow) => {
+            Window.getByLabel('preview').then((otherWindow) => {
 
-        if(state.appMode !== 'preview')
-        {
-            await mainWindow.listen('tauri://close-requested', () => {
+                previewWindow = otherWindow;
 
-                if(state.changed)
+                if(state.appMode !== 'preview')
                 {
-                    dialog.confirm('Are you sure you want to close?', 'Nyx Assistant').then((choice) => {
+                    mainWindow.listen('tauri://close-requested', () => {
 
-                        if(choice)
+                        if(state.changed)
+                        {
+                            dialog.confirm('Are you sure you want to close?', 'Nyx Assistant').then((choice) => {
+
+                                if(choice)
+                                {
+                                    previewWindow.destroy();
+                                    mainWindow.destroy();
+                                }
+                            });
+                        }
+                        else
                         {
                             previewWindow.destroy();
                             mainWindow.destroy();
                         }
                     });
-                }
-                else
-                {
-                    previewWindow.destroy();
-                    mainWindow.destroy();
+
+                    previewWindow.listen('tauri://close-requested', () => {
+
+                        previewWindow.hide();
+                        mainWindow.show();
+                    });
                 }
             });
-
-            await previewWindow.listen('tauri://close-requested', () => {
-
-                previewWindow.hide();
-                mainWindow.show();
-            });
-        }
+        });
 
         /*------------------------------------------------------------------------------------------------------------*/
     }
