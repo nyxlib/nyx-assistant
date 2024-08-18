@@ -35,6 +35,13 @@ let rank = 0;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+const templateAppend = () => {
+
+    alert('TODO');
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 const deviceAppend = () => {
 
     const id = `device:${uuid.v4()}`;
@@ -103,9 +110,13 @@ const deviceUp = (device1) => {
             <i class="bi bi-cpu"></i>
             Devices
             [
-            <button class="btn btn-xs btn-primary" type="button" @click="deviceAppend">
+            <button class="btn btn-xs btn-primary" type="button" @click="deviceAppend()">
                 <i class="bi bi-plus-lg"></i>
                 Add device
+            </button>
+            <button class="btn btn-xs btn-primary" type="button" @click="templateAppend()">
+                <i class="bi bi-plus-lg"></i>
+                Add template
             </button>
             ]
         </div>
