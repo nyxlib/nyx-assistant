@@ -48,8 +48,9 @@
             "binaries/nyx-gen"
         ],
         "targets": [
-            "app",
-            "appimage"
+            "appimage",
+            "dmg",
+            "msi"
         ],
         "icon": [
             "icons/32x32.png",
