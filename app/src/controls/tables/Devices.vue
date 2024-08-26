@@ -116,7 +116,7 @@ const deviceUp = (device1) => {
             </button>
             <button class="btn btn-xs btn-primary me-0" type="button" @click="templateAppend()">
                 <i class="bi bi-plus-lg"></i>
-                Add template
+                Add from template
             </button>
             ]
         </div>
