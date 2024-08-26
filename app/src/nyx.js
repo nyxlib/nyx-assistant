@@ -8,7 +8,7 @@ const VECTOR_DICT = {
     'blob': 'defBLOBVector',
 };
 
-const VEC_DICT = {
+const DEF_DICT = {
     'number': 'defNumber',
     'text': 'defText',
     'light': 'defLight',
@@ -139,7 +139,7 @@ const convert = (devices) => {
                     /*------------------------------------------------------------------------------------------------*/
 
                     const xmlDef = {
-                        '<>': VEC_DICT[vector.type],
+                        '<>': DEF_DICT[vector.type],
                         '@name': def.name,
                         '@rank': def.rank,
                     };
