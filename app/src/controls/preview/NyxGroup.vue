@@ -1,6 +1,10 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+import {computed} from 'vue';
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 import NyxTextVector from './nyx/NyxTextVector.vue';
 import NyxNumberVector from './nyx/NyxNumberVector.vue';
 import NyxSwitchVector from './nyx/NyxSwitchVector.vue';
@@ -10,12 +14,19 @@ import NyxLightVector from './nyx/NyxLightVector.vue';
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-defineProps({
+const props = defineProps({
     groupInfo: {
         type: Object,
-        default: {},
+        default: () => {},
     },
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const sortedVectors = computed(() => Object.values(props.groupInfo)
+    .sort((x, y) => x['@rank'] - y['@rank'])
+    .map((x) => props.groupInfo[x['@name']])
+);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
@@ -24,15 +35,15 @@ defineProps({
 
     <!-- *********************************************************************************************************** -->
 
-    <div v-for="defXXXVector in Object.values(groupInfo)" :key="defXXXVector">
+    <div v-for="vector in sortedVectors" :key="`${vector['@name']}-${vector['@rank']}`">
 
-        <nyx-text-vector :def-text-vector="defXXXVector" v-if="defXXXVector['<>'] === 'defTextVector'" />
+        <nyx-text-vector :def-text-vector="vector" v-if="vector['<>'] === 'defTextVector'" />
 
-        <nyx-number-vector :def-number-vector="defXXXVector" v-else-if="defXXXVector['<>'] === 'defNumberVector'" />
+        <nyx-number-vector :def-number-vector="vector" v-else-if="vector['<>'] === 'defNumberVector'" />
 
-        <nyx-switch-vector :def-switch-vector="defXXXVector" v-else-if="defXXXVector['<>'] === 'defSwitchVector'" />
+        <nyx-switch-vector :def-switch-vector="vector" v-else-if="vector['<>'] === 'defSwitchVector'" />
 
-        <nyx-light-vector :def-light-vector="defXXXVector" v-else-if="defXXXVector['<>'] === 'defLightVector'" />
+        <nyx-light-vector :def-light-vector="vector" v-else-if="vector['<>'] === 'defLightVector'" />
 
     </div>
 

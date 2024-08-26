@@ -25,14 +25,7 @@ const props = defineProps({
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const defs = computed(() => {
-
-    const result = Object.values(props.defs);
-
-    result.sort((x, y) => x.rank - y.rank);
-
-    return result;
-});
+const defs = computed(() => Object.values(props.defs).sort((x, y) => x.rank - y.rank));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -173,9 +166,7 @@ const defUp = (def1) => {
                                     <div class="row mb-2">
                                         <label class="col-form-label col-sm-3 py-1" :for="`FB921875_${idx}`">Label<sup class="text-secondary">opt</sup></label>
                                         <div class="col-sm-9">
-
                                             <input class="form-control form-control-sm" type="text" :id="`FB921875_${idx}`" v-model="def.label" />
-
                                         </div>
                                     </div>
 

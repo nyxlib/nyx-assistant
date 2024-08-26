@@ -1,4 +1,4 @@
-<!--suppress JSUnresolvedReference -->
+<!--suppress HtmlUnknownAttribute, JSUnresolvedReference -->
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -25,14 +25,7 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const vectorIds = computed(() => {
-
-    const result = Object.values(props.device.vectors);
-
-    result.sort((x, y) => x.rank - y.rank);
-
-    return result.map((x) => x.id);
-});
+const sortedVectors = computed(() => Object.values(props.device.vectors).sort((x, y) => x.rank - y.rank).map((x) => props.device.vectors[x.id]));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
@@ -96,9 +89,9 @@ const vectorIds = computed(() => {
 
         <!-- ******************************************************************************************************* -->
 
-        <tab-pane :title="`${device.vectors[id].name || 'noname'} (${device.vectors[id].type || 'notype'})`" icon="braces" v-for="id in vectorIds" :key="device.vectors[id].rank">
+        <tab-pane :title="`${vector.name || 'noname'} (${vector.type || 'notype'})`" icon="braces" v-for="vector in sortedVectors" :key="`${vector.id}-${vector.rank}`">
 
-            <vector-descr :vector="device.vectors[id]" v-if="device.vectors[id].type" />
+            <vector-descr :vector="vector" v-if="vector.type" />
 
         </tab-pane>
 

@@ -1,4 +1,9 @@
+<!--suppress JSUnresolvedReference -->
 <script setup>
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+import {computed} from 'vue';
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -6,9 +11,13 @@
 const props = defineProps({
     defSwitchVector: {
         type: Object,
-        default: {},
+        default: () => {},
     },
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const sortedDefs = computed(() => [...props.defSwitchVector.children].sort((x, y) => x['@rank'] - y['@rank']));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -42,7 +51,7 @@ const COLORS = {
         <div class="col-sm-10 text-center">
             <div class="btn-group btn-group-sm mb-1 w-50" role="group">
 
-                <button class="btn" :class="{'btn-primary': defSwitch['$'] === 'On', 'btn-outline-secondary': defSwitch['$'] === 'Off', 'disabled': defSwitchVector['@perm'] === 'wo'}" :style="{'width': `${100.0 / props.defSwitchVector['children'].length}%`}" v-for="(defSwitch, index) in defSwitchVector['children']" :key="index">
+                <button class="btn" :class="{'btn-primary': defSwitch['$'] === 'On', 'btn-outline-secondary': defSwitch['$'] === 'Off', 'disabled': defSwitchVector['@perm'] === 'wo'}" :style="{'width': `${100.0 / props.defSwitchVector['children'].length}%`}" v-for="defSwitch in sortedDefs" :key="`${defSwitch['@name']}-${defSwitch['@rank']}`">
                     {{ defSwitch['@label'] || defSwitch['@name'] }}
                 </button>
 

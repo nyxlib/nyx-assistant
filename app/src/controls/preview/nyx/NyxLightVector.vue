@@ -6,7 +6,7 @@
 defineProps({
     defLightVector: {
         type: Object,
-        default: {},
+        default: () => {},
     },
 });
 

@@ -2,7 +2,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {ref, watch, inject, reactive, onMounted, onUnmounted} from 'vue';
+import {ref, watch, inject, computed, reactive, onMounted, onUnmounted} from 'vue';
 
 import {Window, getCurrentWindow} from '@tauri-apps/api/window';
 
@@ -56,6 +56,13 @@ const state = reactive({
     changed: false,
     path: null,
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const sortedDevices = computed(() => Object.values(devices.value)
+    .sort((x, y) => x['@rank'] - y['@rank'])
+    .map((x) => devices.value[x['@name']])
+);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -489,14 +496,11 @@ onUnmounted(() => {
 
             <nav-tabs margin="mb-4">
 
-                <tab-pane :title="deviceName" icon="command" v-for="(deviceInfo, deviceName, deviceIndex) in devices" :key="deviceName">
+                <tab-pane :title="device['@name']" icon="command" v-for="device in sortedDevices" :key="`${device['@name']}-${device['@rank']}`">
 
                     <div class="d-flex align-items-center justify-content-center h-100">
 
-                        <nyx-device :device-name="deviceName"
-                                    :device-info="deviceInfo"
-                                    :device-index="deviceIndex"
-                        />
+                        <nyx-device :device-info="device" />
 
                     </div>
 

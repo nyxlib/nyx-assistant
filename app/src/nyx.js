@@ -44,15 +44,37 @@ const ONOFF_DICT = {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+const sortedEntity = (devices) => {
+
+    const result = Object.values(devices);
+
+    result.sort((x, y) => x.rank - y.rank);
+
+    return result;
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 const convert = (devices) => {
 
     const xmlDevices = {};
 
-    Object.values(devices).filter((device) => (device.id || '').startsWith('device:')).forEach((device) => {
+    sortedEntity(devices).filter((device) => (device.id || '').startsWith('device:')).forEach((device) => {
 
-        const xmlDevice = xmlDevices[device.name] = {};
+        /*------------------------------------------------------------------------------------------------------------*/
 
-        Object.values(device.vectors).filter((vector) => (vector.id || '').startsWith('vector:')).forEach((vector) => {
+        const xmlDevice = xmlDevices[device.name] = {
+            '@name': device.name,
+            '@rank': device.rank,
+        };
+
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        const deviceDefs = xmlDevice['children'] = {};
+
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        sortedEntity(device.vectors).filter((vector) => (vector.id || '').startsWith('vector:')).forEach((vector) => {
 
             /*--------------------------------------------------------------------------------------------------------*/
 
@@ -62,11 +84,11 @@ const convert = (devices) => {
 
             let xmlGroup;
 
-            if(group in xmlDevice) {
-                xmlGroup = xmlDevice[group] ; //;
+            if(group in deviceDefs) {
+                xmlGroup = deviceDefs[group] ; //;
             }
             else {
-                xmlGroup = xmlDevice[group] = {};
+                xmlGroup = deviceDefs[group] = {};
             }
 
             /*--------------------------------------------------------------------------------------------------------*/
@@ -79,6 +101,7 @@ const convert = (devices) => {
                     '<>': VECTOR_DICT[vector.type],
                     '@device': device.name,
                     '@name': vector.name,
+                    '@rank': vector.rank,
                 };
 
                 /*----------------------------------------------------------------------------------------------------*/
@@ -125,6 +148,7 @@ const convert = (devices) => {
                     const xmlDef = {
                         '<>': VEC_DICT[vector.type],
                         '@name': def.name,
+                        '@rank': def.rank,
                     };
 
                     /*------------------------------------------------------------------------------------------------*/
@@ -172,6 +196,8 @@ const convert = (devices) => {
             }
         });
     });
+
+    console.log(JSON.stringify(xmlDevices, null, 2));
 
     return xmlDevices;
 };

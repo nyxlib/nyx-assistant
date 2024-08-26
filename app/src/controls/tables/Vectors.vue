@@ -20,14 +20,7 @@ const props = defineProps({
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const vectors = computed(() => {
-
-    const result = Object.values(props.vectors);
-
-    result.sort((x, y) => x.rank - y.rank);
-
-    return result;
-});
+const vectors = computed(() => Object.values(props.vectors).sort((x, y) => x.rank - y.rank));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -143,7 +136,7 @@ const vectorUp = (vector1) => {
                 <!-- *********************************************************************************************** -->
 
                 <tbody>
-                    <tr v-for="vector in vectors" :key="vector">
+                    <tr v-for="vector in vectors" :key="vector.id">
                         <td class="text-center">
                             <button class="btn btn-sm btn-link" type="button" @click="vectorDw(vector)">
                                 <i class="bi bi-caret-up-fill"></i>

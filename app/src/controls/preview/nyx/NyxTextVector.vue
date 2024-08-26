@@ -1,14 +1,23 @@
+<!--suppress JSUnresolvedReference -->
 <script setup>
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+import {computed} from 'vue';
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-defineProps({
+const props = defineProps({
     defTextVector: {
         type: Object,
-        default: {},
+        default: () => {},
     },
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const sortedDefs = computed(() => [...props.defTextVector.children].sort((x, y) => x['@rank'] - y['@rank']));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -41,19 +50,15 @@ const COLORS = {
 
         <div :class="{'col-sm-10': defTextVector['@perm'] === 'ro', 'col-sm-9': defTextVector['@perm'] !== 'ro'}">
 
-            <template v-for="defText in defTextVector['children']">
+            <div class="input-group input-group-sm mb-1" v-for="defText in sortedDefs" :key="`${defText['@name']}-${defText['@rank']}`">
 
-                <div class="input-group input-group-sm mb-1">
+                <span class="input-group-text" style="min-width: 175px;">
+                    {{ defText['@label'] || defText['@name'] }}
+                </span>
 
-                    <span class="input-group-text" style="min-width: 175px;">
-                        {{ defText['@label'] || defText['@name'] }}
-                    </span>
+                <input class="form-control" type="text" :readonly="defTextVector['@perm'] === 'ro'" v-model="defText['$']" />
 
-                    <input class="form-control" type="text" :readonly="defTextVector['@perm'] === 'ro'" v-model="defText['$']" />
-
-                </div>
-
-            </template>
+            </div>
 
         </div>
 

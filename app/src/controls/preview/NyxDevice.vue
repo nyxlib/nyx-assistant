@@ -1,29 +1,32 @@
+<!--suppress JSUnresolvedReference -->
 <script setup>
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+import {computed} from 'vue';
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 import NavTabs from '../NavTabs.vue';
 import TabPane from '../TabPane.vue';
 
-import NyxPanel from './NyxGroup.vue';
+import NyxGroup from './NyxGroup.vue';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-defineProps({
-    deviceName: {
-        type: String,
-        default: '',
-    },
+const props = defineProps({
     deviceInfo: {
         type: Object,
-        default: {},
+        default: () => {},
     },
-    deviceIndex: {
-        type: Number,
-        default: 0,
-    }
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const sortedGroups = computed(() => Object.fromEntries(
+    Object.entries(props.deviceInfo.children).sort((x, y) => x[0].localeCompare(y[0]))
+));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
@@ -35,7 +38,7 @@ defineProps({
     <div class="shadow card mb-3" style="width: 1200px;">
         <div class="card-header px-3 py-2">
             <i class="bi bi-command"></i>
-            {{ deviceName }}
+            {{ deviceInfo['@name'] }}
         </div>
         <div class="card-body px-3 py-2">
 
@@ -43,9 +46,9 @@ defineProps({
 
             <nav-tabs margin="mb-4">
 
-                <tab-pane :title="groupName" v-for="(groupInfo, groupName) in deviceInfo" :key="groupName">
+                <tab-pane :title="groupName" v-for="(groupInfo, groupName) in sortedGroups" :key="groupName">
 
-                    <nyx-panel :group-info="groupInfo" />
+                    <nyx-group :group-info="groupInfo" />
 
                 </tab-pane>
 

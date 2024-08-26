@@ -1,14 +1,23 @@
+<!--suppress JSUnresolvedReference -->
 <script setup>
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+import {computed} from 'vue';
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-defineProps({
+const props = defineProps({
     defNumberVector: {
         type: Object,
-        default: {},
+        default: () => {},
     },
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const sortedDefs = computed(() => [...props.defNumberVector.children].sort((x, y) => x['@rank'] - y['@rank']));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -41,19 +50,15 @@ const COLORS = {
 
         <div :class="{'col-lg-10': defNumberVector['@perm'] === 'ro', 'col-lg-9': defNumberVector['@perm'] !== 'ro'}">
 
-            <template v-for="defNumber in defNumberVector['children']" :key="defNumber">
+            <div class="input-group input-group-sm mb-1" v-for="defNumber in sortedDefs" :key="`${defNumber['@name']}-${defNumber['@rank']}`">
 
-                <div class="input-group input-group-sm mb-1">
+                <span class="input-group-text" style="min-width: 175px;">
+                    {{ defNumber['@label'] || defNumber['@name'] }}
+                </span>
 
-                    <span class="input-group-text" style="min-width: 175px;">
-                        {{ defNumber['@label'] || defNumber['@name'] }}
-                    </span>
+                <input class="form-control" type="number" :min="defNumber['@min']" :max="defNumber['@max']" :step="defNumber['@step']" :readonly="defNumberVector['@perm'] === 'ro'" v-model="defNumber['$']" />
 
-                    <input class="form-control" type="number" :min="defNumber['@min']" :max="defNumber['@max']" :step="defNumber['@step']" :readonly="defNumberVector['@perm'] === 'ro'" v-model="defNumber['$']" />
-
-                </div>
-
-            </template>
+            </div>
 
         </div>
 

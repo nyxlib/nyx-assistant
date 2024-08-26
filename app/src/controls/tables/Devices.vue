@@ -20,14 +20,7 @@ const props = defineProps({
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const devices = computed(() => {
-
-    const result = Object.values(props.devices);
-
-    result.sort((x, y) => x.rank - y.rank);
-
-    return result;
-});
+const devices = computed(() => Object.values(props.devices).sort((x, y) => x.rank - y.rank));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -142,7 +135,7 @@ const deviceUp = (device1) => {
                 <!-- *********************************************************************************************** -->
 
                 <tbody>
-                    <tr v-for="device in devices" :key="device">
+                    <tr v-for="device in devices" :key="device.id">
                         <td class="text-center">
                             <button class="btn btn-sm btn-link" type="button" @click="deviceDw(device)">
                                 <i class="bi bi-caret-up-fill"></i>

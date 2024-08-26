@@ -37,20 +37,13 @@ const props = defineProps({
     },
     path: {
         type: String,
-        required: false,
+        default: '',
     }
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const deviceIds = computed(() => {
-
-    const result = Object.values(props.globals.devices);
-
-    result.sort((x, y) => x.rank - y.rank);
-
-    return result.map((x) => x.id);
-});
+const sortedDevices = computed(() => Object.values(props.globals.devices).sort((x, y) => x.rank - y.rank).map((x) => props.globals.devices[x.id]));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
@@ -292,9 +285,9 @@ const generate = (mode = null) => {
 
         <!-- ******************************************************************************************************* -->
 
-        <tab-pane :title="globals.devices[id].name || 'noname'" icon="cpu" v-for="id in deviceIds" :key="globals.devices[id].rank">
+        <tab-pane :title="device.name || 'noname'" icon="cpu" v-for="device in sortedDevices" :key="`${device.id}-${device.rank}`">
 
-            <device-descr :device="globals.devices[id]" />
+            <device-descr :device="device" />
 
         </tab-pane>
 
