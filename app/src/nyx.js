@@ -44,14 +44,7 @@ const ONOFF_DICT = {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedEntity = (devices) => {
-
-    const result = Object.values(devices);
-
-    result.sort((x, y) => x.rank - y.rank);
-
-    return result;
-};
+const sortedEntity = (devices) => Object.values(devices).sort((x, y) => x.rank - y.rank);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -195,6 +188,8 @@ const convert = (devices) => {
                 console.error(e);
             }
         });
+
+        /*------------------------------------------------------------------------------------------------------------*/
     });
 
     console.log(JSON.stringify(xmlDevices, null, 2));
