@@ -33,9 +33,7 @@ add_compile_options(-Wall -Wno-unknown-pragmas -O3)
 ########################################################################################################################
 
 find_package(LibXml2 REQUIRED)
-#find_package(LibIndiNode REQUIRED)
-set(LIBINDINODE_INCLUDE_DIR "/home/jodier/workspace/nyx-node/src")
-set(LIBINDINODE_LIBRARIES "/home/jodier/workspace/nyx-node/build/libnyx-node.a")
+find_package(LibIndiNode REQUIRED)
 
 ########################################################################################################################
 
@@ -355,7 +353,7 @@ def generateDevices(driverPath, descr, override_device):
                 optionList.append(f'.label = "{vector['label']}"')
             if vector['group']:
                 optionList.append(f'.group = "{vector['group']}"')
-            if vector['group']:
+            if vector['timeout']:
                 optionList.append(f'.timeout = {vector['timeout']}')
             if vector['message']:
                 optionList.append(f'.message = {vector['message']}')
