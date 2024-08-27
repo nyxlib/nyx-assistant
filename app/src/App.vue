@@ -49,10 +49,29 @@ const DEFAULT_GLOBALS = {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+const deepClone = (obj) => {
+
+    if(typeof obj === 'object')
+    {
+        if(Array.isArray(obj))
+        {
+            return obj.map(deepClone);
+        }
+        else
+        {
+            return Object.fromEntries(Object.entries(obj).map(([key, val]) => [key, deepClone(val)]));
+        }
+    }
+
+    return obj;
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 const state = reactive({
     theme: 'light',
     appMode: window.location.hash === '#/preview/' ? 'preview' : 'assistant',
-    globals: Object.assign({}, DEFAULT_GLOBALS),
+    globals: deepClone(DEFAULT_GLOBALS),
     changed: false,
     path: null,
 });
@@ -113,7 +132,7 @@ const confDup = (src, def) => {
        &&
        typeof def === 'object'
     ) {
-        Object.keys(def).forEach((key) => { result[key] = (key in src) ? src[key] : def[key]; });
+        Object.keys(def).forEach((key) => { result[key] = deepClone((key in src) ? src[key] : def[key]); });
     }
 
     return result;
@@ -127,7 +146,7 @@ const resetDrv = () => {
 
         if(ok)
         {
-            state.globals = confDup(DEFAULT_GLOBALS, DEFAULT_GLOBALS);
+            state.globals = deepClone(DEFAULT_GLOBALS);
 
             dialog.success();
         }

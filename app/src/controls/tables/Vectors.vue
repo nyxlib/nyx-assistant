@@ -67,7 +67,7 @@ const vectorDw = (vector1) => {
 
     const index = array.findIndex((vector2) => vector2.id === vector1.id);
 
-    if(index > 0x0000000000)
+    if(index > 0x00000000000000)
     {
         const vector2 = array[index - 1];
 
@@ -82,9 +82,9 @@ const vectorUp = (vector1) => {
 
     const array = vectors.value;
 
-    const index = array.findIndex(vector2 => vector2.id === vector1.id);
+    const index = array.findIndex((vector2) => vector2.id === vector1.id);
 
-    if(index < array.length)
+    if(index < array.length - 1)
     {
         const vector2 = array[index + 1];
 

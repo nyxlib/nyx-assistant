@@ -68,7 +68,7 @@ const defDw = (def1) => {
 
     const index = array.findIndex((def2) => def2.id === def1.id);
 
-    if(index > 0x0000000000)
+    if(index > 0x00000000000000)
     {
         const def2 = array[index - 1];
 
@@ -83,9 +83,9 @@ const defUp = (def1) => {
 
     const array = defs.value;
 
-    const index = array.findIndex(def2 => def2.id === def1.id);
+    const index = array.findIndex((def2) => def2.id === def1.id);
 
-    if(index < array.length)
+    if(index < array.length - 1)
     {
         const def2 = array[index + 1];
 
