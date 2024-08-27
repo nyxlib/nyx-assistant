@@ -2,10 +2,6 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {computed} from 'vue';
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
 import TabPane from '../TabPane.vue';
 import NavTabs from '../NavTabs.vue';
 
@@ -22,10 +18,6 @@ const props = defineProps({
         required: true,
     },
 });
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-const sortedVectors = computed(() => [...Object.values(props.device.vectors)].sort((x, y) => x.rank - y.rank));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
@@ -89,7 +81,7 @@ const sortedVectors = computed(() => [...Object.values(props.device.vectors)].so
 
         <!-- ******************************************************************************************************* -->
 
-        <tab-pane :title="`${vector.name || 'noname'} (${vector.type || 'notype'})`" icon="braces" v-for="vector in sortedVectors" :key="`${vector.id}-${vector.rank}`">
+        <tab-pane :title="`${vector.name || 'noname'} (${vector.type || 'notype'})`" icon="braces" :rank="vector.rank" v-for="vector in Object.values(props.device.vectors)" :key="`${vector.id}-${vector.rank}`">
 
             <vector-descr :vector="vector" v-if="vector.type" />
 

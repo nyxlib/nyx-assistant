@@ -2,7 +2,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {ref, provide} from 'vue';
+import {ref, provide, computed} from 'vue';
 
 import {Tab} from 'bootstrap';
 
@@ -24,13 +24,18 @@ const tabs = ref({});
 const tabListRef = ref(null);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
+
+const sortedTabs = computed(() => [...Object.values(tabs.value)].sort((x, y) => x.tabRank - y.tabRank));
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-provide('addTab', (tabId, tabTitle, tabIcon, onShow, onShown, onHide, onHidden) => {
+provide('addTab', (tabId, tabRank, tabTitle, tabIcon, onShow, onShown, onHide, onHidden) => {
 
     tabs.value[tabId] = {
         tabId: tabId,
+        tabRank: tabRank,
         tabTitle: tabTitle,
         tabIcon: tabIcon,
     };
@@ -88,7 +93,7 @@ provide('updateIcon', (tabId, tabIcon) => {
 
         <!-- ******************************************************************************************************* -->
 
-        <button :class="['nav-link', 'px-3', 'py-2', {'active': i === 0}]" type="button" data-bs-toggle="tab" :data-bs-target="`#${tab.tabId}`" role="tab" v-for="(tab, id, i) in tabs" :key="id">
+        <button :class="['nav-link', 'px-3', 'py-2', {'active': idx === 0}]" type="button" data-bs-toggle="tab" :data-bs-target="`#${tab.tabId}`" role="tab" v-for="(tab, idx) in sortedTabs" :key="tab.tabId">
 
             <i :class="['bi', `bi-${tab.tabIcon}`]" v-if="tab.tabIcon"></i>
 

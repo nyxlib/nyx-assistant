@@ -2,7 +2,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {inject, computed} from 'vue';
+import {inject} from 'vue';
 
 import {Command} from '@tauri-apps/plugin-shell';
 
@@ -40,10 +40,6 @@ const props = defineProps({
         default: '',
     }
 });
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-const sortedDevices = computed(() => [...Object.values(props.globals.devices)].sort((x, y) => x.rank - y.rank));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
@@ -289,9 +285,7 @@ const generate = (mode = null) => {
 
         <!-- ******************************************************************************************************* -->
 
-        <tab-pane :title="device.name || 'noname'" icon="cpu" v-for="device in sortedDevices" :key="`${device.id}-${device.rank}`">
-
-            {{device.id}}-{{device.rank}}
+        <tab-pane :title="device.name || 'noname'" icon="cpu" :rank="device.rank" v-for="device in Object.values(props.globals.devices)" :key="`${device.id}-${device.rank}`">
 
             <device-descr :device="device" />
 
