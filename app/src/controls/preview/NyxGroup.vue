@@ -24,7 +24,7 @@ const props = defineProps({
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const sortedVectors = computed(() => Object.values(props.groupInfo)
-    .sort((x, y) => x['@rank'] - y['@rank'])
+    .sort((x, y) => y['@rank'] - x['@rank'])
     .map((x) => props.groupInfo[x['@name']])
 );
 

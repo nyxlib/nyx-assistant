@@ -25,7 +25,7 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedVectors = computed(() => Object.values(props.device.vectors).sort((x, y) => x.rank - y.rank).map((x) => props.device.vectors[x.id]));
+const sortedVectors = computed(() => Object.values(props.device.vectors).sort((x, y) => y.rank - x.rank).map((x) => props.device.vectors[x.id]));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
@@ -47,14 +47,14 @@ const sortedVectors = computed(() => Object.values(props.device.vectors).sort((x
 
                     <div class="card mb-3">
                         <div class="card-header">
-                            Device
+                            Device <i class="bi bi-question-circle-fill" :title="`Id: ${device.id}, Rank: ${device.rank}`" v-tooltip></i>
                         </div>
                         <div class="card-body">
 
                             <!-- *********************************************************************************** -->
 
                             <div class="mb-3">
-                                <label class="form-label" for="C29507AB">Device name</label>
+                                <label class="form-label" for="C29507AB">Name</label>
                                 <input class="form-control form-control-sm" type="text" id="C29507AB" placeholder="Device name" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="device.name" />
                             </div>
 

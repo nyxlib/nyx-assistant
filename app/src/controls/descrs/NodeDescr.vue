@@ -43,7 +43,7 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedDevices = computed(() => Object.values(props.globals.devices).sort((x, y) => x.rank - y.rank).map((x) => props.globals.devices[x.id]));
+const sortedDevices = computed(() => Object.values(props.globals.devices).sort((x, y) => y.rank - x.rank).map((x) => props.globals.devices[x.id]));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
@@ -154,11 +154,15 @@ const generate = (mode = null) => {
                                 </div>
                                 <div class="col-md-6 text-end">
 
-                                    <div class="btn-group btn-group-sm w-100" :hidden="!HAS_TAURI">
+                                    <div class="input-group input-group-sm w-100" :hidden="!HAS_TAURI">
 
                                         <!-- *********************************************************************** -->
 
-                                        <button class="btn btn-success" type="button" :title="path" :disabled="!globals.nodeName || changed || !path" @click="generate()">
+                                        <input class="form-control" type="text" :value="path" placeholder="-- untitled --" readonly="readonly" />
+
+                                        <!-- *********************************************************************** -->
+
+                                        <button class="btn btn-success" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate()">
                                             <i class="bi bi-tornado"></i> Generate
                                         </button>
 

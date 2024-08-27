@@ -25,7 +25,7 @@ const props = defineProps({
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const sortedGroups = computed(() => Object.fromEntries(
-    Object.entries(props.deviceInfo.children).sort((x, y) => x[0].localeCompare(y[0]))
+    Object.entries(props.deviceInfo.children).sort((x, y) => y[0].localeCompare(x[0]))
 ));
 
 /*--------------------------------------------------------------------------------------------------------------------*/

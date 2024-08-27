@@ -51,16 +51,13 @@ const DEFAULT_GLOBALS = {
 
 const deepClone = (obj) => {
 
-    if(typeof obj === 'object')
+    /**/ if(Object.prototype.toString.call(obj) === '[object Object]')
     {
-        if(Array.isArray(obj))
-        {
-            return obj.map(deepClone);
-        }
-        else
-        {
-            return Object.fromEntries(Object.entries(obj).map(([key, val]) => [key, deepClone(val)]));
-        }
+        return Object.fromEntries(Object.entries(obj).map(([key, val]) => [key, deepClone(val)]));
+    }
+    else if(Object.prototype.toString.call(obj) === '[object Array]')
+    {
+        return obj.map(deepClone);
     }
 
     return obj;
@@ -79,7 +76,7 @@ const state = reactive({
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const sortedDevices = computed(() => Object.values(devices.value)
-    .sort((x, y) => x['@rank'] - y['@rank'])
+    .sort((x, y) => y['@rank'] - x['@rank'])
     .map((x) => devices.value[x['@name']])
 );
 
@@ -147,6 +144,8 @@ const resetDrv = () => {
         if(ok)
         {
             state.globals = deepClone(DEFAULT_GLOBALS);
+
+            state.path = null;
 
             dialog.success();
         }
