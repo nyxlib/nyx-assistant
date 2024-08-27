@@ -2,7 +2,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {ref, provide, computed} from 'vue';
+import {ref, provide} from 'vue';
 
 import {Tab} from 'bootstrap';
 
@@ -27,11 +27,11 @@ const tabListRef = ref(null);
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-provide('addTab', (tabId, tabCnt, tabTitle, tabIcon, onShow, onShown, onHide, onHidden) => {
+provide('addTab', (tabId, tabTitle, tabIcon, onShow, onShown, onHide, onHidden) => {
 
     tabs.value[tabId] = {
         tabId: tabId,
-        tabTitle: tabTitle + ' ' + tabCnt,
+        tabTitle: tabTitle,
         tabIcon: tabIcon,
     };
 

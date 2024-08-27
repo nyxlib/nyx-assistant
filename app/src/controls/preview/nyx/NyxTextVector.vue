@@ -17,7 +17,7 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedDefs = computed(() => [...props.defTextVector.children].sort((x, y) => y['@rank'] - x['@rank']));
+const sortedDefs = computed(() => [...props.defTextVector.children].sort((x, y) => x['@rank'] - y['@rank']));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
