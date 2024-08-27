@@ -17,11 +17,11 @@ const props = defineProps({
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-/* FUNCTIONS                                                                                                          */
+
+const sortedVectors = computed(() => [...Object.values(props.vectors)].sort((x, y) => x.rank - y.rank));
+
 /*--------------------------------------------------------------------------------------------------------------------*/
-
-const vectors = computed(() => Object.values(props.vectors).sort((x, y) => x.rank - y.rank));
-
+/* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 let rank = 0;
@@ -63,7 +63,7 @@ const vectorRm = (vector) => {
 
 const vectorDw = (vector1) => {
 
-    const array = vectors.value;
+    const array = sortedVectors.value;
 
     const index = array.findIndex((vector2) => vector2.id === vector1.id);
 
@@ -80,7 +80,7 @@ const vectorDw = (vector1) => {
 
 const vectorUp = (vector1) => {
 
-    const array = vectors.value;
+    const array = sortedVectors.value;
 
     const index = array.findIndex((vector2) => vector2.id === vector1.id);
 
@@ -136,7 +136,7 @@ const vectorUp = (vector1) => {
                 <!-- *********************************************************************************************** -->
 
                 <tbody>
-                    <tr v-for="vector in vectors" :key="vector.id">
+                    <tr v-for="vector in sortedVectors" :key="vector.id">
                         <td class="text-center">
                             <button class="btn btn-sm btn-link" type="button" @click="vectorDw(vector)">
                                 <i class="bi bi-caret-up-fill"></i>

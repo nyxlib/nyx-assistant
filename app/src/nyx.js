@@ -44,15 +44,11 @@ const ONOFF_DICT = {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedEntity = (devices) => Object.values(devices).sort((x, y) => x.rank - y.rank);
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
 const convert = (devices) => {
 
     const xmlDevices = {};
 
-    sortedEntity(devices).filter((device) => (device.id || '').startsWith('device:')).forEach((device) => {
+    Object.values(devices).filter((device) => (device.id || '').startsWith('device:')).forEach((device) => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
@@ -67,7 +63,7 @@ const convert = (devices) => {
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        sortedEntity(device.vectors).filter((vector) => (vector.id || '').startsWith('vector:')).forEach((vector) => {
+        Object.values(device.vectors).filter((vector) => (vector.id || '').startsWith('vector:')).forEach((vector) => {
 
             /*--------------------------------------------------------------------------------------------------------*/
 
@@ -192,7 +188,7 @@ const convert = (devices) => {
         /*------------------------------------------------------------------------------------------------------------*/
     });
 
-    console.log(JSON.stringify(xmlDevices, null, 2));
+    //console.log(JSON.stringify(xmlDevices, null, 2));
 
     return xmlDevices;
 };

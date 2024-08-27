@@ -22,11 +22,11 @@ const props = defineProps({
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-/* FUNCTIONS                                                                                                          */
+
+const sortedDefs = computed(() => [...Object.values(props.defs)].sort((x, y) => x.rank - y.rank));
+
 /*--------------------------------------------------------------------------------------------------------------------*/
-
-const defs = computed(() => Object.values(props.defs).sort((x, y) => x.rank - y.rank));
-
+/* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 let rank = 0;
@@ -64,7 +64,7 @@ const defRm = (def) => {
 
 const defDw = (def1) => {
 
-    const array = defs.value;
+    const array = sortedDefs.value;
 
     const index = array.findIndex((def2) => def2.id === def1.id);
 
@@ -81,7 +81,7 @@ const defDw = (def1) => {
 
 const defUp = (def1) => {
 
-    const array = defs.value;
+    const array = sortedDefs.value;
 
     const index = array.findIndex((def2) => def2.id === def1.id);
 
@@ -134,7 +134,7 @@ const defUp = (def1) => {
                 <!-- *********************************************************************************************** -->
 
                 <tbody>
-                    <tr v-for="(def, idx) in defs" :key="idx">
+                    <tr v-for="(def, idx) in sortedDefs" :key="idx">
                         <td class="text-center">
                             <button class="btn btn-sm btn-link" type="button" @click="defDw(def)">
                                 <i class="bi bi-caret-up-fill"></i>

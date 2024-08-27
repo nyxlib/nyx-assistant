@@ -17,11 +17,11 @@ const props = defineProps({
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-/* FUNCTIONS                                                                                                          */
+
+const sortedDevices = computed(() => [...Object.values(props.devices)].sort((x, y) => x.rank - y.rank));
+
 /*--------------------------------------------------------------------------------------------------------------------*/
-
-const devices = computed(() => Object.values(props.devices).sort((x, y) => x.rank - y.rank));
-
+/* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 let rank = 0;
@@ -61,9 +61,9 @@ const deviceRm = (device) => {
 
 const deviceDw = (device1) => {
 
-    const array = devices.value;
+    const array = sortedDevices.value;
 
-    const index = array.findIndex((device2) => device2?.id === device1.id);
+    const index = array.findIndex((device2) => device2.id === device1.id);
 
     if(index > 0x00000000000000)
     {
@@ -78,9 +78,9 @@ const deviceDw = (device1) => {
 
 const deviceUp = (device1) => {
 
-    const array = devices.value;
+    const array = sortedDevices.value;
 
-    const index = array.findIndex((device2) => device2?.id === device1.id);
+    const index = array.findIndex((device2) => device2.id === device1.id);
 
     if(index < array.length - 1)
     {
@@ -135,7 +135,7 @@ const deviceUp = (device1) => {
                 <!-- *********************************************************************************************** -->
 
                 <tbody>
-                    <tr v-for="device in devices" :key="device.id">
+                    <tr v-for="device in sortedDevices" :key="device.id">
                         <td class="text-center">
                             <button class="btn btn-sm btn-link" type="button" @click="deviceDw(device)">
                                 <i class="bi bi-caret-up-fill"></i>
