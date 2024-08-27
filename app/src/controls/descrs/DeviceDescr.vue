@@ -39,7 +39,7 @@ const props = defineProps({
 
                     <div class="card mb-3">
                         <div class="card-header">
-                            Device <i class="bi bi-question-circle-fill" :title="`Id: ${device.id}, Rank: ${device.rank}`" v-tooltip></i>
+                            Device <i class="bi bi-question-circle-fill" :title="`Id: ${device.id}`" v-tooltip></i>
                         </div>
                         <div class="card-body">
 

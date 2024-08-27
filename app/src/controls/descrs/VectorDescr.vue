@@ -29,7 +29,7 @@ defineProps({
 
             <div class="card mb-3">
                 <div class="card-header">
-                    Vector <i class="bi bi-question-circle-fill" :title="`Id: ${vector.id}, Rank: ${vector.rank}`" v-tooltip></i>
+                    Vector <i class="bi bi-question-circle-fill" :title="`Id: ${vector.id}`" v-tooltip></i>
                 </div>
                 <div class="card-body">
 
