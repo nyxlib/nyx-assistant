@@ -2,7 +2,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {ref, watch, inject, computed, reactive, onMounted, onUnmounted} from 'vue';
+import {ref, watch, inject, reactive, onMounted, onUnmounted} from 'vue';
 
 import {Window, getCurrentWindow} from '@tauri-apps/api/window';
 
@@ -72,10 +72,6 @@ const state = reactive({
     changed: false,
     path: null,
 });
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-const sortedDevices = computed(() => [...Object.values(devices.value)].sort((x, y) => x['@rank'] - y['@rank']));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -511,7 +507,7 @@ onUnmounted(() => {
 
             <nav-tabs margin="mb-4">
 
-                <tab-pane :title="device['@name']" icon="command" v-for="device in sortedDevices" :key="`${device['@name']}-${device['@rank']}`">
+                <tab-pane :title="device['@name']" icon="command" :rank="device['@rank']" v-for="device in Object.values(devices)" :key="`${device['@name']}-${device['@rank']}`">
 
                     <div class="d-flex align-items-center justify-content-center h-100">
 
