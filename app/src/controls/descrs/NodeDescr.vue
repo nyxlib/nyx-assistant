@@ -43,7 +43,10 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedDevices = computed(() => Object.values(props.globals.devices).sort((x, y) => y.rank - x.rank).map((x) => props.globals.devices[x.id]));
+const sortedDevices = computed(() => [...Object.values(props.globals.devices)]
+    .sort((x, y) => x.rank - y.rank)
+    .map((x) => props.globals.devices[x.id]))
+;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
