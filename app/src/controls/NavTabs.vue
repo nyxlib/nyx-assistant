@@ -1,8 +1,8 @@
-<!--suppress JSUnusedLocalSymbols, JSUnresolvedReference -->
+<!--suppress JSUnresolvedReference -->
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {ref, provide, computed} from 'vue';
+import {ref, provide, nextTick, computed} from 'vue';
 
 import {Tab} from 'bootstrap';
 
@@ -40,7 +40,7 @@ provide('addTab', (tabId, tabRank, tabTitle, tabIcon, onShow, onShown, onHide, o
         tabIcon: tabIcon,
     };
 
-    setTimeout(() => {
+    nextTick(() => {
 
         const el = tabListRef.value.querySelector(`button[data-bs-target="#${tabId}"]`);
 
@@ -53,8 +53,7 @@ provide('addTab', (tabId, tabRank, tabTitle, tabIcon, onShow, onShown, onHide, o
             el.addEventListener('hide.bs.tab', onHide);
             el.addEventListener('hidden.bs.tab', onHidden);
         }
-
-    }, 500);
+    });
 
     return Object.keys(tabs.value).length === 1;
 });
