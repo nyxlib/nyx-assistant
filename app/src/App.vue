@@ -76,7 +76,7 @@ const state = reactive({
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const sortedDevices = computed(() => Object.values(devices.value)
-    .sort((x, y) => y['@rank'] - x['@rank'])
+    .sort((x, y) => x['@rank'] - y['@rank'])
     .map((x) => devices.value[x['@name']])
 );
 
