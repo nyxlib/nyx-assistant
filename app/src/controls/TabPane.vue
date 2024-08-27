@@ -1,3 +1,11 @@
+<script>
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+let globalTabCnt = 0;
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+</script>
+
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -71,9 +79,13 @@ const onHidden = (e) => {
 /* INITIALIZATION                                                                                                     */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+const tabCnt = globalTabCnt++;
+
 onMounted(() => {
 
-    isFirst.value = addTab(tabId, props.title, props.icon, onShow, onShown, onHide, onHidden);
+    console.log(props.title);
+
+    isFirst.value = addTab(tabId, tabCnt, props.title, props.icon, onShow, onShown, onHide, onHidden);
 
     watch(() => props.title, (title) => {
 

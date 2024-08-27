@@ -25,7 +25,7 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedVectors = computed(() => Object.values(props.device.vectors).sort((x, y) => y.rank - x.rank).map((x) => props.device.vectors[x.id]));
+const sortedVectors = computed(() => [...Object.values(props.device.vectors)].sort((x, y) => x.rank - y.rank));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>

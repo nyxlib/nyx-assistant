@@ -43,10 +43,7 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedDevices = computed(() => [...Object.values(props.globals.devices)]
-    .sort((x, y) => x.rank - y.rank)
-    .map((x) => props.globals.devices[x.id]))
-;
+const sortedDevices = computed(() => [...Object.values(props.globals.devices)].sort((x, y) => x.rank - y.rank));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
@@ -293,6 +290,8 @@ const generate = (mode = null) => {
         <!-- ******************************************************************************************************* -->
 
         <tab-pane :title="device.name || 'noname'" icon="cpu" v-for="device in sortedDevices" :key="`${device.id}-${device.rank}`">
+
+            {{device.id}}-{{device.rank}}
 
             <device-descr :device="device" />
 

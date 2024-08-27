@@ -2,7 +2,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {ref, provide} from 'vue';
+import {ref, provide, computed} from 'vue';
 
 import {Tab} from 'bootstrap';
 
@@ -27,11 +27,11 @@ const tabListRef = ref(null);
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-provide('addTab', (tabId, tabTitle, tabIcon, onShow, onShown, onHide, onHidden) => {
+provide('addTab', (tabId, tabCnt, tabTitle, tabIcon, onShow, onShown, onHide, onHidden) => {
 
     tabs.value[tabId] = {
         tabId: tabId,
-        tabTitle: tabTitle,
+        tabTitle: tabTitle + ' ' + tabCnt,
         tabIcon: tabIcon,
     };
 
@@ -88,7 +88,7 @@ provide('updateIcon', (tabId, tabIcon) => {
 
         <!-- ******************************************************************************************************* -->
 
-        <button :class="['nav-link', 'px-3', 'py-2', {'active': idx === 0}]" type="button" data-bs-toggle="tab" :data-bs-target="`#${tab.tabId}`" role="tab" v-for="(tab, _, idx) in tabs" :key="idx">
+        <button :class="['nav-link', 'px-3', 'py-2', {'active': i === 0}]" type="button" data-bs-toggle="tab" :data-bs-target="`#${tab.tabId}`" role="tab" v-for="(tab, id, i) in tabs" :key="id">
 
             <i :class="['bi', `bi-${tab.tabIcon}`]" v-if="tab.tabIcon"></i>
 
