@@ -39,12 +39,13 @@ const COLORS = {
 
         <!-- ******************************************************************************************************* -->
 
-        <label class="col-sm-2 text-start">
-            <span :class="`text-${COLORS[defSwitchVector['@state']]}`">
-                <i class="bi bi-circle-fill"></i>
-            </span>
+        <div class="col-sm-2 text-start">
+
+            <i :class="['bi', 'bi-circle-fill', `text-${COLORS[defSwitchVector['@state']]}`]"></i>
+
             {{ defSwitchVector['@label'] || defSwitchVector['@name'] }}
-        </label>
+
+        </div>
 
         <!-- ******************************************************************************************************* -->
 
