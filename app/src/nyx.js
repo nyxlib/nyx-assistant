@@ -162,8 +162,22 @@ const convert = (devices) => {
                         xmlDef['@step'] = def.step;
                     }
 
-                    if(def.value) {
-                        xmlDef['$'] = vector.type === 'switch' ? ONOFF_DICT[def.value] : def.value;
+                    if(def.value)
+                    {
+                        switch(vector.type)
+                        {
+                            case 'switch':
+                                xmlDef['$'] = ONOFF_DICT[def.value];
+                                break;
+
+                            case 'light':
+                                xmlDef['$'] = STATE_DICT[def.value];
+                                break;
+
+                            default:
+                                xmlDef['$'] = def.value;
+                                break;
+                        }
                     }
 
                     /*------------------------------------------------------------------------------------------------*/
