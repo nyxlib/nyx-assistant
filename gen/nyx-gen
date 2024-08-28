@@ -357,7 +357,7 @@ def generateDevices(driverPath, descr, override_device):
             if vector['message']:
                 optionList.append(f'.message = {vector['message']}')
 
-            if not L:
+            if not optionList:
                 optionList.append('/**/')
 
             ############################################################################################################
