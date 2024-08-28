@@ -45,7 +45,7 @@ const props = defineProps({
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const generate = (mode = null) => {
+const generate = (_static = false, _mode = null) => {
 
     if(props.path)
     {
@@ -56,15 +56,19 @@ const generate = (mode = null) => {
             '--descr', props.path
         ];
 
-        if(mode === 'override-main') {
+        if(_static) {
+            args.push('--static');
+        }
+
+        if(_mode === 'override-main') {
             args.push('--override-main');
         }
 
-        if(mode === 'override-device') {
+        if(_mode === 'override-device') {
             args.push('--override-device');
         }
 
-        if(mode === 'override-project') {
+        if(_mode === 'override-project') {
             args.push('--override-project');
         }
 
@@ -142,9 +146,14 @@ const generate = (mode = null) => {
                             <div class="row">
                                 <div class="col-md-6">
 
-                                    <div class="form-check form-switch mb-0">
+                                    <div class="form-check form-switch mb-3">
                                         <input class="form-check-input" type="checkbox" role="switch" id="A313C013" v-model="globals.hardcoded" :true-value="true" :false-value="false" />
                                         <label class="form-check-label" for="A313C013">Hardcoded configuration</label>
+                                    </div>
+
+                                    <div class="form-check form-switch mb-0">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="FAD1B43F" v-model="globals.static" :true-value="true" :false-value="false" />
+                                        <label class="form-check-label" for="FAD1B43F">Statically-linked executable</label>
                                     </div>
 
                                 </div>
@@ -158,7 +167,7 @@ const generate = (mode = null) => {
 
                                         <!-- *********************************************************************** -->
 
-                                        <button class="btn btn-success" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate()">
+                                        <button class="btn btn-success" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate(globals.static)">
                                             <i class="bi bi-tornado"></i> Generate
                                         </button>
 
@@ -170,17 +179,17 @@ const generate = (mode = null) => {
 
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-main')">
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate(globals.static, 'override-main')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c
                                                 </button>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-device')">
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate(globals.static, 'override-device')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override devices
                                                 </button>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-project')">
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate(globals.static, 'override-project')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override project
                                                 </button>
                                             </li>

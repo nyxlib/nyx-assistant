@@ -35,6 +35,7 @@ const DEFAULT_GLOBALS = {
     nodeName: '',
     nodeTimeout: 1000,
     hardcoded: true,
+    static: false,
     /* MQTT */
     enableMQTT: false,
     mqttURI: '',
