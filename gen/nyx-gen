@@ -9,7 +9,7 @@ import argparse
 
 ########################################################################################################################
 
-def generateCMakeLists(driverPath, descr, static):
+def generateCMakeLists(driverPath, descr):
 
     ####################################################################################################################
 
@@ -48,7 +48,7 @@ add_executable({descr['nodeName'].lower()} ${{SOURCE_FILES}})
 
 target_include_directories({descr['nodeName'].lower()} PRIVATE ${{LIBNYXNODE_INCLUDE_DIR}})
 
-target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if static else 'SHARED'}_LIBRARIES}})
+target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if descr['static'] else 'SHARED'}_LIBRARIES}})
 
 ########################################################################################################################
 '''[1:]
@@ -568,8 +568,6 @@ def main():
 
     parser.add_argument('--override-main', action = 'store_true', help = 'Override main.c')
 
-    parser.add_argument('--static', action = 'store_true', help = 'Link executable statically')
-
     parser.add_argument('--output', type = str, default = '.', help = 'Skeleton output path')
 
     parser.add_argument('--descr', type = str, required = True, help = 'Driver description file')
@@ -608,7 +606,7 @@ def main():
 
     ####################################################################################################################
 
-    generateCMakeLists(driverPath, descr, args.static)
+    generateCMakeLists(driverPath, descr)
 
     generateHeader(driverPath, descr)
 

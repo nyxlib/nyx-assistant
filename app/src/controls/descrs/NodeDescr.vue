@@ -45,7 +45,7 @@ const props = defineProps({
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const generate = (_static = false, _mode = null) => {
+const generate = (mode = null) => {
 
     if(props.path)
     {
@@ -56,19 +56,15 @@ const generate = (_static = false, _mode = null) => {
             '--descr', props.path
         ];
 
-        if(_static) {
-            args.push('--static');
-        }
-
-        if(_mode === 'override-main') {
+        if(mode === 'override-main') {
             args.push('--override-main');
         }
 
-        if(_mode === 'override-device') {
+        if(mode === 'override-device') {
             args.push('--override-device');
         }
 
-        if(_mode === 'override-project') {
+        if(mode === 'override-project') {
             args.push('--override-project');
         }
 
@@ -167,7 +163,7 @@ const generate = (_static = false, _mode = null) => {
 
                                         <!-- *********************************************************************** -->
 
-                                        <button class="btn btn-success" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate(globals.static)">
+                                        <button class="btn btn-success" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate()">
                                             <i class="bi bi-tornado"></i> Generate
                                         </button>
 
@@ -179,17 +175,17 @@ const generate = (_static = false, _mode = null) => {
 
                                         <ul class="dropdown-menu">
                                             <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate(globals.static, 'override-main')">
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-main')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c
                                                 </button>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate(globals.static, 'override-device')">
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-device')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override devices
                                                 </button>
                                             </li>
                                             <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate(globals.static, 'override-project')">
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-project')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override project
                                                 </button>
                                             </li>
