@@ -257,15 +257,15 @@ def generateDevices(driverPath, descr, override_device):
 
     for device in sorted(descr['devices'].values(), key = lambda x: x['rank']):
 
-        callbackList1 = []
-        callbackList2 = []
-
         ################################################################################################################
 
         ctorList.append(f'device_{device['name'].lower()}_initialize();')
         dtorList.append(f'device_{device['name'].lower()}_finalize();')
 
         ################################################################################################################
+
+        callbackList1 = []
+        callbackList2 = []
 
         for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
 
