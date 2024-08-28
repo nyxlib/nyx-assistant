@@ -260,9 +260,6 @@ def generateDevices(driverPath, descr, override_device):
         callbackList1 = []
         callbackList2 = []
 
-        vectorDefList1 = []
-        vectorDefList2 = []
-
         ################################################################################################################
 
         ctorList.append(f'device_{device['name'].lower()}_initialize();')
@@ -271,6 +268,9 @@ def generateDevices(driverPath, descr, override_device):
         ################################################################################################################
 
         for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
+
+            vectorDefList1 = []
+            vectorDefList2 = []
 
             for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
 
@@ -357,7 +357,8 @@ def generateDevices(driverPath, descr, override_device):
             if vector['message']:
                 optionList.append(f'.message = {vector['message']}')
 
-            optionList.append('/**/')
+            if not L:
+                optionList.append('/**/')
 
             ############################################################################################################
 
