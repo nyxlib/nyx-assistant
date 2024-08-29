@@ -62,6 +62,10 @@ const generate = (mode = null) => {
 
         const args = ['--output', getPath(props.path), '--descr', props.path];
 
+        if(mode === 'override-cmake') {
+            args.push('--override-cmake');
+        }
+
         if(mode === 'override-main') {
             args.push('--override-main');
         }
@@ -180,6 +184,11 @@ const generate = (mode = null) => {
                                         <!-- *********************************************************************** -->
 
                                         <ul class="dropdown-menu">
+                                            <li>
+                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-cmake')">
+                                                    <i class="bi bi-exclamation-triangle text-danger"></i> Override CMake
+                                                </button>
+                                            </li>
                                             <li>
                                                 <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-main')">
                                                     <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c

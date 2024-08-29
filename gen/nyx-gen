@@ -13,7 +13,7 @@ LINE_BREAK = '\n'
 
 ########################################################################################################################
 
-def generate_cmake_lists(driver_path, descr):
+def generate_cmake_lists(driver_path, descr, override):
 
     ####################################################################################################################
 
@@ -57,9 +57,11 @@ target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if des
 ########################################################################################################################
 '''[1:]
 
-    with open(os.path.join(driver_path, 'CMakeLists.txt'), 'wt') as f:
+    if override or not os.path.isfile(os.path.join(driver_path, 'CMakeLists.txt')):
 
-        f.write(template)
+        with open(os.path.join(driver_path, 'CMakeLists.txt'), 'wt') as f:
+
+            f.write(template)
 
 ########################################################################################################################
 
@@ -126,7 +128,7 @@ void nyx_glue_finalize(void);
 
 ########################################################################################################################
 
-def generate_main(driver_path, descr, override_main):
+def generate_main(driver_path, descr, override):
 
     ####################################################################################################################
 
@@ -241,7 +243,7 @@ _err:
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-    if override_main or not os.path.isfile(os.path.join(driver_path, 'src', 'main.c')):
+    if override or not os.path.isfile(os.path.join(driver_path, 'src', 'main.c')):
 
         with open(os.path.join(driver_path, 'src', 'main.c'), 'wt') as f:
 
@@ -249,7 +251,7 @@ _err:
 
 ########################################################################################################################
 
-def generate_devices(driver_path, descr, override_device):
+def generate_devices(driver_path, descr, override):
 
     ctor_list = []
     dtor_list = []
@@ -502,7 +504,7 @@ void device_{device['name'].lower()}_finalize(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-        if override_device or not os.path.isfile(os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.c')):
+        if override or not os.path.isfile(os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.c')):
 
             with open(os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.c'), 'wt') as f:
 
@@ -573,6 +575,8 @@ def main():
 
     parser.add_argument('--override-main', action = 'store_true', help = 'Override main.c')
 
+    parser.add_argument('--override-cmake', action = 'store_true', help = 'Override CMake')
+
     parser.add_argument('--output', type = str, default = '.', help = 'Skeleton output path')
 
     parser.add_argument('--descr', type = str, required = True, help = 'Driver description file')
@@ -613,7 +617,7 @@ def main():
 
     ####################################################################################################################
 
-    generate_cmake_lists(driver_path, descr)
+    generate_cmake_lists(driver_path, descr, args.override_cmake)
 
     generate_header(driver_path, descr)
 
