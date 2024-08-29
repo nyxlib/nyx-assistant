@@ -21,16 +21,31 @@ before_script:
     - pyinstaller --version
 
 stages:
-    - build
+    - build_nyx_gen
+    - build_nyx_assistant
 
-build_project:
-    stage: build
+build_nyx_gen_project:
+    stage: build_nyx_gen
     script:
         - source "${HOME}/.venv/bin/activate"
         - ./gen/build.sh
     artifacts:
         paths:
             - tauri/binaries/nyx-gen-*
+        expire_in: 1 week
+        when: always
+    only:
+        - main
+
+build_nyx_assistant_project:
+    stage: build_nyx_assistant
+    script:
+        - source "${HOME}/.nvm/nvm.sh"
+        - npm install
+        - npm run tauri-prod
+    artifacts:
+        paths:
+            - tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage
         expire_in: 1 week
         when: always
     only:
