@@ -5,17 +5,15 @@ variables:
 
 before_script:
     - apt-get update
-    - apt-get install -y curl python3 python3-pip
+    - apt-get install -y curl python3-venv
 
-    - pip3 install pyinstaller
+    - python3 -m venv ./venv/
+    - source ./venv/bin/activate
+    - pip install pyinstaller
 
     - curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${NODE_VERSION}/install.sh" | bash
 
     - nvm install 20
-
-    - node --version
-    - rustc --version
-    - python3 --version
 
 stages:
     - build
@@ -23,6 +21,7 @@ stages:
 build_project:
     stage: build
     script:
+        - source ./venv/bin/activate
         - ./gen/build.sh
         - npm install
         - npm run tauri-prod
