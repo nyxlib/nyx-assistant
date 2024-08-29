@@ -1,0 +1,36 @@
+image: rust:latest
+
+variables:
+    NODE_VERSION: "0.40.0"
+
+before_script:
+    - apt-get update
+    - apt-get install -y curl python3 python3-pip
+
+    - pip3 install pyinstaller
+
+    - curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${NODE_VERSION}/install.sh" | bash
+
+    - nvm install 20
+
+    - node --version
+    - rustc --version
+    - python3 --version
+
+stages:
+    - build
+
+build_project:
+    stage: build
+    script:
+        - ./gen/build.sh
+        - npm install
+        - npm run tauri-prod
+    artifacts:
+        paths:
+            - tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage
+        expire_in: 1 week
+        when: always
+        keep: false
+    only:
+        - main
