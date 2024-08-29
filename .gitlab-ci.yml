@@ -34,12 +34,12 @@ build_project:
         - npm install
         - npm run tauri-prod
 
-        - mv tauri/binaries/nyx-gen-* ./
-        - mv tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage ./
+        - mv tauri/binaries/nyx-gen-* ./nyx-gen
+        - mv tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage ./nyx-assistant.AppImage
     artifacts:
         paths:
-            - ./nyx-gen-*
-            - ./nyx-assistant_*.AppImage
+            - ./nyx-gen
+            - ./nyx-assistant.AppImage
         expire_in: 1 week
         when: always
     only:
