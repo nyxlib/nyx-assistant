@@ -12,6 +12,8 @@ before_script:
 
     - curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${NODE_VERSION}/install.sh" | bash
     - nvm install 20
+    - export NVM_DIR="$HOME/.nvm"
+    - [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
     - npm --version
     - node --version
@@ -27,11 +29,9 @@ build_project:
     script:
         - source ./venv/bin/activate
         - ./gen/build.sh
-        - npm install
-        - npm run tauri-prod
     artifacts:
         paths:
-            - tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage
+            - tauri/binaries/nyx-gen-*
         expire_in: 1 week
         when: always
     only:
