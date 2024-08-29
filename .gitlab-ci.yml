@@ -44,6 +44,7 @@ build_project:
     artifacts:
         paths:
             - ./nyx-gen
+            - ./nyx-assistant
             - ./nyx-assistant.AppImage
         expire_in: 1 week
         when: always
