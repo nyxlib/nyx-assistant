@@ -30,8 +30,6 @@ build_project:
     script:
         - source "${HOME}/.venv/bin/activate"
         - ./gen/build.sh
-
-        - source "${HOME}/.nvm/nvm.sh"
         - npm install
         - npm run tauri-prod
     artifacts:
