@@ -5,8 +5,8 @@ variables:
 
 before_script:
     - apk update
-    - apk add --no-cache bash curl make ca-certificates
-    - apk add --no-cache rust cargo pkgconfig python3-dev py3-virtualenv gtk+3.0-dev libsoup3-dev webkit2gtk-dev
+    - apk add --no-cache bash curl ca-certificates
+    - apk add --no-cache gcc make rust cargo pkgconfig python3-dev py3-virtualenv gtk+3.0-dev libsoup3-dev webkit2gtk-dev
 
     - python3 -m venv "${HOME}/.venv/"
     - source "${HOME}/.venv/bin/activate"
