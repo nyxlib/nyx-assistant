@@ -19,6 +19,13 @@ before_script:
     - python3 --version
     - pyinstaller --version
 
+cache:
+    key: "${CI_COMMIT_REF_SLUG}"
+    paths:
+        - ./tauri/target/release/build/
+        - ./tauri/target/release/deps/
+    policy: pull-push
+
 stages:
     - build
 
