@@ -11,8 +11,8 @@ before_script:
     - pip install pyinstaller
 
     - curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${NODE_VERSION}/install.sh" | bash
+    - source "${HOME}/.nvm/nvm.sh"
     - nvm install 20
-    - source "{HOME}/.nvm/nvm.sh"
 
     - npm --version
     - node --version
