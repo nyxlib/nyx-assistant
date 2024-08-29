@@ -31,6 +31,5 @@ build_project:
             - tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage
         expire_in: 1 week
         when: always
-        keep: false
     only:
         - main
