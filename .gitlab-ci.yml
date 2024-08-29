@@ -32,6 +32,7 @@ build_project:
         - npm run tauri-prod
 
         - mv tauri/binaries/nyx-gen-* ./nyx-gen
+        - mv tauri/target/release/nyx-assistant ./nyx-assistant
         - mv tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage ./nyx-assistant.AppImage
     artifacts:
         paths:
