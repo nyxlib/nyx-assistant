@@ -30,12 +30,16 @@ build_project:
     script:
         - source "${HOME}/.venv/bin/activate"
         - ./gen/build.sh
+
         - npm install
         - npm run tauri-prod
+
+        - mv tauri/binaries/nyx-gen-* ./
+        - mv tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage ./
     artifacts:
         paths:
-            - tauri/binaries/nyx-gen-*
-            - tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage
+            - ./nyx-gen-*
+            - ./nyx-assistant_*.AppImage
         expire_in: 1 week
         when: always
     only:
