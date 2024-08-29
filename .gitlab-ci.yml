@@ -6,14 +6,18 @@ variables:
 before_script:
     - apt-get update
     - apt-get install -y curl python3-venv
-
     - python3 -m venv ./venv/
     - source ./venv/bin/activate
     - pip install pyinstaller
 
     - curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${NODE_VERSION}/install.sh" | bash
-
     - nvm install 20
+
+    - npm --version
+    - node --version
+    - rustc --version
+    - python3 --version
+    - pyinstaller --version
 
 stages:
     - build
