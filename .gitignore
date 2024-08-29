@@ -7,7 +7,6 @@ target
 node_modules
 
 /tauri/gen/
-/tauri/icons/
 /tauri/binaries/
 
 *.spec
