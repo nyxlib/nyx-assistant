@@ -20,6 +20,7 @@ before_script:
     - npm --version
     - node --version
     - rustc --version
+    - cargo --version
     - python3 --version
     - pyinstaller --version
 
