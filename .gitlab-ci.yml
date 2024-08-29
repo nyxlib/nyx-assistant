@@ -1,8 +1,5 @@
 image: ubuntu:jammy
 
-variables:
-    NODE_VERSION: "0.40.0"
-
 before_script:
     - apt-get update
     - apt-get install -y file wget curl

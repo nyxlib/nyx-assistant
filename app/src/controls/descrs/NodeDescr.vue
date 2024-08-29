@@ -45,16 +45,22 @@ const props = defineProps({
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+const getPath = (filename) => {
+
+    const lastSlashIndex = filename.lastIndexOf('/');
+
+    return lastSlashIndex > 0 ? filename.substring(0, lastSlashIndex) : lastSlashIndex === 0 ? '/' : '.';
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 const generate = (mode = null) => {
 
     if(props.path)
     {
         /*------------------------------------------------------------------------------------------------------------*/
 
-        const args = [
-            '--output', props.path.replace('.json', ''),
-            '--descr', props.path
-        ];
+        const args = ['--output', getPath(props.path), '--descr', props.path];
 
         if(mode === 'override-main') {
             args.push('--override-main');
