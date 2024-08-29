@@ -13,7 +13,7 @@ def generateCMakeLists(driverPath, descr):
 
     ####################################################################################################################
 
-    fileList = [os.path.join('.', 'src', f'device_{device['name'].lower()}.c') for device in sorted(descr['devices'].values(), key = lambda x: x['rank'])]
+    fileList = [os.path.join('.', 'src', f'device_{device["name"].lower()}.c') for device in sorted(descr['devices'].values(), key = lambda x: x['rank'])]
 
     ####################################################################################################################
 
