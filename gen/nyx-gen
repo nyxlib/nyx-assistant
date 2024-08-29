@@ -9,11 +9,15 @@ import argparse
 
 ########################################################################################################################
 
-def generateCMakeLists(driverPath, descr):
+LINE_BREAK = '\n'
+
+########################################################################################################################
+
+def generate_cmake_lists(driver_path, descr):
 
     ####################################################################################################################
 
-    fileList = [os.path.join('.', 'src', f'device_{device["name"].lower()}.c') for device in sorted(descr['devices'].values(), key = lambda x: x['rank'])]
+    file_list = [os.path.join('.', 'src', f'device_{device["name"].lower()}.c') for device in sorted(descr['devices'].values(), key = lambda x: x['rank'])]
 
     ####################################################################################################################
 
@@ -37,7 +41,7 @@ find_package(LibNyxNode REQUIRED)
 ########################################################################################################################
 
 set(SOURCE_FILES
-    {'\n    '.join(fileList)}
+    {f'{LINE_BREAK}    '.join(file_list)}
     ./src/glue.c
     ./src/main.c
 )
@@ -53,32 +57,32 @@ target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if des
 ########################################################################################################################
 '''[1:]
 
-    with open(os.path.join(driverPath, 'CMakeLists.txt'), 'wt') as f:
+    with open(os.path.join(driver_path, 'CMakeLists.txt'), 'wt') as f:
 
         f.write(template)
 
 ########################################################################################################################
 
-def generateHeader(driverPath, descr):
+def generate_header(driver_path, descr):
 
     ####################################################################################################################
 
-    ctorList = []
-    dtorList = []
-    vectorList = []
+    ctor_list = []
+    dtor_list = []
+    vector_list = []
 
     for device in sorted(descr['devices'].values(), key = lambda x: x['rank']):
 
-        ctorList.append(f'void device_{device['name'].lower()}_initialize();')
-        dtorList.append(f'void device_{device['name'].lower()}_finalize();')
+        ctor_list.append(f'void device_{device["name"].lower()}_initialize();')
+        dtor_list.append(f'void device_{device["name"].lower()}_finalize();')
 
         for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
 
-            for vectorDef in sorted(vector['defs'].values() ,key = lambda x: x['rank']):
+            for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
 
-                vectorList.append(f'extern nyx_dict_t *vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()};')
+                vector_list.append(f'extern nyx_dict_t *vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()};')
 
-            vectorList.append(f'extern nyx_dict_t *vector_{device['name'].lower()}_{vector['name'].lower()};')
+            vector_list.append(f'extern nyx_dict_t *vector_{device["name"].lower()}_{vector["name"].lower()};')
 
     ####################################################################################################################
 
@@ -95,13 +99,13 @@ def generateHeader(driverPath, descr):
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-{'\n'.join(vectorList)}
+{LINE_BREAK.join(vector_list)}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-{'\n'.join(ctorList)}
+{LINE_BREAK.join(ctor_list)}
 
-{'\n'.join(dtorList)}
+{LINE_BREAK.join(dtor_list)}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -116,25 +120,25 @@ void nyx_glue_finalize(void);
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-    with open(os.path.join(driverPath, 'src', 'internal.h'), 'wt') as f:
+    with open(os.path.join(driver_path, 'src', 'internal.h'), 'wt') as f:
 
         f.write(template)
 
 ########################################################################################################################
 
-def generateMain(driverPath, descr, override_main):
+def generate_main(driver_path, descr, override_main):
 
     ####################################################################################################################
 
-    vectorList = []
+    vector_list = []
 
     for device in sorted(descr['devices'].values(), key = lambda x: x['rank']):
 
         for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
 
-            vectorList.append(f'vector_{device['name'].lower()}_{vector['name'].lower()},')
+            vector_list.append(f'vector_{device["name"].lower()}_{vector["name"].lower()},')
 
-    vectorList.append('NULL,')
+    vector_list.append('NULL,')
 
     ####################################################################################################################
 
@@ -180,7 +184,7 @@ int main()
     /*----------------------------------------------------------------------------------------------------------------*/
 
     nyx_dict_t *vector_list[] = {{
-        {'\n        '.join(vectorList)}
+        {f'{LINE_BREAK}        '.join(vector_list)}
     }};
 
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -237,21 +241,21 @@ _err:
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-    if override_main or not os.path.isfile(os.path.join(driverPath, 'src', 'main.c')):
+    if override_main or not os.path.isfile(os.path.join(driver_path, 'src', 'main.c')):
 
-        with open(os.path.join(driverPath, 'src', 'main.c'), 'wt') as f:
+        with open(os.path.join(driver_path, 'src', 'main.c'), 'wt') as f:
 
             f.write(template)
 
 ########################################################################################################################
 
-def generateDevices(driverPath, descr, override_device):
+def generate_devices(driver_path, descr, override_device):
 
-    ctorList = []
-    dtorList = []
+    ctor_list = []
+    dtor_list = []
 
-    vectorList1 = []
-    vectorList2 = []
+    vector_list1 = []
+    vector_list2 = []
 
     ####################################################################################################################
 
@@ -259,18 +263,18 @@ def generateDevices(driverPath, descr, override_device):
 
         ################################################################################################################
 
-        ctorList.append(f'device_{device['name'].lower()}_initialize();')
-        dtorList.append(f'device_{device['name'].lower()}_finalize();')
+        ctor_list.append(f'device_{device["name"].lower()}_initialize();')
+        dtor_list.append(f'device_{device["name"].lower()}_finalize();')
 
         ################################################################################################################
 
-        callbackList1 = []
-        callbackList2 = []
+        callback_list1 = []
+        callback_list2 = []
 
         for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
 
-            vectorDefList1 = []
-            vectorDefList2 = []
+            vector_def_list1 = []
+            vector_def_list2 = []
 
             for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
 
@@ -280,7 +284,7 @@ def generateDevices(driverPath, descr, override_device):
 
                 if vector['type'] == 'number':
 
-                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = nyx_number_def_new("{vectorDef['name']}", "{vectorDef['label']}", "{vectorDef['format']}", {vectorDef['min']}, {vectorDef['max']}, {vectorDef['step']}, {vectorDef['value']});')
+                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_number_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", "{vectorDef["format"]}", {vectorDef["min"]}, {vectorDef["max"]}, {vectorDef["step"]}, {vectorDef["value"]});')
 
                 ########################################################################################################
                 # TEXT                                                                                                 #
@@ -288,7 +292,7 @@ def generateDevices(driverPath, descr, override_device):
 
                 if vector['type'] == 'text':
 
-                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = nyx_text_def_new("{vectorDef['name']}", "{vectorDef['label']}", "{vectorDef['value']}");')
+                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_text_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", "{vectorDef["value"]}");')
 
                 ########################################################################################################
                 # LIGHT                                                                                                #
@@ -296,7 +300,7 @@ def generateDevices(driverPath, descr, override_device):
 
                 if vector['type'] == 'light':
 
-                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = nyx_light_def_new("{vectorDef['name']}", "{vectorDef['label']}", {vectorDef['value']});')
+                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_light_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
 
                 ########################################################################################################
                 # SWITCH                                                                                               #
@@ -304,7 +308,7 @@ def generateDevices(driverPath, descr, override_device):
 
                 if vector['type'] == 'switch':
 
-                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = nyx_switch_def_new("{vectorDef['name']}", "{vectorDef['label']}", {vectorDef['value']});')
+                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_switch_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
 
                 ########################################################################################################
                 # BLOB                                                                                                 #
@@ -312,64 +316,64 @@ def generateDevices(driverPath, descr, override_device):
 
                 if vector['type'] == 'blob':
 
-                    vectorDefList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = nyx_blob_def_new("{vectorDef['name']}", "{vectorDef['label']}", {vectorDef['value']});')
+                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_blob_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
 
                 ########################################################################################################
 
-                vectorList1.append(f'nyx_dict_t *vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()} = NULL;')
+                vector_list1.append(f'nyx_dict_t *vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = NULL;')
 
-                vectorDefList1.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()},')
+                vector_def_list1.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()},')
 
                 ########################################################################################################
 
                 if vectorDef['callback']:
 
-                    callbackList1.append(f'static void _{vector['name'].lower()}_{vectorDef['name'].lower()}_callback(struct nyx_object_s *def_vector, bool modified)\n{{\n    /* TO BE IMPLEMENTED */\n}}\n')
+                    callback_list1.append(f'static void _{vector["name"].lower()}_{vectorDef["name"].lower()}_callback(struct nyx_object_s *def_vector, bool modified)\n{{\n    /* TO BE IMPLEMENTED */\n}}\n')
 
-                    callbackList2.append(f'vector_def_{device['name'].lower()}_{vector['name'].lower()}_{vectorDef['name'].lower()}->base.out_callback = _{vector['name'].lower()}_{vectorDef['name'].lower()}_callback;')
+                    callback_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}->base.out_callback = _{vector["name"].lower()}_{vectorDef["name"].lower()}_callback;')
 
             ############################################################################################################
 
-            vectorList1.append(f'nyx_dict_t *vector_{device['name'].lower()}_{vector['name'].lower()} = NULL;')
+            vector_list1.append(f'nyx_dict_t *vector_{device["name"].lower()}_{vector["name"].lower()} = NULL;')
 
-            vectorDefList1.append('NULL,')
+            vector_def_list1.append('NULL,')
 
             ############################################################################################################
 
             if vector['callback']:
 
-                callbackList1.append(f'static void _{vector['name'].lower()}_callback(struct nyx_object_s *vector, bool modified)\n{{\n    /* TO BE IMPLEMENTED */\n}}\n')
+                callback_list1.append(f'static void _{vector["name"].lower()}_callback(struct nyx_object_s *vector, bool modified)\n{{\n    /* TO BE IMPLEMENTED */\n}}\n')
 
-                callbackList2.append(f'vector_{device['name'].lower()}_{vector['name'].lower()}->base.out_callback = _{vector['name'].lower()}_callback;')
+                callback_list2.append(f'vector_{device["name"].lower()}_{vector["name"].lower()}->base.out_callback = _{vector["name"].lower()}_callback;')
 
             ############################################################################################################
             # OPTIONS AND DEFINITIONS                                                                                  #
             ############################################################################################################
 
-            optionList = []
+            option_list = []
 
             if vector['label']:
-                optionList.append(f'.label = "{vector['label']}"')
+                option_list.append(f'.label = "{vector["label"]}"')
             if vector['group']:
-                optionList.append(f'.group = "{vector['group']}"')
+                option_list.append(f'.group = "{vector["group"]}"')
             if vector['timeout']:
-                optionList.append(f'.timeout = {vector['timeout']}')
+                option_list.append(f'.timeout = {vector["timeout"]}')
             if vector['message']:
-                optionList.append(f'.message = {vector['message']}')
+                option_list.append(f'.message = {vector["message"]}')
 
-            if not optionList:
-                optionList.append('/**/')
+            if not option_list:
+                option_list.append('/**/')
 
             ############################################################################################################
 
-            defsAndOpts = f'''{'\n    '.join(vectorDefList2)}
+            defs_and_opts = f'''{f'{LINE_BREAK}    '.join(vector_def_list2)}
 
     nyx_dict_t *{device['name'].lower()}_{vector['name'].lower()}_defs[] = {{
-        {'\n        '.join(vectorDefList1)}
+        {f'{LINE_BREAK}        '.join(vector_def_list1)}
     }};
 
     nyx_opts_t {device['name'].lower()}_{vector['name'].lower()}_opts = {{
-        {'\n        '.join(optionList)}
+        {f'{LINE_BREAK}        '.join(option_list)}
     }};
 '''
 
@@ -377,7 +381,7 @@ def generateDevices(driverPath, descr, override_device):
             # VECTOR                                                                                                   #
             ############################################################################################################
 
-            vectorList2.append(f'/* VECTOR {device['name'].upper()}::{vector['name'].upper()} */\n')
+            vector_list2.append(f'/* VECTOR {device["name"].upper()}::{vector["name"].upper()} */\n')
 
             ############################################################################################################
             # NUMBER                                                                                                   #
@@ -385,7 +389,7 @@ def generateDevices(driverPath, descr, override_device):
 
             if vector['type'] == 'number':
 
-                vectorList2.append(f'''{defsAndOpts}
+                vector_list2.append(f'''{defs_and_opts}
     vector_{device['name'].lower()}_{vector['name'].lower()} = nyx_number_def_vector_new(
         "{device['name']}",
         "{vector['name']}",
@@ -402,7 +406,7 @@ def generateDevices(driverPath, descr, override_device):
 
             elif vector['type'] == 'text':
 
-                vectorList2.append(f'''{defsAndOpts}
+                vector_list2.append(f'''{defs_and_opts}
     vector_{device['name'].lower()}_{vector['name'].lower()} = nyx_text_def_vector_new(
         "{device['name']}",
         "{vector['name']}",
@@ -419,7 +423,7 @@ def generateDevices(driverPath, descr, override_device):
 
             elif vector['type'] == 'light':
 
-                vectorList2.append(f'''{defsAndOpts}
+                vector_list2.append(f'''{defs_and_opts}
     vector_{device['name'].lower()}_{vector['name'].lower()} = nyx_light_def_vector_new(
         "{device['name']}",
         "{vector['name']}",
@@ -435,7 +439,7 @@ def generateDevices(driverPath, descr, override_device):
 
             elif vector['type'] == 'switch':
 
-                vectorList2.append(f'''{defsAndOpts}
+                vector_list2.append(f'''{defs_and_opts}
     vector_{device['name'].lower()}_{vector['name'].lower()} = nyx_switch_def_vector_new(
         "{device['name']}",
         "{vector['name']}",
@@ -453,7 +457,7 @@ def generateDevices(driverPath, descr, override_device):
 
             elif vector['type'] == 'blob':
 
-                vectorList2.append(f'''{defsAndOpts}
+                vector_list2.append(f'''{defs_and_opts}
     vector_{device['name'].lower()}_{vector['name'].lower()} = nyx_blob_def_vector_new(
         "{device['name']}",
         "{vector['name']}",
@@ -464,11 +468,11 @@ def generateDevices(driverPath, descr, override_device):
     );
 ''')
 
-        ################################################################################################################
+            ############################################################################################################
 
-        if device['disabled'] or vector['disabled']:
+            if device['disabled'] or vector['disabled']:
 
-            vectorList2.append(f'vector_{device['name'].lower()}_{vector['name'].lower()}->base.flags |= INDI_FLAGS_XXXX_DISABLED;\n')
+                vector_list2.append(f'vector_{device["name"].lower()}_{vector["name"].lower()}->base.flags |= INDI_FLAGS_XXXX_DISABLED;\n')
 
         ################################################################################################################
 
@@ -479,13 +483,13 @@ def generateDevices(driverPath, descr, override_device):
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-{'\n/*--------------------------------------------------------------------------------------------------------------------*/\n\n'.join(callbackList1).rstrip() if callbackList1 else '/* TO BE IMPLEMENTED */'}
+{f'{LINE_BREAK}{LINE_BREAK}/*--------------------------------------------------------------------------------------------------------------------*/{LINE_BREAK}{LINE_BREAK}'.join(callback_list1).rstrip() if callback_list1 else '/* TO BE IMPLEMENTED */'}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 void device_{device['name'].lower()}_initialize(void)
 {{
-    {'\n    '.join(callbackList2) + '\n\n    /* TO BE IMPLEMENTED */' if callbackList2 else '/* TO BE IMPLEMENTED */'}
+    {f'{LINE_BREAK}    '.join(callback_list2) + f'{LINE_BREAK}{LINE_BREAK}    /* TO BE IMPLEMENTED */' if callback_list2 else '/* TO BE IMPLEMENTED */'}
 }}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -498,9 +502,9 @@ void device_{device['name'].lower()}_finalize(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-        if override_device or not os.path.isfile(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c')):
+        if override_device or not os.path.isfile(os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.c')):
 
-            with open(os.path.join(driverPath, 'src', f'device_{device['name'].lower()}.c'), 'wt') as f:
+            with open(os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.c'), 'wt') as f:
 
                 f.write(template)
 
@@ -514,7 +518,7 @@ void device_{device['name'].lower()}_finalize(void)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-{'\n'.join(vectorList1)}
+{LINE_BREAK.join(vector_list1)}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -524,13 +528,13 @@ void nyx_glue_initialize(void)
     /* INITIALIZE VECTORS                                                                                             */
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    {'\n    '.join(vectorList2).rstrip()}
+    {f'{LINE_BREAK}    '.join(vector_list2).rstrip()}
 
     /*----------------------------------------------------------------------------------------------------------------*/
     /* INITIALIZE HARDWARE                                                                                            */
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    {'\n    '.join(ctorList).rstrip()}
+    {f'{LINE_BREAK}    '.join(ctor_list).rstrip()}
 
     /*----------------------------------------------------------------------------------------------------------------*/
 }}
@@ -543,7 +547,7 @@ void nyx_glue_finalize(void)
     /* FINALIZE HARDWARE                                                                                              */
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    {'\n    '.join(dtorList).rstrip()}
+    {f'{LINE_BREAK}    '.join(dtor_list).rstrip()}
 
     /*----------------------------------------------------------------------------------------------------------------*/
 }}
@@ -551,7 +555,7 @@ void nyx_glue_finalize(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-    with open(os.path.join(driverPath, 'src', 'glue.c'), 'wt') as f:
+    with open(os.path.join(driver_path, 'src', 'glue.c'), 'wt') as f:
 
         f.write(template)
 
@@ -583,37 +587,39 @@ def main():
 
             descr = json.load(f)
 
-    except IOError as e:
+    except IOError:
 
         return 1
 
     ####################################################################################################################
 
-    driverPath = os.path.join(args.output, descr['nodeName'])
+    driver_path = os.path.join(args.output, descr['nodeName'])
 
     ####################################################################################################################
 
-    if os.path.isdir(driverPath):
+    if os.path.isdir(driver_path):
 
         if args.override_project:
 
-            shutil.rmtree(driverPath)
+            shutil.rmtree(driver_path)
 
-            os.makedirs(os.path.join(driverPath, 'src'))
+            # noinspection PyTypeChecker
+            os.makedirs(os.path.join(driver_path, 'src'))
 
     else:
 
-        os.makedirs(os.path.join(driverPath, 'src'))
+        # noinspection PyTypeChecker
+        os.makedirs(os.path.join(driver_path, 'src'))
 
     ####################################################################################################################
 
-    generateCMakeLists(driverPath, descr)
+    generate_cmake_lists(driver_path, descr)
 
-    generateHeader(driverPath, descr)
+    generate_header(driver_path, descr)
 
-    generateMain(driverPath, descr, args.override_main)
+    generate_main(driver_path, descr, args.override_main)
 
-    generateDevices(driverPath, descr, args.override_device)
+    generate_devices(driver_path, descr, args.override_device)
 
     ####################################################################################################################
 
