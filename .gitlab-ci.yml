@@ -6,15 +6,11 @@ variables:
 before_script:
     - apk update
     - apk add --no-cache bash curl ca-certificates
-    - apk add --no-cache gcc g++ make rust cargo pkgconfig python3-dev py3-virtualenv gtk+3.0-dev libsoup3-dev webkit2gtk-dev
+    - apk add --no-cache gcc g++ make npm nodejs rust cargo pkgconfig python3-dev py3-virtualenv gtk+3.0-dev libsoup3-dev webkit2gtk-dev
 
     - python3 -m venv "${HOME}/.venv/"
     - source "${HOME}/.venv/bin/activate"
     - pip install pyinstaller
-
-    - curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v${NODE_VERSION}/install.sh" | bash
-    - source "${HOME}/.nvm/nvm.sh"
-    - nvm install 20
 
     - npm --version
     - node --version
@@ -30,8 +26,6 @@ build_project:
     script:
         - source "${HOME}/.venv/bin/activate"
         - ./gen/build.sh
-
-        - source "${HOME}/.nvm/nvm.sh"
         - npm install
         - npm run tauri-prod
     artifacts:
