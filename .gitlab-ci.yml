@@ -1,4 +1,4 @@
-image: ubuntu:oracular
+image: ubuntu:jammy
 
 variables:
     NODE_VERSION: "0.40.0"
