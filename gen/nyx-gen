@@ -355,13 +355,13 @@ def generate_devices(driver_path, descr, override):
             option_list = []
 
             if vector['label']:
-                option_list.append(f'.label = "{vector["label"]}"')
+                option_list.append(f'.label = "{vector["label"]}",')
             if vector['group']:
-                option_list.append(f'.group = "{vector["group"]}"')
+                option_list.append(f'.group = "{vector["group"]}",')
             if vector['timeout']:
-                option_list.append(f'.timeout = {vector["timeout"]}')
+                option_list.append(f'.timeout = {vector["timeout"]},')
             if vector['message']:
-                option_list.append(f'.message = {vector["message"]}')
+                option_list.append(f'.message = {vector["message"]},')
 
             if not option_list:
                 option_list.append('/**/')
