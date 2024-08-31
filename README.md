@@ -32,6 +32,8 @@ Before using Nyx Assistant, make sure that `libfuse2` is installed:
 sudo dnf install fuse-libs
 # or
 sudo apt-get install libfuse2
+# or
+sudo apt-get install libfuse2t64
 ```
 
 Developer
