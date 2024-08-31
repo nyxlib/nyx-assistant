@@ -18,6 +18,22 @@ Nyx Assistant
 
 TODO
 
+Downloading Nyx Assistant
+=========================
+
+The last build can be downloaded [there](https://gitlab.in2p3.fr/lpsc-kid/nyx-assistant/-/artifacts).
+
+Installing Nyx Assistant
+========================
+
+Before using Nyx Assistant, make sure that `libfuse2` is installed:
+
+```bash
+sudo dnf install
+# or
+sudo apt-get install libfuse2
+```
+
 Developer
 =========
 
