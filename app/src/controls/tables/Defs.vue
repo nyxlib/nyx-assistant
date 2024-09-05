@@ -47,6 +47,8 @@ const defAppend = () => {
         min: 0,
         max: 0,
         step: 0,
+        blobFormat: '',
+        blobSize: 0,
         callback: false,
     };
 
@@ -237,6 +239,31 @@ const defUp = (def1) => {
                                         <label class="col-form-label col-sm-3 py-1" :for="`CF0F2894_${idx}`">Step</label>
                                         <div class="col-sm-9">
                                             <input class="form-control form-control-sm" type="text" :id="`CF0F2894_${idx}`" required="required" v-model="def.step" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!--************************************************************************************ -->
+
+                            <div class="row" v-if="type === 'blob'">
+                                <div class="col-md-6">
+
+                                    <div class="row mb-2">
+                                        <label class="col-form-label col-sm-3 py-1" :for="`ECF6D0D6_${idx}`">Format</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control form-control-sm" type="text" :id="`ECF6D0D6_${idx}`" required="required" v-model="def.blobFormat" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div class="row mb-2">
+                                        <label class="col-form-label col-sm-3 py-1" :for="`C7D94FF3_${idx}`">Size</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control form-control-sm" type="number" :id="`C7D94FF3_${idx}`" readonly="readonly" v-model="def.blobSize" />
                                         </div>
                                     </div>
 
