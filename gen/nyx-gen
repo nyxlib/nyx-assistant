@@ -208,10 +208,10 @@ int main()
 
     while(s_signo == 0)
     {{
-        nyx_node_pool(node, {descr['nodeTimeout']});
+        nyx_node_poll(node, {descr['nodeTimeout']});
     }}
 
-    nyx_node_free(node, true);
+    nyx_node_finalize(node, true);
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
