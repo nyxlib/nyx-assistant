@@ -34,8 +34,16 @@ const DEFAULT_GLOBALS = {
     /* NODE */
     nodeName: '',
     nodeTimeout: 1000,
+    mode: 'posix',
+    /* POSIX */
     hardcoded: true,
     static: false,
+    /* ARDUINO WIFI */
+    wifiName: '',
+    wifiPassword: '',
+    /* ARDUINO ETHERNET */
+    ethernetController: 'w5500',
+    ethernetCSPin: 0,
     /* MQTT */
     enableMQTT: false,
     mqttURI: '',
