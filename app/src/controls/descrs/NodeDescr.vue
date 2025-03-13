@@ -123,8 +123,8 @@ const generate = (override = null) => {
                     <div class="card mb-3">
                         <select class="form-select card-header border-0 border-bottom">
                             <option value="posix">Node - POSIX mode</option>
-                            <option value="arduino-wifi">Node - Arduino with WiFi mode</option>
-                            <option value="arduino-ethernet">Node - Arduino with Ethernet mode</option>
+                            <option value="arduino-wifi">Node - Arduino mode with WiFi</option>
+                            <option value="arduino-ethernet">Node - Arduino mode with Ethernet</option>
                         </select>
                         <div class="card-body">
 
