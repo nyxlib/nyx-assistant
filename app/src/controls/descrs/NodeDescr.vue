@@ -2,7 +2,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {inject} from 'vue';
+import {inject, reactive, computed, onMounted} from 'vue';
 
 import {Command} from '@tauri-apps/plugin-shell';
 
@@ -40,6 +40,16 @@ const props = defineProps({
         default: '',
     }
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const state = reactive({
+    boards: []
+});
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const boards = computed(() => state.boards.filter((board) => board.frameworks.includes('arduino')));
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
@@ -103,6 +113,29 @@ const generate = (override = null) => {
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
+/* INITIALIZATION                                                                                                     */
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+onMounted(() => {
+
+    fetch('https://addons.nyxlib.org/api/platformio/boards/').then((response) => {
+
+        response.json().then((result) => {
+
+            state.boards = result;
+
+        }).catch(() => {
+
+            state.boards = [];
+        });
+
+    }).catch(() => {
+
+        state.boards = [];
+    });
+});
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 </script>
 
 <template>
@@ -121,7 +154,7 @@ const generate = (override = null) => {
                     <!-- ******************************************************************************************* -->
 
                     <div class="card mb-3">
-                        <select class="form-select card-header border-0 border-bottom">
+                        <select class="form-select card-header border-0 border-bottom" v-model="globals.mode">
                             <option value="posix">Node - POSIX mode</option>
                             <option value="arduino-wifi">Node - Arduino mode with WiFi</option>
                             <option value="arduino-ethernet">Node - Arduino mode with Ethernet</option>
@@ -160,14 +193,23 @@ const generate = (override = null) => {
                                     </div>
 
                                     <div class="mb-3" :hidden="globals.mode != 'arduino-wifi'">
-                                        <label class="form-label" for="EFCECA87">WiFi name</label>
-                                        <input class="form-control form-control-sm" type="text" id="EFCECA87" placeholder="WiFi name" required="required" v-model="globals.wifiName" />
+                                        <label class="form-label" for="EFCECA87">WiFi SSID</label>
+                                        <input class="form-control form-control-sm" type="text" id="EFCECA87" placeholder="WiFi SSID" required="required" v-model="globals.wifiSSID" />
                                     </div>
 
                                     <div class="mb-3" :hidden="globals.mode != 'arduino-ethernet'">
                                         <label class="form-label" for="F6C2CDF9">Ethernet controller</label>
                                         <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.ethernetController">
                                             <option value="w5500">W5500</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-0" :hidden="globals.mode != 'arduino-wifi' && globals.mode != 'arduino-ethernet'">
+                                        <label class="form-label" for="F6C2CDF9">Board</label>
+                                        <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.board">
+                                            <option :value="`${board.platform}|${board.id}`" v-for="board in boards" :key="board.id">
+                                                {{ board.name }}
+                                            </option>
                                         </select>
                                     </div>
 
@@ -189,48 +231,54 @@ const generate = (override = null) => {
                                         <input class="form-control form-control-sm" type="number" min="0" id="EAEEA67C" placeholder="Ethernet CS pin" required="required" v-model="globals.ethernetCSPin" />
                                     </div>
 
-                                    <div class="input-group input-group-sm w-100" :hidden="!HAS_TAURI">
+                                    <div class="mb-0">
 
-                                        <!-- *********************************************************************** -->
+                                        <label class="form-label" for="B6BD1084">Generate</label>
 
-                                        <input class="form-control" type="text" :value="path" placeholder="-- untitled --" readonly="readonly" />
+                                        <div class="input-group input-group-sm w-100" :hidden="!HAS_TAURI">
 
-                                        <!-- *********************************************************************** -->
+                                            <!-- *********************************************************************** -->
 
-                                        <button class="btn btn-success" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate()">
-                                            <i class="bi bi-tornado"></i> Generate
-                                        </button>
+                                            <input class="form-control" type="text" :value="path" id="B6BD1084" placeholder="-- untitled --" readonly="readonly" />
 
-                                        <button class="btn btn-success dropdown-toggle dropdown-toggle-split border-start" type="button" data-bs-toggle="dropdown">
-                                            <span class="visually-hidden">Toggle Dropdown</span>
-                                        </button>
+                                            <!-- *********************************************************************** -->
 
-                                        <!-- *********************************************************************** -->
+                                            <button class="btn btn-success" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate()">
+                                                <i class="bi bi-tornado"></i> Generate
+                                            </button>
 
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-cmake')">
-                                                    <i class="bi bi-exclamation-triangle text-danger"></i> Override CMake
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-main')">
-                                                    <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-device')">
-                                                    <i class="bi bi-exclamation-triangle text-danger"></i> Override devices
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-project')">
-                                                    <i class="bi bi-exclamation-triangle text-danger"></i> Override project
-                                                </button>
-                                            </li>
-                                        </ul>
+                                            <button class="btn btn-success dropdown-toggle dropdown-toggle-split border-start" type="button" data-bs-toggle="dropdown">
+                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                            </button>
 
-                                        <!-- *********************************************************************** -->
+                                            <!-- *********************************************************************** -->
+
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-cmake')">
+                                                        <i class="bi bi-exclamation-triangle text-danger"></i> Override CMake
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-main')">
+                                                        <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-device')">
+                                                        <i class="bi bi-exclamation-triangle text-danger"></i> Override devices
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-project')">
+                                                        <i class="bi bi-exclamation-triangle text-danger"></i> Override project
+                                                    </button>
+                                                </li>
+                                            </ul>
+
+                                            <!-- *********************************************************************** -->
+
+                                        </div>
 
                                     </div>
 

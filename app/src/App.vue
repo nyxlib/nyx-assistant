@@ -38,8 +38,10 @@ const DEFAULT_GLOBALS = {
     /* POSIX */
     hardcoded: true,
     static: false,
+    /* ARDUINO */
+    board: '',
     /* ARDUINO WIFI */
-    wifiName: '',
+    wifiSSID: '',
     wifiPassword: '',
     /* ARDUINO ETHERNET */
     ethernetController: 'w5500',
