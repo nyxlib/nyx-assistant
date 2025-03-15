@@ -205,7 +205,7 @@ onMounted(() => {
                                     </div>
 
                                     <div class="mb-0" :hidden="globals.mode != 'arduino-wifi' && globals.mode != 'arduino-ethernet'">
-                                        <label class="form-label" for="F6C2CDF9">Board</label>
+                                        <label class="form-label" for="F6C2CDF9">PlatformIO board</label>
                                         <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.board">
                                             <option :value="`${board.platform}|${board.id}`" v-for="board in boards" :key="board.id">
                                                 {{ board.name }}

@@ -36,7 +36,7 @@ project({descr['nodeName'].lower()} C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_compile_options(-Wall -Wno-unknown-pragmas -O3)
+add_compile_options(-Wall -Wno-unknown-pragmas -Wno-unused-function -O3)
 
 ########################################################################################################################
 
@@ -81,6 +81,8 @@ target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if des
 ; https://docs.platformio.org/page/projectconf.html
 
 [env]
+build_flags = -Wno-unknown-pragmas -Wno-unused-function
+
 lib_deps = https://github.com/nyxlib/nyx-node.git
 
 [env:nyx_node]
@@ -91,9 +93,11 @@ framework = arduino
 
     ####################################################################################################################
 
-    if override or not os.path.isfile(os.path.join(driver_path, filename)):
+    filename = os.path.join(driver_path, filename)
 
-        with open(os.path.join(driver_path, filename), 'wt') as f:
+    if override or not os.path.isfile(filename):
+
+        with open(filename, 'wt') as f:
 
             f.write(template)
 
@@ -156,7 +160,9 @@ void nyx_glue_finalize(void);
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-    with open(os.path.join(driver_path, 'src', 'internal.h'), 'wt') as f:
+    filename = os.path.join(driver_path, 'src', 'internal.h')
+
+    with open(filename, 'wt') as f:
 
         f.write(template)
 
@@ -179,6 +185,8 @@ def generate_main(driver_path, descr, override):
     ####################################################################################################################
 
     if descr['mode'] == 'posix':
+
+        filename = 'main.c'
 
         template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -283,11 +291,18 @@ _err:
 
     elif descr['mode'] == 'arduino-wifi':
 
+        filename = 'main.cpp'
+
         template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-#include <WiFi.h>
 #include <Arduino.h>
+
+#ifdef ESP8266
+#  include <ESP8266WiFi.h>
+#else
+#  include <WiFi.h>
+#endif
 
 #include "internal.h"
 
@@ -365,6 +380,8 @@ void loop()
     ####################################################################################################################
 
     elif descr['mode'] == 'arduino-ethernet':
+
+        filename = 'main.cpp'
 
         template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -447,9 +464,11 @@ void loop()
 
     ####################################################################################################################
 
-    if override or not os.path.isfile(os.path.join(driver_path, 'src', 'main.c')):
+    filename = os.path.join(driver_path, 'src', filename)
 
-        with open(os.path.join(driver_path, 'src', 'main.c'), 'wt') as f:
+    if override or not os.path.isfile(filename):
+
+        with open(filename, 'wt') as f:
 
             f.write(template)
 
@@ -708,9 +727,11 @@ void device_{device['name'].lower()}_finalize(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-        if override or not os.path.isfile(os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.c')):
+        filename = os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.cpp' if descr['mode'] != 'posix' else f'device_{device["name"].lower()}.c')
 
-            with open(os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.c'), 'wt') as f:
+        if override or not os.path.isfile(filename):
+
+            with open(filename, 'wt') as f:
 
                 f.write(template)
 
@@ -761,7 +782,9 @@ void nyx_glue_finalize(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-    with open(os.path.join(driver_path, 'src', 'glue.c'), 'wt') as f:
+    filename = os.path.join(driver_path, 'src', 'glue.cpp' if descr['mode'] != 'posix' else 'glue.c')
+
+    with open(filename, 'wt') as f:
 
         f.write(template)
 
