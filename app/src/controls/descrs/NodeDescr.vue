@@ -49,10 +49,6 @@ const state = reactive({
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-
-const boards = computed(() => state.boards.filter((board) => board.frameworks.includes('arduino')));
-
-/*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -229,8 +225,8 @@ onMounted(() => {
 
                                     <div class="mb-0" :hidden="globals.mode != 'arduino-wifi'">
                                         <label class="form-label" for="F6C2CDF9">PlatformIO board</label>
-                                        <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.boardsWithWifi">
-                                            <option :value="`${board.platform}|${board.id}`" v-for="board in boards" :key="board.id">
+                                        <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.board">
+                                            <option :value="`${board.platform}|${board.id}`" v-for="board in state.boardsWithWifi" :key="board.id">
                                                 {{ board.name }}
                                             </option>
                                         </select>
@@ -238,8 +234,8 @@ onMounted(() => {
 
                                     <div class="mb-0" :hidden="globals.mode != 'arduino-ethernet'">
                                         <label class="form-label" for="B1204B1B">PlatformIO board</label>
-                                        <select class="form-select form-select-sm" id="B1204B1B" v-model="globals.boardsWithEthernet">
-                                            <option :value="`${board.platform}|${board.id}`" v-for="board in boards" :key="board.id">
+                                        <select class="form-select form-select-sm" id="B1204B1B" v-model="globals.board">
+                                            <option :value="`${board.platform}|${board.id}`" v-for="board in state.boardsWithEthernet" :key="board.id">
                                                 {{ board.name }}
                                             </option>
                                         </select>

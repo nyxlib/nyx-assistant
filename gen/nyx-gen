@@ -85,6 +85,8 @@ build_flags = -Wno-unknown-pragmas -Wno-unused-function
 
 lib_deps = https://github.com/nyxlib/nyx-node.git
 
+monitor_speed = 115200
+
 [env:nyx_node]
 platform = {platform}
 board = {board}
