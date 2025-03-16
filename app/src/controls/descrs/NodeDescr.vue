@@ -44,7 +44,8 @@ const props = defineProps({
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const state = reactive({
-    boards: []
+    boardsWithWifi: [],
+    boardsWithEthernet: [],
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -118,21 +119,43 @@ const generate = (override = null) => {
 
 onMounted(() => {
 
-    fetch('https://addons.nyxlib.org/api/platformio/boards/').then((response) => {
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    fetch('https://addons.nyxlib.org/api/platformio/boards/wifi/').then((response) => {
 
         response.json().then((result) => {
 
-            state.boards = result;
+            state.boardsWithWifi = result;
 
         }).catch(() => {
 
-            state.boards = [];
+            state.boardsWithWifi = [];
         });
 
     }).catch(() => {
 
-        state.boards = [];
+        state.boardsWithWifi = [];
     });
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    fetch('https://addons.nyxlib.org/api/platformio/boards/ethernet/').then((response) => {
+
+        response.json().then((result) => {
+
+            state.boardsWithEthernet = result;
+
+        }).catch(() => {
+
+            state.boardsWithEthernet = [];
+        });
+
+    }).catch(() => {
+
+        state.boardsWithEthernet = [];
+    });
+
+    /*----------------------------------------------------------------------------------------------------------------*/
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -204,9 +227,18 @@ onMounted(() => {
                                         </select>
                                     </div>
 
-                                    <div class="mb-0" :hidden="globals.mode != 'arduino-wifi' && globals.mode != 'arduino-ethernet'">
+                                    <div class="mb-0" :hidden="globals.mode != 'arduino-wifi'">
                                         <label class="form-label" for="F6C2CDF9">PlatformIO board</label>
-                                        <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.board">
+                                        <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.boardsWithWifi">
+                                            <option :value="`${board.platform}|${board.id}`" v-for="board in boards" :key="board.id">
+                                                {{ board.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-0" :hidden="globals.mode != 'arduino-ethernet'">
+                                        <label class="form-label" for="B1204B1B">PlatformIO board</label>
+                                        <select class="form-select form-select-sm" id="B1204B1B" v-model="globals.boardsWithEthernet">
                                             <option :value="`${board.platform}|${board.id}`" v-for="board in boards" :key="board.id">
                                                 {{ board.name }}
                                             </option>
