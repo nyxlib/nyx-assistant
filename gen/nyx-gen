@@ -63,7 +63,7 @@ target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if des
 
     ####################################################################################################################
 
-    elif descr['mode'] in ['arduino-wifi', 'arduino-ethernet']:
+    elif descr['mode'] == 'arduino-wifi':
 
         platform, board = descr['board'].split('|')
 
@@ -83,7 +83,7 @@ target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if des
 [env]
 build_flags = -Wno-unknown-pragmas -Wno-unused-function
 
-lib_deps = https://github.com/nyxlib/nyx-node.git
+lib_deps = PubSubClient, https://github.com/nyxlib/nyx-node.git
 
 monitor_speed = 115200
 
@@ -91,6 +91,42 @@ monitor_speed = 115200
 platform = {platform}
 board = {board}
 framework = arduino
+build_flags = -DHAS_WIFI
+'''[1:]
+
+    ####################################################################################################################
+
+    elif descr['mode'] == 'arduino-ethernet':
+
+        platform, board = descr['board'].split('|')
+
+        filename = 'platformio.ini'
+
+        template = f'''
+; PlatformIO Project Configuration File
+;
+;   Build options: build flags, source filter
+;   Upload options: custom upload port, speed and extra flags
+;   Library options: dependencies, extra library storages
+;   Advanced options: extra scripting
+;
+; Please visit documentation for the other options and examples
+; https://docs.platformio.org/page/projectconf.html
+
+[env]
+build_flags = -Wno-unknown-pragmas -Wno-unused-function
+
+lib_deps = PubSubClient, arduino-libraries/Ethernet, https://github.com/nyxlib/nyx-node.git
+
+lib_ignore = WiFiS3, FATFilesystem
+
+monitor_speed = 115200
+
+[env:nyx_node]
+platform = {platform}
+board = {board}
+framework = arduino
+build_flags = -DHAS_ETHERNET
 '''[1:]
 
     ####################################################################################################################
@@ -347,7 +383,9 @@ void setup(void)
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    printf("\\nIP: %s\\n", WiFi.localIP().toString());
+    Serial.print('\\n');
+
+    NYX_INFO(("IP: %s", WiFi.localIP().toString().c_str()));
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -403,12 +441,13 @@ void loop()
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 #include <Arduino.h>
+#include <Ethernet.h>
 
 #include "internal.h"
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-#define W5500_SPI_CS_PIN {descr['ethernetCSPin']}
+#define ETHERNET_CS_PIN {descr['ethernetCSPin']}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -431,6 +470,36 @@ void setup(void)
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    byte ethernet_mac_addr[6];
+
+    nyx_generate_mac_addr(ethernet_mac_addr, 0xEF, 0x02, "{descr['nodeName']}");
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    Ethernet.init(ETHERNET_CS_PIN);
+
+    Ethernet.begin(ethernet_mac_addr);
+
+    if(Ethernet.hardwareStatus() == EthernetNoHardware)
+    {{
+        Serial.print('\\n');
+
+        NYX_ERROR(("Ethernet shield was not found. Sorry, can't run without hardware. :("));
+
+        for(;;)
+        {{
+            delay(1);
+        }}
+    }}
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    Serial.print('\\n');
+
+    NYX_INFO(("IP: %s", Ethernet.localIP().toString().c_str()));
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
     nyx_memory_initialize();
 
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -442,10 +511,6 @@ void setup(void)
     nyx_dict_t *vector_list[] = {{
         {f'{LINE_BREAK}        '.join(vector_list)}
     }};
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    nyx_w5500_spi_cs_pin = W5500_SPI_CS_PIN;
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
