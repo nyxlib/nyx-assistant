@@ -385,7 +385,7 @@ void setup(void)
 
     Serial.print('\\n');
 
-    NYX_INFO(("IP: %s", WiFi.localIP().toString().c_str()));
+    NYX_LOG_INFO("IP: %s", WiFi.localIP().toString().c_str());
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -484,7 +484,7 @@ void setup(void)
     {{
         Serial.print('\\n');
 
-        NYX_ERROR(("Ethernet shield was not found. Sorry, can't run without hardware. :("));
+        NYX_LOG_ERROR("Ethernet shield was not found. Sorry, can't run without hardware. :(");
 
         for(;;)
         {{
@@ -496,7 +496,7 @@ void setup(void)
 
     Serial.print('\\n');
 
-    NYX_INFO(("IP: %s", Ethernet.localIP().toString().c_str()));
+    NYX_LOG_INFO("IP: %s", Ethernet.localIP().toString().c_str());
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
