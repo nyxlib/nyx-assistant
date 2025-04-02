@@ -351,11 +351,11 @@ _err:
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-static nyx_node_t *node = NULL;
+static nyx_node_t *node = nullptr;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-void setup(void)
+void setup()
 {{
     /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -404,10 +404,10 @@ void setup(void)
     /*----------------------------------------------------------------------------------------------------------------*/
 
     node = nyx_node_initialize(
-        {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'NULL'},
-        {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'NULL'},
-        {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'},
-        {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'},
+        {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'nullptr'},
+        {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'nullptr'},
+        {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'},
+        {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'},
         "{descr['nodeName']}",
         vector_list,
         3000,
@@ -422,7 +422,7 @@ void setup(void)
 
 void loop()
 {{
-    if(node != NULL)
+    if(node != nullptr)
     {{
         nyx_node_poll(node, {descr['nodeTimeout']});
     }}
@@ -451,11 +451,11 @@ void loop()
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-static nyx_node_t *node = NULL;
+static nyx_node_t *node = nullptr;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-void setup(void)
+void setup()
 {{
     /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -515,10 +515,10 @@ void setup(void)
     /*----------------------------------------------------------------------------------------------------------------*/
 
     node = nyx_node_initialize(
-        {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'NULL'},
-        {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'NULL'},
-        {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'},
-        {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'},
+        {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'nullptr'},
+        {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'nullptr'},
+        {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'},
+        {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'},
         "{descr['nodeName']}",
         vector_list,
         3000,
@@ -533,7 +533,7 @@ void setup(void)
 
 void loop()
 {{
-    if(node != NULL)
+    if(node != nullptr)
     {{
         nyx_node_poll(node, {descr['nodeTimeout']});
     }}
