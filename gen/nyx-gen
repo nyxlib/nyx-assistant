@@ -661,19 +661,12 @@ def generate_devices(driver_path, descr, override):
             # OPTIONS AND DEFINITIONS                                                                                  #
             ############################################################################################################
 
-            option_list = []
-
-            if vector['label']:
-                option_list.append(f'.label = "{vector["label"]}",')
-            if vector['group']:
-                option_list.append(f'.group = "{vector["group"]}",')
-            if vector['timeout']:
-                option_list.append(f'.timeout = {vector["timeout"]},')
-            if vector['message']:
-                option_list.append(f'.message = {vector["message"]},')
-
-            if not option_list:
-                option_list.append('/**/')
+            option_list = [
+                f'.label = {"\"" + vector["label"] + "\"" if vector["label"] else "NULL"},',
+                f'.group = {"\"" + vector["group"] + "\"" if vector["group"] else "NULL"},',
+                f'.timeout = {       vector["timeout"]        if vector["timeout"] else "0x00"},',
+                f'.message = {"\"" + vector["message"] + "\"" if vector["message"] else "NULL"},',
+            ]
 
             ############################################################################################################
 
