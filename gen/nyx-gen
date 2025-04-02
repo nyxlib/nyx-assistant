@@ -397,7 +397,7 @@ void setup(void)
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    nyx_dict_t *vector_list[] = {{
+    static nyx_dict_t *vector_list[] = {{
         {f'{LINE_BREAK}        '.join(vector_list)}
     }};
 
@@ -508,7 +508,7 @@ void setup(void)
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    nyx_dict_t *vector_list[] = {{
+    static nyx_dict_t *vector_list[] = {{
         {f'{LINE_BREAK}        '.join(vector_list)}
     }};
 
