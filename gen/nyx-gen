@@ -85,6 +85,8 @@ build_flags = -Wno-unused-function
 
 lib_deps = PubSubClient, https://github.com/nyxlib/nyx-node.git
 
+lib_ignore = FATFilesystem
+
 monitor_speed = 115200
 
 [env:nyx_node]
@@ -370,7 +372,9 @@ void setup()
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    #ifdef WIFI_STA
     WiFi.mode(WIFI_STA);
+    #endif
 
     WiFi.begin(WIFI_SSID, WIFI_PASS);
 
