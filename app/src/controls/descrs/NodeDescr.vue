@@ -2,7 +2,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {inject, reactive, computed, onMounted} from 'vue';
+import {inject, reactive, onMounted} from 'vue';
 
 import {Command} from '@tauri-apps/plugin-shell';
 
@@ -226,7 +226,7 @@ onMounted(() => {
                                     <div class="mb-0" :hidden="globals.mode != 'arduino-wifi'">
                                         <label class="form-label" for="F6C2CDF9">PlatformIO board</label>
                                         <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.board">
-                                            <option :value="`${board.platform}|${board.id}`" v-for="board in state.boardsWithWifi" :key="board.id">
+                                            <option :value="`${board.platform}|${board.id}|${board.ram}`" v-for="board in state.boardsWithWifi" :key="board.id">
                                                 {{ board.name }}
                                             </option>
                                         </select>
@@ -235,7 +235,7 @@ onMounted(() => {
                                     <div class="mb-0" :hidden="globals.mode != 'arduino-ethernet'">
                                         <label class="form-label" for="B1204B1B">PlatformIO board</label>
                                         <select class="form-select form-select-sm" id="B1204B1B" v-model="globals.board">
-                                            <option :value="`${board.platform}|${board.id}`" v-for="board in state.boardsWithEthernet" :key="board.id">
+                                            <option :value="`${board.platform}|${board.id}|${board.ram}`" v-for="board in state.boardsWithEthernet" :key="board.id">
                                                 {{ board.name }}
                                             </option>
                                         </select>

@@ -65,7 +65,7 @@ target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if des
 
     elif descr['mode'] == 'arduino-wifi':
 
-        platform, board = descr['board'].split('|')
+        platform, board, ram = descr['board'].split('|')
 
         filename = 'platformio.ini'
 
@@ -81,7 +81,7 @@ target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if des
 ; https://docs.platformio.org/page/projectconf.html
 
 [env]
-build_flags = -Wno-unused-function
+build_flags = -DNYX_HAS_WIFI -DNYX_RAM_SIZE={ram} -Wno-unused-function
 
 lib_deps = PubSubClient, https://github.com/nyxlib/nyx-node.git
 
@@ -93,14 +93,13 @@ monitor_speed = 115200
 platform = {platform}
 board = {board}
 framework = arduino
-build_flags = -DHAS_WIFI
 '''[1:]
 
     ####################################################################################################################
 
     elif descr['mode'] == 'arduino-ethernet':
 
-        platform, board = descr['board'].split('|')
+        platform, board, ram = descr['board'].split('|')
 
         filename = 'platformio.ini'
 
@@ -116,7 +115,7 @@ build_flags = -DHAS_WIFI
 ; https://docs.platformio.org/page/projectconf.html
 
 [env]
-build_flags = -Wno-unused-function
+build_flags = -DNYX_HAS_ETHERNET -DNYX_RAM_SIZE={ram} -Wno-unused-function
 
 lib_deps = PubSubClient, arduino-libraries/Ethernet, https://github.com/nyxlib/nyx-node.git
 
@@ -128,7 +127,6 @@ monitor_speed = 115200
 platform = {platform}
 board = {board}
 framework = arduino
-build_flags = -DHAS_ETHERNET
 '''[1:]
 
     ####################################################################################################################
