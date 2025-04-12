@@ -199,7 +199,7 @@ onMounted(() => {
 
                                     <div class="mb-3" :hidden="globals.mode != 'arduino-wifi'">
                                         <label class="form-label" for="EFCECA87">WiFi SSID</label>
-                                        <input class="form-control form-control-sm" type="text" id="EFCECA87" placeholder="WiFi SSID" required="required" v-model="globals.wifiSSID" v-no-autocomplete />
+                                        <input class="form-control form-control-sm" type="text" id="EFCECA87" placeholder="WiFi SSID" required="required" v-model="globals.wifiSSID" autocomplete="username" />
                                     </div>
 
                                     <div class="mb-3" :hidden="globals.mode != 'arduino-ethernet'">
@@ -233,7 +233,7 @@ onMounted(() => {
 
                                     <div class="mb-3" :hidden="globals.mode != 'arduino-wifi'">
                                         <label class="form-label" for="E87BBCE3">WiFi password</label>
-                                        <input class="form-control form-control-sm" type="password" id="E87BBCE3" placeholder="WiFi password" required="required" v-model="globals.wifiPassword" v-password-toggle />
+                                        <input class="form-control form-control-sm" type="text" id="E87BBCE3" placeholder="WiFi password" required="required" v-model="globals.wifiPassword" v-password-toggle />
                                     </div>
 
                                     <div class="mb-3" :hidden="globals.mode != 'arduino-ethernet'">
@@ -328,12 +328,12 @@ onMounted(() => {
 
                                     <div class="mb-3">
                                         <label class="form-label" for="C8A2E5EB">Username<sup class="text-secondary">opt</sup></label>
-                                        <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" :disabled="!globals.enableMQTT" v-model="globals.mqttUsername" v-no-autocomplete />
+                                        <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" :disabled="!globals.enableMQTT" v-model="globals.mqttUsername" autocomplete="username" />
                                     </div>
 
                                     <div class="mb-0">
                                         <label class="form-label" for="CC00EA1C">Password<sup class="text-secondary">opt</sup></label>
-                                        <input class="form-control form-control-sm" type="password" id="CC00EA1C" placeholder="Password" :disabled="!globals.enableMQTT" v-model="globals.mqttPassword" v-password-toggle />
+                                        <input class="form-control form-control-sm" type="text" id="CC00EA1C" placeholder="Password" :disabled="!globals.enableMQTT" v-model="globals.mqttPassword" v-password-toggle />
                                     </div>
 
                                 </div>
