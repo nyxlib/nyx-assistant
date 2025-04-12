@@ -218,7 +218,10 @@ def generate_main(driver_path, descr, override):
 
             vector_list.append(f'vector_{device["name"].lower()}_{vector["name"].lower()},')
 
-    vector_list.append('NULL,')
+    if descr['mode'] == 'posix':
+        vector_list.append('NULL,')
+    else:
+        vector_list.append('nullptr,')
 
     ####################################################################################################################
 

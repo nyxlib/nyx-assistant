@@ -22,7 +22,7 @@ pyinstaller \
 --noconfirm \
 --specpath "${NYX_GEN_HOME}/build/" \
 --workpath "${NYX_GEN_HOME}/build/" \
---distpath "${NYX_GEN_HOME}/../tauri/binaries/" \
+--distpath "${NYX_GEN_HOME}/../src-tauri/binaries/" \
 --name "nyx-gen-${NYX_GEN_HOST}" \
 "${NYX_GEN_HOME}/nyx-gen"
 
