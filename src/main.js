@@ -6,7 +6,7 @@ import {Tooltip} from 'bootstrap';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import dialog from './plugins/dialog';
+import dialog from './plugins/dialog.js';
 
 import App from './App.vue';
 

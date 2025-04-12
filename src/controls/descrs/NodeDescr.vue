@@ -6,6 +6,8 @@ import {inject, reactive, onMounted} from 'vue';
 
 import {Command} from '@tauri-apps/plugin-shell';
 
+import Multiselect from '@vueform/multiselect';
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 import TabPane from '../TabPane.vue';
@@ -44,8 +46,7 @@ const props = defineProps({
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const state = reactive({
-    boardsWithWifi: [],
-    boardsWithEthernet: [],
+    boards: [],
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -117,38 +118,20 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    fetch('https://addons.nyxlib.org/api/platformio/boards/wifi/').then((response) => {
+    fetch('https://addons.nyxlib.org/api/platformio/boards/').then((response) => {
 
         response.json().then((result) => {
 
-            state.boardsWithWifi = result;
+            state.boards = result;
 
         }).catch(() => {
 
-            state.boardsWithWifi = [];
+            state.boards = [];
         });
 
     }).catch(() => {
 
-        state.boardsWithWifi = [];
-    });
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    fetch('https://addons.nyxlib.org/api/platformio/boards/ethernet/').then((response) => {
-
-        response.json().then((result) => {
-
-            state.boardsWithEthernet = result;
-
-        }).catch(() => {
-
-            state.boardsWithEthernet = [];
-        });
-
-    }).catch(() => {
-
-        state.boardsWithEthernet = [];
+        state.boards = [];
     });
 
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -223,19 +206,10 @@ onMounted(() => {
                                         </select>
                                     </div>
 
-                                    <div class="mb-0" :hidden="globals.mode != 'arduino-wifi'">
+                                    <div class="mb-0" :hidden="!['arduino-wifi', 'arduino-ethernet'].includes(globals.mode)">
                                         <label class="form-label" for="F6C2CDF9">PlatformIO board</label>
                                         <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.board">
-                                            <option :value="`${board.platform}|${board.id}|${board.ram}`" v-for="board in state.boardsWithWifi" :key="board.id">
-                                                {{ board.name }}
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-0" :hidden="globals.mode != 'arduino-ethernet'">
-                                        <label class="form-label" for="B1204B1B">PlatformIO board</label>
-                                        <select class="form-select form-select-sm" id="B1204B1B" v-model="globals.board">
-                                            <option :value="`${board.platform}|${board.id}|${board.ram}`" v-for="board in state.boardsWithEthernet" :key="board.id">
+                                            <option :value="`${board.platform}|${board.id}|${board.ram}`" v-for="board in state.boards" :key="board.id">
                                                 {{ board.name }}
                                             </option>
                                         </select>

@@ -2,42 +2,43 @@
     "name": "nyx-assistant",
     "description": "Nyx Assistant",
     "version": "1.0.0",
+    "author": "Jérôme Odier",
+    "license": "GPL",
+    "repository": {
+        "type": "git",
+        "url": "https://gitlab.in2p3.fr/lpsc-kid/nyx-assistant"
+    },
     "type": "module",
     "private": true,
     "scripts": {
-        "app-dev": "cd ./app/ && ../node_modules/vite/bin/vite.js --port 2468 dev",
-        "app-prod": "cd ./app/ && ../node_modules/vite/bin/vite.js build",
-        "tauri-dev": "cd ./tauri/ && ../node_modules/@tauri-apps/cli/tauri.js dev --verbose",
-        "tauri-prod": "cd ./tauri/ && ../node_modules/@tauri-apps/cli/tauri.js build --verbose",
-        "lint": "cd ./app/ && ../node_modules/eslint/bin/eslint.js"
+        "app-dev": "vite --port 2468 dev",
+        "app-prod": "vite build",
+        "lint": "eslint",
+        "tauri-dev": "tauri dev --verbose",
+        "tauri-prod": "tauri build --verbose"
     },
     "dependencies": {
-        "@tauri-apps/api": "^2.0.0-rc.4",
-        "@tauri-apps/plugin-dialog": "^2.0.0-rc.0",
-        "@tauri-apps/plugin-fs": "^2.0.0-rc.1",
-        "@tauri-apps/plugin-notification": "^2.0.0-rc.0",
-        "@tauri-apps/plugin-shell": "^2.0.0-rc.0",
+        "@tauri-apps/api": "^2.4.1",
+        "@tauri-apps/plugin-dialog": "^2.2.1",
+        "@tauri-apps/plugin-fs": "^2.2.1",
+        "@tauri-apps/plugin-notification": "^2.2.2",
+        "@tauri-apps/plugin-shell": "^2.2.1",
         "@types/uuid": "^10.0.0",
-        "bootstrap": "^5.3.3",
+        "@vueform/multiselect": "^2.6.11",
+        "bootstrap": "^5.3.5",
         "bootstrap-icons": "^1.11.3",
-        "uuid": "^10.0.0",
-        "vue": "^3.4.38"
+        "uuid": "^11.1.0",
+        "vue": "^3.5.13"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "^2.0.0-rc.8",
+        "@tauri-apps/cli": "^2.4.1",
         "@types/bootstrap": "^5.2.10",
-        "@vitejs/plugin-vue": "^5.1.2",
-        "@vue/eslint-config-prettier": "^9.0.0",
-        "eslint": "^9.9.1",
-        "eslint-plugin-vue": "^9.27.0",
-        "sass": "^1.77.8",
-        "vite": "^5.4.2",
+        "@vitejs/plugin-vue": "^5.2.3",
+        "@vue/eslint-config-prettier": "^10.2.0",
+        "eslint": "^9.24.0",
+        "eslint-plugin-vue": "^9.33.0",
+        "sass": "^1.86.3",
+        "vite": "^6.2.6",
         "vite-plugin-eslint": "^1.8.1"
-    },
-    "author": "Jérôme Odier",
-    "license": "CeCILL",
-    "repository": {
-        "type": "git",
-        "url": "https://gitlab.in2p3.fr/lpsc-kid/indi-dashboard"
     }
 }
