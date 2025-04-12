@@ -245,7 +245,7 @@ onMounted(() => {
 
                                         <label class="form-label" for="B6BD1084">Generate</label>
 
-                                        <div class="input-group input-group-sm w-100" :hidden="!HAS_TAURI">
+                                        <div class="input-group input-group-sm w-100" v-if="HAS_TAURI">
 
                                             <!-- ******************************************************************* -->
 
@@ -288,6 +288,10 @@ onMounted(() => {
 
                                             <!-- ******************************************************************* -->
 
+                                        </div>
+
+                                        <div class="form-text" v-else>
+                                            <i class="bi bi-laptop"></i> <a href="https://nyxlib.org/installing/" target="_blank">Download the desktop application</a>
                                         </div>
 
                                     </div>
