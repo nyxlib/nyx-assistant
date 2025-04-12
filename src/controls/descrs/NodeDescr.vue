@@ -122,7 +122,10 @@ onMounted(() => {
 
         response.json().then((result) => {
 
-            state.boards = result;
+            state.boards = result.map((board) => ({
+                value: `${board.platform}|${board.id}|${board.ram}`,
+                label: board.name,
+            }));
 
         }).catch(() => {
 
@@ -208,11 +211,16 @@ onMounted(() => {
 
                                     <div class="mb-0" :hidden="!['arduino-wifi', 'arduino-ethernet'].includes(globals.mode)">
                                         <label class="form-label" for="F6C2CDF9">PlatformIO board</label>
-                                        <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.board">
-                                            <option :value="`${board.platform}|${board.id}|${board.ram}`" v-for="board in state.boards" :key="board.id">
-                                                {{ board.name }}
-                                            </option>
-                                        </select>
+                                        <multiselect
+                                            mode="single"
+                                            id="F6C2CDF9"
+                                            :can-clear="true"
+                                            :searchable="true"
+                                            :create-option="true"
+                                            :close-on-select="true"
+                                            :options="state.boards"
+                                            v-model="globals.board"
+                                        />
                                     </div>
 
                                 </div>
