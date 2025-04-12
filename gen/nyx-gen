@@ -329,7 +329,7 @@ _err:
 
     elif descr['mode'] == 'arduino-wifi':
 
-        with open(os.path.join(driver_path, 'src', 'credentials.{descr["HEAD_EXT"]}'), 'wt') as f:
+        with open(os.path.join(driver_path, 'src', f'credentials.{descr["HEAD_EXT"]}'), 'wt') as f:
 
             f.write(f'#define WIFI_SSID "{descr["wifiSSID"]}"\n#define WIFI_PASS "{descr["wifiPassword"]}"\n')
 
