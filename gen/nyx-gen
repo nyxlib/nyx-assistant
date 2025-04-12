@@ -652,7 +652,10 @@ def generate_devices(driver_path, descr, override):
 
             vector_list1.append(f'nyx_dict_t *vector_{device["name"].lower()}_{vector["name"].lower()} = NULL;')
 
-            vector_def_list1.append('NULL,')
+            if descr['mode'] == 'posix':
+                vector_def_list1.append('NULL,')
+            else:
+                vector_def_list1.append('nullptr,')
 
             ############################################################################################################
 
