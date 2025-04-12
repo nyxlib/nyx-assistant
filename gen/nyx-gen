@@ -187,9 +187,9 @@ def generate_header(driver_path, descr):
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-void nyx_glue_initialize(void);
+void nyx_glue_initialize();
 
-void nyx_glue_finalize(void);
+void nyx_glue_finalize();
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -793,14 +793,14 @@ def generate_devices(driver_path, descr, override):
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-void device_{device['name'].lower()}_initialize(void)
+void device_{device['name'].lower()}_initialize()
 {{
     {f'{LINE_BREAK}    '.join(callback_list2) + f'{LINE_BREAK}{LINE_BREAK}    /* TO BE IMPLEMENTED */' if callback_list2 else '/* TO BE IMPLEMENTED */'}
 }}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-void device_{device['name'].lower()}_finalize(void)
+void device_{device['name'].lower()}_finalize()
 {{
     /* TO BE IMPLEMENTED */
 }}
@@ -830,7 +830,7 @@ void device_{device['name'].lower()}_finalize(void)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-void nyx_glue_initialize(void)
+void nyx_glue_initialize()
 {{
     /*----------------------------------------------------------------------------------------------------------------*/
     /* INITIALIZE VECTORS                                                                                             */
@@ -849,7 +849,7 @@ void nyx_glue_initialize(void)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-void nyx_glue_finalize(void)
+void nyx_glue_finalize()
 {{
     /*----------------------------------------------------------------------------------------------------------------*/
     /* FINALIZE HARDWARE                                                                                              */
