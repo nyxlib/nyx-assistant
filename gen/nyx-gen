@@ -218,10 +218,7 @@ def generate_main(driver_path, descr, override):
 
             vector_list.append(f'vector_{device["name"].lower()}_{vector["name"].lower()},')
 
-    if descr['mode'] == 'posix':
-        vector_list.append('NULL,')
-    else:
-        vector_list.append('nullptr,')
+    vector_list.append(f'{descr['NULL']},')
 
     ####################################################################################################################
 
@@ -636,7 +633,7 @@ def generate_devices(driver_path, descr, override):
 
                 ########################################################################################################
 
-                vector_list1.append(f'nyx_dict_t *vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = NULL;')
+                vector_list1.append(f'nyx_dict_t *vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = {descr['NULL']};')
 
                 vector_def_list1.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()},')
 
@@ -650,12 +647,9 @@ def generate_devices(driver_path, descr, override):
 
             ############################################################################################################
 
-            vector_list1.append(f'nyx_dict_t *vector_{device["name"].lower()}_{vector["name"].lower()} = NULL;')
+            vector_list1.append(f'nyx_dict_t *vector_{device["name"].lower()}_{vector["name"].lower()} = {descr['NULL']};')
 
-            if descr['mode'] == 'posix':
-                vector_def_list1.append('NULL,')
-            else:
-                vector_def_list1.append('nullptr,')
+            vector_def_list1.append(f'{descr['NULL']},')
 
             ############################################################################################################
 
@@ -670,10 +664,10 @@ def generate_devices(driver_path, descr, override):
             ############################################################################################################
 
             option_list = [
-                f'.label = {"\"" + vector["label"] + "\"" if vector["label"] else "NULL"},',
-                f'.group = {"\"" + vector["group"] + "\"" if vector["group"] else "NULL"},',
-                f'.timeout = {       vector["timeout"]        if vector["timeout"] else "0x00"},',
-                f'.message = {"\"" + vector["message"] + "\"" if vector["message"] else "NULL"},',
+                f'.label = {"\"" + vector["label"] + "\"" if vector["label"] else descr['NULL']},',
+                f'.group = {"\"" + vector["group"] + "\"" if vector["group"] else descr['NULL']},',
+                f'.timeout = {       vector["timeout"]        if vector["timeout"] else      "0"     },',
+                f'.message = {"\"" + vector["message"] + "\"" if vector["message"] else descr['NULL']},',
             ]
 
             ############################################################################################################
@@ -908,6 +902,10 @@ def main():
     except IOError:
 
         return 1
+
+    ####################################################################################################################
+
+    descr['NULL'] = 'NULL' if descr['mode'] == 'posix' else 'nullptr'
 
     ####################################################################################################################
 
