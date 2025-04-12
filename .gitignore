@@ -6,8 +6,8 @@ build
 target
 node_modules
 
-/tauri/gen/
-/tauri/binaries/
+/src-tauri/gen/
+/src-tauri/binaries/
 
 *.spec
 Cargo.lock
