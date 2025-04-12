@@ -6,7 +6,7 @@
         "beforeDevCommand": "npm run app-prod",
         "beforeBuildCommand": "npm run app-prod",
         "devUrl": "http://localhost:2468/",
-        "frontendDist": "../app/dist/"
+        "frontendDist": "../dist/"
     },
     "app": {
         "windows": [

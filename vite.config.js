@@ -13,7 +13,7 @@ import eslintPlugin from 'vite-plugin-eslint';
 
 // noinspection JSUnusedGlobalSymbols
 export default defineConfig({
-    plugins: [vuePlugin(), /*eslintPlugin({cache: false})*/],
+    plugins: [vuePlugin(), eslintPlugin()],
     base: './',
     build: {
         chunkSizeWarningLimit: 1250,

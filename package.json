@@ -15,7 +15,8 @@
         "app-prod": "vite build",
         "lint": "eslint",
         "tauri-dev": "tauri dev --verbose",
-        "tauri-prod": "tauri build --verbose"
+        "tauri-prod": "tauri build --verbose",
+        "tauri-android-deploy": "adb install ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk"
     },
     "dependencies": {
         "@tauri-apps/api": "^2.4.1",
