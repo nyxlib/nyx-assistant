@@ -209,20 +209,6 @@ onMounted(() => {
                                         </select>
                                     </div>
 
-                                    <div class="mb-0" :hidden="!['arduino-wifi', 'arduino-ethernet'].includes(globals.mode)">
-                                        <label class="form-label" for="F6C2CDF9">PlatformIO board</label>
-                                        <multiselect
-                                            mode="single"
-                                            id="F6C2CDF9"
-                                            :can-clear="true"
-                                            :searchable="true"
-                                            :create-option="true"
-                                            :close-on-select="true"
-                                            :options="state.boards"
-                                            v-model="globals.board"
-                                        />
-                                    </div>
-
                                 </div>
                                 <div class="col-md-6">
 
@@ -240,6 +226,31 @@ onMounted(() => {
                                         <label class="form-label" for="EAEEA67C">Ethernet CS pin</label>
                                         <input class="form-control form-control-sm" type="number" min="0" id="EAEEA67C" placeholder="Ethernet CS pin" required="required" v-model="globals.ethernetCSPin" />
                                     </div>
+
+                                </div>
+                            </div>
+
+                            <!-- *********************************************************************************** -->
+
+                            <div class="row">
+                                <div class="col-md-6">
+
+                                    <div class="mb-0" :hidden="!['arduino-wifi', 'arduino-ethernet'].includes(globals.mode)">
+                                        <label class="form-label" for="F6C2CDF9">PlatformIO board</label>
+                                        <multiselect
+                                            mode="single"
+                                            id="F6C2CDF9"
+                                            :can-clear="true"
+                                            :searchable="true"
+                                            :create-option="true"
+                                            :close-on-select="true"
+                                            :options="state.boards"
+                                            v-model="globals.board"
+                                        />
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
 
                                     <div class="mb-0">
 

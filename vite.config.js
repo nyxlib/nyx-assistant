@@ -26,6 +26,9 @@ export default defineConfig({
             }
         }
     },
+    esbuild: {
+        legalComments: 'none'
+    },
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))
