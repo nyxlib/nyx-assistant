@@ -37,10 +37,10 @@ const _LOCKER_HTML = `
             position: fixed;
 
             top: 40px;
-            left: 00px;
+            bottom: 00px;
 
-            left: 4.5rem;
-            right: 0.0rem;
+            left: 0;
+            right: 0;
 
             /*--------------------------------------------------------------------------------------------------------*/
 
