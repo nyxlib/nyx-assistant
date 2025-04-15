@@ -6,6 +6,8 @@ import {inject, reactive, onMounted} from 'vue';
 
 import {Command} from '@tauri-apps/plugin-shell';
 
+import {fetch} from '@tauri-apps/plugin-http';
+
 import Multiselect from '@vueform/multiselect';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -118,7 +120,7 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    fetch('https://addons.nyxlib.org/api/platformio/boards/').then((response) => {
+    fetch('https://addons.nyxlib.org/api/platformio/boards/', {method: 'GET'}).then((response) => {
 
         response.json().then((result) => {
 
@@ -129,10 +131,14 @@ onMounted(() => {
 
         }).catch(() => {
 
+            dialog.error(e.message);
+
             state.boards = [];
         });
 
-    }).catch(() => {
+    }).catch((e) => {
+
+        dialog.error(e.message);
 
         state.boards = [];
     });

@@ -1,0 +1,67 @@
+# https://dashboard.snapcraft.io/register-snap/
+
+name: nyx-assistant
+base: core22
+version: '0.1.0'
+summary: Your summary # 79 char long summary
+description: |
+    Your description
+
+grade: stable
+confinement: strict
+
+layout:
+    /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/webkit2gtk-4.1:
+        bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/webkit2gtk-4.1
+
+apps:
+    nyx-assistant:
+        command: usr/bin/nyx-assistant
+        desktop: usr/share/applications/nyx-assistant.desktop
+        extensions: [gnome]
+        plugs:
+            - home
+            - removable-media
+            - network
+#            - desktop
+#            - unity7
+        #plugs:
+        #  - network
+        # Add whatever plugs you need here, see https://snapcraft.io/docs/snapcraft-interfaces for more info.
+        # The gnome extension already includes [ desktop, desktop-legacy, gsettings, opengl, wayland, x11, mount-observe, calendar-service ]
+
+package-repositories:
+    - type: apt
+      components: [main]
+      suites: [noble]
+      key-id: 78E1918602959B9C59103100F1831DDAFC42E99D
+      url: http://ppa.launchpad.net/snappy-dev/snapcraft-daily/ubuntu
+
+parts:
+    build-app:
+        plugin: dump
+        build-snaps:
+            - node/20/stable
+            - rustup/latest/stable
+        build-packages:
+            - curl
+            - dpkg
+            - file
+            - wget
+            - libssl-dev
+            - libxdo-dev
+            - librsvg2-dev
+            - build-essential
+            - libwebkit2gtk-4.1-dev
+            - libayatana-appindicator3-dev
+        stage-packages:
+            - libwebkit2gtk-4.1-0
+            - libayatana-appindicator3-1
+        source: .
+        override-build: |
+            set -eu
+            rustup default stable
+            npm install
+            npm run tauri-prod -- --bundles deb
+            dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
+            sed -i -e "s|Icon=nyx-assistant|Icon=/usr/share/icons/hicolor/128x128/apps/nyx-assistant.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/nyx-assistant.desktop

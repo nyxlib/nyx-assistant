@@ -48,7 +48,7 @@
             "binaries/nyx-gen"
         ],
         "targets": [
-            "appimage",
+            "deb",
             "dmg",
             "msi"
         ],

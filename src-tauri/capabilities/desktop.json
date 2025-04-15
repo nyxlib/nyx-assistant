@@ -28,6 +28,14 @@
         "dialog:allow-message",
         "fs:allow-app-read",
         "fs:allow-app-write",
+        {
+            "identifier": "http:default",
+            "allow": [
+                {
+                    "url": "https://addons.nyxlib.org/*"
+                }
+            ]
+        },
         "notification:allow-notify",
         "notification:allow-request-permission",
         "notification:allow-is-permission-granted",
