@@ -120,7 +120,11 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    fetch('https://addons.nyxlib.org/api/platformio/boards/', {method: 'GET'}).then((response) => {
+    const _fetch = (typeof window['__TAURI__'] === 'undefined') ? window.fetch : fetch;
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    _fetch('https://addons.nyxlib.org/api/platformio/boards/', {method: 'GET'}).then((response) => {
 
         response.json().then((result) => {
 
