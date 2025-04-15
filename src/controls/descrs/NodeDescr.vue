@@ -117,6 +117,8 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    dialog.lock();
+
     std.fetch('https://addons.nyxlib.org/api/platformio/boards/', {method: 'GET'}).then((response) => {
 
         response.json().then((result) => {
@@ -126,18 +128,20 @@ onMounted(() => {
                 label: board.name,
             }));
 
+            dialog.unlock();
+
         }).catch((e) => {
 
-            dialog.error(e);
-
             state.boards = [];
+
+            dialog.error(e);
         });
 
     }).catch((e) => {
 
-        dialog.error(e);
-
         state.boards = [];
+
+        dialog.error(e);
     });
 
     /*----------------------------------------------------------------------------------------------------------------*/
