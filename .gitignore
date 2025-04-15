@@ -9,6 +9,7 @@ node_modules
 /src-tauri/gen/
 /src-tauri/binaries/
 
+*.snap
 *.spec
 Cargo.lock
 package-lock.json
