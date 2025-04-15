@@ -129,16 +129,16 @@ onMounted(() => {
                 label: board.name,
             }));
 
-        }).catch(() => {
+        }).catch((e) => {
 
-            dialog.error(e.message);
+            dialog.error(e);
 
             state.boards = [];
         });
 
     }).catch((e) => {
 
-        dialog.error(e.message);
+        dialog.error(e);
 
         state.boards = [];
     });
