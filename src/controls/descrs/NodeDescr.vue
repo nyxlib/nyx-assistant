@@ -198,17 +198,17 @@ onMounted(() => {
                             <div class="row">
                                 <div class="col-md-6">
 
-                                    <div class="form-check form-switch mb-3" :hidden="globals.mode != 'posix'">
+                                    <div class="form-check form-switch mb-3" :hidden="globals.mode !== 'posix'">
                                         <input class="form-check-input" type="checkbox" role="switch" id="A313C013" v-model="globals.hardcoded" :true-value="true" :false-value="false" />
                                         <label class="form-check-label" for="A313C013">Hardcoded configuration</label>
                                     </div>
 
-                                    <div class="mb-3" :hidden="globals.mode != 'arduino-wifi'">
+                                    <div class="mb-3" :hidden="globals.mode !== 'arduino-wifi'">
                                         <label class="form-label" for="EFCECA87">WiFi SSID</label>
                                         <input class="form-control form-control-sm" type="text" id="EFCECA87" placeholder="WiFi SSID" required="required" v-model="globals.wifiSSID" autocomplete="username" />
                                     </div>
 
-                                    <div class="mb-3" :hidden="globals.mode != 'arduino-ethernet'">
+                                    <div class="mb-3" :hidden="globals.mode !== 'arduino-ethernet'">
                                         <label class="form-label" for="F6C2CDF9">Ethernet controller</label>
                                         <select class="form-select form-select-sm" id="F6C2CDF9" v-model="globals.ethernetController">
                                             <option value="w5500">W5500</option>
@@ -218,17 +218,17 @@ onMounted(() => {
                                 </div>
                                 <div class="col-md-6">
 
-                                    <div class="form-check form-switch mb-3" :hidden="globals.mode != 'posix'">
+                                    <div class="form-check form-switch mb-3" :hidden="globals.mode !== 'posix'">
                                         <input class="form-check-input" type="checkbox" role="switch" id="FAD1B43F" v-model="globals.static" :true-value="true" :false-value="false" />
                                         <label class="form-check-label" for="FAD1B43F">Statically-linked executable</label>
                                     </div>
 
-                                    <div class="mb-3" :hidden="globals.mode != 'arduino-wifi'">
+                                    <div class="mb-3" :hidden="globals.mode !== 'arduino-wifi'">
                                         <label class="form-label" for="E87BBCE3">WiFi password</label>
                                         <input class="form-control form-control-sm" type="text" id="E87BBCE3" placeholder="WiFi password" required="required" v-model="globals.wifiPassword" v-password-toggle />
                                     </div>
 
-                                    <div class="mb-3" :hidden="globals.mode != 'arduino-ethernet'">
+                                    <div class="mb-3" :hidden="globals.mode !== 'arduino-ethernet'">
                                         <label class="form-label" for="EAEEA67C">Ethernet CS pin</label>
                                         <input class="form-control form-control-sm" type="number" min="0" id="EAEEA67C" placeholder="Ethernet CS pin" required="required" v-model="globals.ethernetCSPin" />
                                     </div>

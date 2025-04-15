@@ -3,9 +3,9 @@
 name: nyx-assistant
 base: core22
 version: '0.1.0'
-summary: Your summary # 79 char long summary
+summary: Nyx Assistant ...
 description: |
-    Your description
+    Nyx Assistant ...
 
 grade: stable
 confinement: strict
