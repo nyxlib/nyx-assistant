@@ -202,8 +202,6 @@ const convert = (devices) => {
         /*------------------------------------------------------------------------------------------------------------*/
     });
 
-    //console.log(JSON.stringify(xmlDevices, null, 2));
-
     return xmlDevices;
 };
 

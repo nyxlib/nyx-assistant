@@ -4,10 +4,6 @@
 
 import {inject, reactive, onMounted} from 'vue';
 
-import {Command} from '@tauri-apps/plugin-shell';
-
-import {fetch} from '@tauri-apps/plugin-http';
-
 import Multiselect from '@vueform/multiselect';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -27,6 +23,7 @@ const HAS_TAURI = typeof window['__TAURI__'] !== 'undefined';
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const dialog = inject('dialog');
+const std = inject('std');
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -92,7 +89,7 @@ const generate = (override = null) => {
 
         dialog.lock();
 
-        Command.sidecar('binaries/nyx-gen', args).execute().then((output) => {
+        std.exec('nyx-gen', args).then((output) => {
 
             if(output.code === 0)
             {
@@ -120,11 +117,7 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    const _fetch = (typeof window['__TAURI__'] === 'undefined') ? window.fetch : fetch;
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    _fetch('https://addons.nyxlib.org/api/platformio/boards/', {method: 'GET'}).then((response) => {
+    std.fetch('https://addons.nyxlib.org/api/platformio/boards/', {method: 'GET'}).then((response) => {
 
         response.json().then((result) => {
 

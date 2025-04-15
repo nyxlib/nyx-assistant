@@ -8,6 +8,7 @@ import {Tooltip} from 'bootstrap';
 
 import dialog from './plugins/dialog.js';
 import input from './plugins/input.js';
+import std from './plugins/std.js';
 
 import App from './App.vue';
 
@@ -19,6 +20,7 @@ const app = createApp(App);
 
 app.use(dialog);
 app.use(input);
+app.use(std);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -39,7 +41,6 @@ app.directive('tooltip', {
         }
     }
 });
-
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
