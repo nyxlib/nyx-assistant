@@ -98,7 +98,7 @@ const deviceUp = (device1) => {
 
     <!-- *********************************************************************************************************** -->
 
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header px-3 py-2">
             <i class="bi bi-cpu"></i>
             Devices

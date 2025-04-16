@@ -172,12 +172,12 @@ onMounted(() => {
                     <!-- ******************************************************************************************* -->
 
                     <div class="card mb-3">
-                        <select class="form-select card-header border-0 border-bottom" v-model="globals.mode">
+                        <select class="card-header form-select border-0 border-bottom px-3 py-2" v-model="globals.mode">
                             <option value="posix">Node - POSIX mode</option>
                             <option value="arduino-wifi">Node - Arduino mode with WiFi</option>
                             <option value="arduino-ethernet">Node - Arduino mode with Ethernet</option>
                         </select>
-                        <div class="card-body">
+                        <div class="card-body px-3 py-2">
 
                             <!-- *********************************************************************************** -->
 
@@ -331,10 +331,10 @@ onMounted(() => {
                     <!-- ******************************************************************************************* -->
 
                     <div class="card mb-3">
-                        <div class="card-header">
+                        <div class="card-header px-3 py-2">
                             Connectivity
                         </div>
-                        <div class="card-body">
+                        <div class="card-body px-3 py-2">
 
                             <!-- *********************************************************************************** -->
 

@@ -23,8 +23,9 @@ apps:
             - home
             - removable-media
             - network
-#            - desktop
-#            - unity7
+            - desktop
+            - wayland
+            - x11
         #plugs:
         #  - network
         # Add whatever plugs you need here, see https://snapcraft.io/docs/snapcraft-interfaces for more info.
