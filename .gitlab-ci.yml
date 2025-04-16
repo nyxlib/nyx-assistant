@@ -1,4 +1,4 @@
-image: ubuntu:noble
+image: ubuntu:oracular
 
 before_script:
     - apt-get update
