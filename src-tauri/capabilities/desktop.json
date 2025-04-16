@@ -10,9 +10,7 @@
         "windows"
     ],
     "permissions": [
-        "core:event:allow-emit",
-        "core:event:allow-listen",
-        "core:event:allow-unlisten",
+        "core:event:default",
         "core:window:allow-show",
         "core:window:allow-hide",
         "core:window:allow-close",
@@ -22,10 +20,7 @@
         "core:window:allow-start-dragging",
         "core:window:allow-get-all-windows",
         "core:window:allow-toggle-maximize",
-        "dialog:allow-open",
-        "dialog:allow-save",
-        "dialog:allow-confirm",
-        "dialog:allow-message",
+        "dialog:default",
         "fs:allow-app-read",
         "fs:allow-app-write",
         {
@@ -36,9 +31,7 @@
                 }
             ]
         },
-        "notification:allow-notify",
-        "notification:allow-request-permission",
-        "notification:allow-is-permission-granted",
+        "notification:default",
         {
             "identifier": "shell:allow-execute",
             "allow": [

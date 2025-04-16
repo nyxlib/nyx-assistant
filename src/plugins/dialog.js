@@ -1,4 +1,4 @@
-// noinspection JSUnresolvedReference
+// noinspection JSUnusedGlobalSymbols
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 import * as notification from '@tauri-apps/plugin-notification';
@@ -110,7 +110,7 @@ const _unlock = () => {
 /* DIALOGS                                                                                                            */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const _notify_step2 = (notification, body, title) => {
+const _notify_step2 = (body, title) => {
 
     notification.sendNotification({
         title: title,
@@ -135,21 +135,21 @@ const _notify = (body, title) => {
 
     if(typeof window['__TAURI__'] !== 'undefined')
     {
-        notification.isPermissionGranted().then((permission) => {
+        notification.isPermissionGranted().then((granted) => {
 
-            if(!permission)
+            if(!granted)
             {
-                notification.requestPermission().then((permission) => {
+                notification.requestPermission().then((result) => {
 
-                    if(permission === 'granted')
+                    if(result === 'granted')
                     {
-                        _notify_step2(notification, title, body);
+                        _notify_step2(title, body);
                     }
                 });
             }
             else
             {
-                _notify_step2(notification, title, body);
+                _notify_step2(title, body);
             }
         });
     }
