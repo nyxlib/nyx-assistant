@@ -106,7 +106,7 @@ const generate = (override = null) => {
 
         }).catch((e) => {
 
-            dialog.error(e);
+            dialog.error(/**/e/**/);
 
             dialog.unlock();
         });
