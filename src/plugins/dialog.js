@@ -17,7 +17,7 @@ const _LOCKER_HTML = `
     <div id="DEC2F4DE">
         <div class="align-self-center text-center">
             <div class="spinner-border" role="status" style="width: 4rem; height: 4rem;"></div>
-            <div class="display-4" role="status">loading…</div>
+            <div class="display-4" role="status">please wait…</div>
         </div>
     </div>
 
