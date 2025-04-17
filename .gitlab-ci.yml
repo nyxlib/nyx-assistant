@@ -36,13 +36,5 @@ build_project:
         - npm install
         - npm run tauri-prod
 
-        - mv src-tauri/binaries/nyx-gen-* ./nyx-gen
-        - mv src-tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage ./nyx-assistant.AppImage
-    artifacts:
-        paths:
-            - ./nyx-gen
-            - ./nyx-assistant.AppImage
-        expire_in: 1 week
-        when: always
-    only:
-        - main
+        - scp src-tauri/binaries/nyx-gen-* "${DEPLOY_USER}"@"${DEPLOY_HOST}":/var/www/nyxlib.org/download/
+        - scp src-tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage "${DEPLOY_USER}"@"${DEPLOY_HOST}":/var/www/nyxlib.org/download/
