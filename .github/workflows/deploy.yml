@@ -71,7 +71,7 @@ jobs:
 
                     npm install
 
-                    snapcraft
+                    sudo snapcraft
 
             -   name: Deploy project
                 shell: bash
