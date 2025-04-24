@@ -21,23 +21,20 @@ jobs:
 
                     sudo systemctl start snapd
 
-                    sudo ln -s /var/lib/snapd/snap /snap
+                    sudo ln -s /var/lib/snapd/snap /snap || true
 
             -   name: Setup Snapcraft
                 run: |
-                    sudo snap install snapcraft --classic
-
                     sudo snap install lxd
+                    sudo lxd init --auto
 
-                    sudo usermod -aG lxd "${USER}"
-                    sudo newgrp lxd
-                    sudo lxd init --minimal
+                    sudo snap install snapcraft --classic
 
             -   name: Setup PyInstaller
                 shell: bash
                 run: |
-                    python3 -m venv "$HOME/.venv"
-                    source "$HOME/.venv/bin/activate"
+                    python3 -m venv "${HOME}/.venv"
+                    source "${HOME}/.venv/bin/activate"
                     pip install --upgrade pip
                     pip install pyinstaller
 
@@ -45,7 +42,7 @@ jobs:
                 shell: bash
                 run: |
                     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
-                    source "$HOME/.nvm/nvm.sh"
+                    source "${HOME}/.nvm/nvm.sh"
                     nvm install --lts
 
             -   name: Install Rust toolchain
@@ -56,9 +53,9 @@ jobs:
             -   name: Build project
                 shell: bash
                 run: |
-                    source "$HOME/.venv/bin/activate"
-                    source "$HOME/.nvm/nvm.sh"
-                    source "$HOME/.cargo/env"
+                    source "${HOME}/.venv/bin/activate"
+                    source "${HOME}/.nvm/nvm.sh"
+                    source "${HOME}/.cargo/env"
 
                     npm --version
                     node --version
