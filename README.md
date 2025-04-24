@@ -41,8 +41,8 @@ Developer
 
 * [Jérôme ODIER](https://annuaire.in2p3.fr/4121-4467/jerome-odier) ([CNRS/LPSC](http://lpsc.in2p3.fr/))
 
-[Build Status]:https://gitlab.in2p3.fr/lpsc-kid/nyx-assistant/-/commits/main
-[Build Status img]:https://gitlab.in2p3.fr/lpsc-kid/nyx-assistant/badges/main/pipeline.svg
+[Build Status]:https://github.com/nyxlib/nyx-assistant/actions/workflows/deploy.yml
+[Build Status img]:https://github.com/nyxlib/nyx-assistant/actions/workflows/deploy.yml/badge.svg
 
 [License]:http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt
 [License img]:https://img.shields.io/badge/license-CeCILL_C-blue.svg
