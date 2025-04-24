@@ -21,11 +21,13 @@ jobs:
 
             -   name: Setup Snapcraft
                 run: |
-                    sudo systemctl start snapd
                     sudo ln -s /var/lib/snapd/snap /snap
+                    sudo systemctl start snapd
 
-                    sudo snap install lxd
                     sudo snap install snapcraft --classic
+                    sudo snap install lxd
+
+                    sudo lxd init --minimal
 
             -   name: Setup PyInstaller
                 shell: bash
