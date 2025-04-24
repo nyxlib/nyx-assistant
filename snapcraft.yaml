@@ -63,6 +63,6 @@ parts:
             set -eu
             rustup default stable
             npm install
-            npm run tauri-prod -- --bundles deb
+            npm run tauri-prod
             dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
             sed -i -e "s|Icon=nyx-assistant|Icon=/usr/share/icons/hicolor/128x128/apps/nyx-assistant.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/nyx-assistant.desktop
