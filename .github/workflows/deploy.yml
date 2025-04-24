@@ -23,6 +23,8 @@ jobs:
                 run: |
                     sudo systemctl start snapd
                     sudo ln -s /var/lib/snapd/snap /snap
+
+                    sudo snap install lxd
                     sudo snap install snapcraft --classic
 
             -   name: Setup PyInstaller
