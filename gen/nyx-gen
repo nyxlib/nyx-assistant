@@ -288,6 +288,7 @@ int main()
         MQTT_PASSWORD,
         "{descr['nodeName']}",
         vector_list,
+        NULL,
         3000,
         true,
         true
@@ -417,6 +418,7 @@ void setup()
         MQTT_PASSWORD,
         "{descr['nodeName']}",
         vector_list,
+        NULL,
         3000,
         true,
         false
@@ -531,6 +533,7 @@ void setup()
         MQTT_PASSWORD,
         "{descr['nodeName']}",
         vector_list,
+        NULL,
         3000,
         true,
         false
