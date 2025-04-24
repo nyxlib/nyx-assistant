@@ -29,7 +29,8 @@ jobs:
 
                     sudo snap install lxd
 
-                    sudo lxd init --auto
+                    sudo usermod -aG lxd $USER
+                    sudo lxd init --minimal
 
             -   name: Setup PyInstaller
                 shell: bash
