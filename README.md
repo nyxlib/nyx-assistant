@@ -45,4 +45,4 @@ Developer
 [Build Status img]:https://github.com/nyxlib/nyx-assistant/actions/workflows/deploy.yml/badge.svg
 
 [License]:http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt
-[License img]:https://img.shields.io/badge/license-CeCILL_C-blue.svg
+[License img]:https://img.shields.io/badge/License-CeCILL_C-blue.svg
