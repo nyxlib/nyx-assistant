@@ -41,6 +41,11 @@ package-repositories:
 parts:
     build-app:
         plugin: dump
+        build-snaps:
+            - node/20/stable
+            - rustup/latest/stable
+            - libwebkit2gtk-4.1-0
+            - libayatana-appindicator3-1
         source: .
         override-build: |
             set -eu
