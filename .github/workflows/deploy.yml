@@ -81,6 +81,6 @@ jobs:
                     chmod 644 ~/.ssh/known_hosts
 
                     scp src-tauri/binaries/nyx-gen-* "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/download/linux/x86_64/nyx-gen"
-                    scp nyx-assistant_0.1.0_amd64.snap "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/download/linux/x86_64/nyx-assistant.snap"
+                    scp nyx-assistant_*_amd64.snap "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/download/linux/x86_64/nyx-assistant.snap"
                     scp src-tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/download/linux/x86_64/nyx-assistant.AppImage"
 
