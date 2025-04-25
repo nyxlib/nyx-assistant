@@ -2,7 +2,7 @@
 
 name: nyx-assistant
 base: core22
-version: '0.1.0'
+version: '1.0.0'
 summary: Nyx Assistant ...
 description: |
     Nyx Assistant ...
@@ -44,11 +44,25 @@ parts:
         build-snaps:
             - node/20/stable
             - rustup/latest/stable
+        build-packages:
+            - curl
+            - dpkg
+            - file
+            - wget
+            - libssl-dev
+            - libxdo-dev
+            - librsvg2-dev
+            - build-essential
+            - libwebkit2gtk-4.1-dev
+            - libayatana-appindicator3-dev
         stage-packages:
             - libwebkit2gtk-4.1-0
             - libayatana-appindicator3-1
         source: .
         override-build: |
             set -eu
+            rustup default stable
+            npm install
+            npm run tauri-prod -- --bundles deb
             dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
             sed -i -e "s|Icon=nyx-assistant|Icon=/usr/share/icons/hicolor/128x128/apps/nyx-assistant.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/nyx-assistant.desktop
