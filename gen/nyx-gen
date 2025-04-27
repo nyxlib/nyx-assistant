@@ -56,7 +56,53 @@ add_executable({descr['nodeName'].lower()} ${{SOURCE_FILES}})
 
 target_include_directories({descr['nodeName'].lower()} PRIVATE ${{LIBNYXNODE_INCLUDE_DIR}})
 
-target_link_libraries({descr['nodeName'].lower()} ${{LIBNYXNODE_{'STATIC' if descr['static'] else 'SHARED'}_LIBRARIES}})
+target_link_libraries({descr['nodeName'].lower()} PRIVATE ${{NYXNODE_{'STATIC' if descr['static'] else 'SHARED'}_LIB_PATH}})
+
+########################################################################################################################
+'''[1:]
+
+    ####################################################################################################################
+
+    if descr['mode'] == 'python':
+
+        filename = 'CMakeLists.txt'
+
+        template = f'''
+########################################################################################################################
+
+cmake_minimum_required(VERSION 3.5)
+
+########################################################################################################################
+
+project({descr['nodeName'].lower()} C)
+
+set(CMAKE_C_STANDARD 99)
+
+add_compile_options(-Wall -Wno-unknown-pragmas -Wno-unused-function -O3)
+
+########################################################################################################################
+
+find_package(Threads REQUIRED)
+find_package(LibNyxNode REQUIRED)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+
+########################################################################################################################
+
+set(SOURCE_FILES
+    {f'{LINE_BREAK}    '.join(file_list)}
+    ./src/glue.c
+    ./src/main.c
+)
+
+########################################################################################################################
+
+add_library({descr['nodeName'].lower()} SHARED ${{SOURCE_FILES}})
+
+set_target_properties({descr['nodeName'].lower()} PROPERTIES PREFIX "")
+
+target_include_directories({descr['nodeName'].lower()} PRIVATE ${{Python3_INCLUDE_DIRS}} ${{LIBNYXNODE_INCLUDE_DIR}})
+
+target_link_libraries({descr['nodeName'].lower()} PRIVATE ${{Python3_LIBRARIES}} ${{NYXNODE_{'STATIC' if descr['static'] else 'SHARED'}_LIB_PATH}} Threads::Threads)
 
 ########################################################################################################################
 '''[1:]
@@ -330,6 +376,150 @@ _err:
     /*----------------------------------------------------------------------------------------------------------------*/
 
     return 0;
+}}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+'''[1:]
+
+    ####################################################################################################################
+
+    if descr['mode'] == 'python':
+
+        with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
+
+            f.write(f'#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n')
+
+        filename = 'main.c'
+
+        template = f'''
+/*--------------------------------------------------------------------------------------------------------------------*/
+#define PY_SSIZE_T_CLEAN
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+#include <Python.h>
+#include <pthread.h>
+
+#include "glue.h"
+#include "credentials.h"
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static pthread_t worker_thread = 0;
+
+static volatile bool worker_alive = false;
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static void *worker_routine(void *arg)
+{{
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    nyx_set_log_level(NYX_LOG_LEVEL_INFO);
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    nyx_memory_initialize();
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    nyx_glue_initialize();
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    nyx_dict_t *vector_list[] = {{
+        {f'{LINE_BREAK}        '.join(vector_list)}
+    }};
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    nyx_node_t *node = nyx_node_initialize(
+        {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'NULL'},
+        {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'NULL'},
+        MQTT_USERNAME,
+        MQTT_PASSWORD,
+        "{descr['nodeName']}",
+        vector_list,
+        NULL,
+        3000,
+        true,
+        true
+    );
+
+    for(worker_alive = true; worker_alive;)
+    {{
+        nyx_node_poll(node, {descr['nodeTimeout']});
+    }}
+
+    nyx_node_finalize(node, true);
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    nyx_glue_finalize();
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    nyx_memory_finalize();
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    return NULL;
+}}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static void ModuleFree(void *mod)
+{{
+    if(worker_alive)
+    {{
+        worker_alive = false;
+
+        pthread_join(worker_thread, NULL);
+    }}
+}}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static PyMethodDef MethodDefs[] = {{
+    {{NULL, NULL, 0, NULL}}
+}};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static struct PyModuleDef ModuleDef = {{
+    PyModuleDef_HEAD_INIT,
+    "{descr['nodeName']}",
+    NULL,
+    -1,
+    MethodDefs,
+    NULL,
+    NULL,
+    NULL,
+    ModuleFree
+}};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+PyMODINIT_FUNC PyInit_{descr['nodeName']}(void)
+{{
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    PyObject *module = PyModule_Create(&ModuleDef);
+
+    if(module != NULL)
+    {{
+        if(pthread_create(&worker_thread, NULL, worker_routine, NULL) != 0)
+        {{
+            PyErr_SetString(PyExc_RuntimeError, "Failed to start worker thread");
+
+            Py_DECREF(module);
+
+            return NULL;
+        }}
+    }}
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    return module;
 }}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -827,7 +1017,7 @@ void device_{device['name'].lower()}_finalize()
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-        filename = os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.cpp' if descr['mode'] != 'posix' else f'device_{device["name"].lower()}.c')
+        filename = os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.cpp' if descr['mode'] != 'posix' and descr['mode'] != 'python' else f'device_{device["name"].lower()}.c')
 
         if override or not os.path.isfile(filename):
 
@@ -924,7 +1114,7 @@ def main():
 
     ####################################################################################################################
 
-    if descr['mode'] == 'posix':
+    if descr['mode'] == 'posix' or descr['mode'] == 'python':
         descr['NULL'] = 'NULL'
         descr['SRC_EXT'] = 'c'
         descr['HEAD_EXT'] = 'h'
