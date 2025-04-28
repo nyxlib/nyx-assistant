@@ -40,7 +40,7 @@ add_compile_options(-Wall -Wno-unknown-pragmas -Wno-unused-function -O3)
 
 ########################################################################################################################
 
-find_package(LibNyxNode REQUIRED)
+find_package(NyxNode REQUIRED)
 
 ########################################################################################################################
 
@@ -54,7 +54,7 @@ set(SOURCE_FILES
 
 add_executable({descr['nodeName'].lower()} ${{SOURCE_FILES}})
 
-target_include_directories({descr['nodeName'].lower()} PRIVATE ${{LIBNYXNODE_INCLUDE_DIR}})
+target_include_directories({descr['nodeName'].lower()} PRIVATE ${{NYXNODE_INCLUDE_DIR}})
 
 target_link_libraries({descr['nodeName'].lower()} PRIVATE ${{NYXNODE_{'STATIC' if descr['static'] else 'SHARED'}_LIB_PATH}})
 
@@ -78,13 +78,13 @@ project({descr['nodeName'].lower()} C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_compile_options(-Wall -Wno-unknown-pragmas -Wno-unused-function -O3)
+add_compile_options(-DPY_SSIZE_T_CLEAN -Wall -Wno-unknown-pragmas -Wno-unused-function -O3)
 
 ########################################################################################################################
 
 find_package(Threads REQUIRED)
-find_package(LibNyxNode REQUIRED)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+find_package(NyxNode REQUIRED)
 
 ########################################################################################################################
 
@@ -100,9 +100,9 @@ add_library({descr['nodeName'].lower()} SHARED ${{SOURCE_FILES}})
 
 set_target_properties({descr['nodeName'].lower()} PROPERTIES PREFIX "")
 
-target_include_directories({descr['nodeName'].lower()} PRIVATE ${{Python3_INCLUDE_DIRS}} ${{LIBNYXNODE_INCLUDE_DIR}})
+target_include_directories({descr['nodeName'].lower()} PRIVATE ${{Python3_INCLUDE_DIRS}} ${{NYXNODE_INCLUDE_DIR}})
 
-target_link_libraries({descr['nodeName'].lower()} PRIVATE ${{Python3_LIBRARIES}} ${{NYXNODE_{'STATIC' if descr['static'] else 'SHARED'}_LIB_PATH}} Threads::Threads)
+target_link_libraries({descr['nodeName'].lower()} PRIVATE Threads::Threads ${{Python3_LIBRARIES}} ${{NYXNODE_{'STATIC' if descr['static'] else 'SHARED'}_LIB_PATH}})
 
 ########################################################################################################################
 '''[1:]
@@ -194,6 +194,7 @@ def generate_header(driver_path, descr):
     ctor_list = []
     dtor_list = []
     vector_list = []
+    python_callback_list = []
 
     for device in sorted(descr['devices'].values(), key = lambda x: x['rank']):
 
@@ -203,6 +204,10 @@ def generate_header(driver_path, descr):
         for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
 
             for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
+
+                if descr['mode'] == 'python' and vectorDef['callback']:
+
+                    python_callback_list.append(f'extern PyObject *vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}_python_callback;')
 
                 vector_list.append(f'extern nyx_dict_t *vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()};')
 
@@ -219,11 +224,11 @@ def generate_header(driver_path, descr):
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-#include <nyx_node.h>
+{'#include <Python.h>\n\n' if descr['mode'] == 'python' else ''}#include <nyx_node.h>
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-{LINE_BREAK.join(vector_list)}
+{f'{LINE_BREAK.join(python_callback_list)}\n\n' if len(python_callback_list) > 0 else ''}{LINE_BREAK.join(vector_list)}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -272,7 +277,7 @@ def generate_main(driver_path, descr, override):
 
         with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
 
-            f.write(f'#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n')
+            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n')
 
         filename = 'main.c'
 
@@ -385,15 +390,57 @@ _err:
 
     if descr['mode'] == 'python':
 
+        python_callback_list = []
+
+        register_python_callback_list = []
+
+        for device in sorted(descr['devices'].values(), key = lambda x: x['rank']):
+
+            for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
+
+                for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
+
+                    if vectorDef['callback']:
+
+                        name1 = f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}_python_callback'
+
+                        name2 = f'register_vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}_python_callback'
+
+                        python_callback_list.append(f'''
+PyObject *{name1} = NULL;
+
+static PyObject *_{name2}(PyObject *self, PyObject *args)
+{{
+    Py_XDECREF({name1});
+
+    if(!PyArg_ParseTuple(args, "O", &{name1}))
+    {{
+        return NULL;
+    }}
+
+    if(!PyCallable_Check({name1}))
+    {{
+        PyErr_SetString(PyExc_TypeError, "Parameter must be callable");
+
+        {name1} = NULL;
+
+        return NULL;
+    }}
+
+    Py_XINCREF({name1});
+
+    Py_RETURN_NONE;
+}}'''[1:])
+
+                        register_python_callback_list.append(f'{{"{name2}", _{name2}, METH_VARARGS, "Register the callback for {device["name"]}::{vector["name"]}::{vectorDef["name"]}"}},')
+
         with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
 
-            f.write(f'#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n')
+            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n')
 
         filename = 'main.c'
 
         template = f'''
-/*--------------------------------------------------------------------------------------------------------------------*/
-#define PY_SSIZE_T_CLEAN
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 #include <Python.h>
@@ -406,7 +453,7 @@ _err:
 
 static pthread_t worker_thread = 0;
 
-static volatile bool worker_alive = false;
+/*--*/ volatile bool worker_alive = false;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -479,7 +526,12 @@ static void ModuleFree(void *mod)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+{f'{LINE_BREAK}{LINE_BREAK}/*--------------------------------------------------------------------------------------------------------------------*/{LINE_BREAK}{LINE_BREAK}'.join(python_callback_list)}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 static PyMethodDef MethodDefs[] = {{
+    {f'{LINE_BREAK}    '.join(register_python_callback_list)}
     {{NULL, NULL, 0, NULL}}
 }};
 
@@ -499,7 +551,7 @@ static struct PyModuleDef ModuleDef = {{
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-PyMODINIT_FUNC PyInit_{descr['nodeName']}(void)
+PyMODINIT_FUNC PyInit_{descr['nodeName']}()
 {{
     /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -507,9 +559,9 @@ PyMODINIT_FUNC PyInit_{descr['nodeName']}(void)
 
     if(module != NULL)
     {{
-        if(pthread_create(&worker_thread, NULL, worker_routine, NULL) != 0)
+        if(pthread_create(&worker_thread, NULL, worker_routine, NULL) != 0x00)
         {{
-            PyErr_SetString(PyExc_RuntimeError, "Failed to start worker thread");
+            PyErr_SetString(PyExc_RuntimeError, "Failed to start Nyx worker thread");
 
             Py_DECREF(module);
 
@@ -771,6 +823,61 @@ void loop()
 
 ########################################################################################################################
 
+def generate_python_notifier(descr, device, vector, vectorDef):
+
+    if descr['mode'] == 'python':
+        if   vector['type'] == 'number' and 'd' in vector['type']:
+            args = 'Py_BuildValue("(i)", nyx_number_def_get((nyx_dict_t *) def_vector))'
+        elif vector['type'] == 'number' and 'l' in vector['type']:
+            args = 'Py_BuildValue("(l)", nyx_number_def_get((nyx_dict_t *) def_vector))'
+        elif vector['type'] == 'number' and 'f' in vector['type']:
+            args = 'Py_BuildValue("(d)", nyx_number_def_get((nyx_dict_t *) def_vector))'
+        elif vector['type'] == 'text':
+            args = 'Py_BuildValue("(s)", nyx_text_def_get((nyx_dict_t *) def_vector))'
+        elif vector['type'] == 'switch':
+            args = 'Py_BuildValue("(i)", nyx_switch_def_get((nyx_dict_t *) def_vector))'
+        else:
+            return '    /* TO BE IMPLEMENTED */'
+    else:
+        return '    /* TO BE IMPLEMENTED */'
+
+    name = f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}_python_callback'
+
+    return f'''
+    if(modified && {name} != NULL)
+    {{
+        /*------------------------------------------------------------------------------------------------------------*/
+        /* !!! AUTOGENERATED CODE !!!                                                                                 */
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        PyGILState_STATE gstate = PyGILState_Ensure();
+
+        PyObject *args = {args};
+
+        PyObject *result = PyObject_CallObject({name}, args);
+
+        Py_DECREF(args);
+
+        if(result == NULL) {{
+            PyErr_Print();
+        }} else {{
+            Py_DECREF(result);
+        }}
+
+        PyGILState_Release(gstate);
+
+        /*------------------------------------------------------------------------------------------------------------*/
+        /* USER FREE CODE                                                                                             */
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        /* TO BE IMPLEMENTED */
+
+        /*------------------------------------------------------------------------------------------------------------*/
+    }}
+'''[1: -1]
+
+########################################################################################################################
+
 def generate_devices(driver_path, descr, override):
 
     ctor_list = []
@@ -850,7 +957,7 @@ def generate_devices(driver_path, descr, override):
 
                 if vectorDef['callback']:
 
-                    callback_list1.append(f'static void _{vector["name"].lower()}_{vectorDef["name"].lower()}_callback(struct nyx_object_s *def_vector, bool modified)\n{{\n    /* TO BE IMPLEMENTED */\n}}\n')
+                    callback_list1.append(f'static void _{vector["name"].lower()}_{vectorDef["name"].lower()}_callback(struct nyx_object_s *def_vector, bool modified)\n{{\n{generate_python_notifier(descr, device, vector, vectorDef)}\n}}')
 
                     callback_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}->base.in_callback = _{vector["name"].lower()}_{vectorDef["name"].lower()}_callback;')
 
@@ -864,7 +971,7 @@ def generate_devices(driver_path, descr, override):
 
             if vector['callback']:
 
-                callback_list1.append(f'static void _{vector["name"].lower()}_callback(struct nyx_object_s *vector, bool modified)\n{{\n    /* TO BE IMPLEMENTED */\n}}\n')
+                callback_list1.append(f'static void _{vector["name"].lower()}_callback(struct nyx_object_s *vector, bool modified)\n{{\n    /* TO BE IMPLEMENTED */\n}}')
 
                 callback_list2.append(f'vector_{device["name"].lower()}_{vector["name"].lower()}->base.in_callback = _{vector["name"].lower()}_callback;')
 
