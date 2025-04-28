@@ -224,7 +224,7 @@ def generate_header(driver_path, descr):
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-{'#include <Python.h>\n\n' if descr['mode'] == 'python' else ''}#include <nyx_node.h>
+{'#include <Python.h>\n#include <pthread.h>\n' if descr['mode'] == 'python' else ''}#include <nyx_node.h>
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -442,9 +442,6 @@ static PyObject *_{name2}(PyObject *self, PyObject *args)
 
         template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
-
-#include <Python.h>
-#include <pthread.h>
 
 #include "glue.h"
 #include "credentials.h"
