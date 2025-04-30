@@ -78,6 +78,8 @@ project({descr['nodeName'].lower()} C)
 
 set(CMAKE_C_STANDARD 99)
 
+set(Python3_EXECUTABLE /usr/bin/python3)
+
 add_compile_options(-DPY_SSIZE_T_CLEAN -Wall -Wno-unknown-pragmas -Wno-unused-function -O3)
 
 ########################################################################################################################
@@ -103,6 +105,14 @@ set_target_properties({descr['nodeName'].lower()} PROPERTIES PREFIX "")
 target_include_directories({descr['nodeName'].lower()} PRIVATE ${{Python3_INCLUDE_DIRS}} ${{NYXNODE_INCLUDE_DIR}})
 
 target_link_libraries({descr['nodeName'].lower()} PRIVATE Threads::Threads ${{Python3_LIBRARIES}} ${{NYXNODE_{'STATIC' if descr['static'] else 'SHARED'}_LIB_PATH}})
+
+########################################################################################################################
+
+include(GNUInstallDirs)
+
+install(TARGETS mynode LIBRARY DESTINATION ${{Python3_SITEARCH}})
+
+install(FILES ./grc/{descr['nodeName'].lower()}.block.yml DESTINATION ${{CMAKE_INSTALL_DATADIR}}/gnuradio/grc/blocks/)
 
 ########################################################################################################################
 '''[1:]
@@ -205,11 +215,13 @@ def generate_header(driver_path, descr):
 
             for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
 
+                ns = f'{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}'
+
                 if descr['mode'] == 'python' and vectorDef['callback']:
 
-                    python_callback_list.append(f'extern PyObject *vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}_python_callback;')
+                    python_callback_list.append(f'extern PyObject *vector_def_{ns}_python_callback;')
 
-                vector_list.append(f'extern nyx_dict_t *vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()};')
+                vector_list.append(f'extern nyx_dict_t *vector_def_{ns};')
 
             vector_list.append(f'extern nyx_dict_t *vector_{device["name"].lower()}_{vector["name"].lower()};')
 
@@ -402,37 +414,90 @@ _err:
 
                     if vectorDef['callback']:
 
-                        name1 = f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}_python_callback'
+                        ################################################################################################
 
-                        name2 = f'register_vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}_python_callback'
+                        ns = f'{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}'
+
+                        ################################################################################################
+
+                        if   vector['type'] == 'number' and 'd' in vector['type']:
+                            ctype = 'int'
+                            setter = f'nyx_number_def_set_int((nyx_dict_t *) vector_def_{ns}, value);'
+                        elif vector['type'] == 'number' and 'l' in vector['type']:
+                            ctype = 'lond'
+                            setter = f'nyx_number_def_get_int((nyx_dict_t *) vector_def_{ns}, value);'
+                        elif vector['type'] == 'number' and 'f' in vector['type']:
+                            ctype = 'double'
+                            setter = f'nyx_number_def_set_double((nyx_dict_t *) vector_def_{ns}, value);'
+                        elif vector['type'] == 'text':
+                            ctype = 'STR_t'
+                            setter = f'nyx_text_def_set((nyx_dict_t *) vector_def_{ns}, value);'
+                        elif vector['type'] == 'switch':
+                            ctype = 'int'
+                            setter = f'nyx_switch_def_set((nyx_dict_t *) vector_def_{ns}, value);'
+                        else:
+                            continue
+
+                        ################################################################################################
 
                         python_callback_list.append(f'''
-PyObject *{name1} = NULL;
+/*----------------*/
+/* CALLBACK       */
+/*----------------*/
 
-static PyObject *_{name2}(PyObject *self, PyObject *args)
+PyObject *vector_def_{ns}_python_callback = NULL;
+
+static PyObject *_register_{ns}_callback(PyObject *self, PyObject *args)
 {{
-    Py_XDECREF({name1});
+    Py_XDECREF(vector_def_{ns}_python_callback);
 
-    if(!PyArg_ParseTuple(args, "O", &{name1}))
+    if(!PyArg_ParseTuple(args, "O", &vector_def_{ns}_python_callback))
     {{
         return NULL;
     }}
 
-    if(!PyCallable_Check({name1}))
+    if(!PyCallable_Check(vector_def_{ns}_python_callback))
     {{
         PyErr_SetString(PyExc_TypeError, "Parameter must be callable");
 
-        {name1} = NULL;
+        vector_def_{ns}_python_callback = NULL;
 
         return NULL;
     }}
 
-    Py_XINCREF({name1});
+    Py_XINCREF(vector_def_{ns}_python_callback);
+
+    Py_RETURN_NONE;
+}}
+
+/*----------------*/
+/* SETTER         */
+/*----------------*/
+
+static PyObject *_set_{ns}_value(PyObject *self, PyObject *args)
+{{
+    if(worker_alive)
+    {{
+        {ctype} value;
+
+        if(!PyArg_ParseTuple(args, "i", &value))
+        {{
+            return NULL;
+        }}
+
+        {setter}
+    }}
 
     Py_RETURN_NONE;
 }}'''[1:])
 
-                        register_python_callback_list.append(f'{{"{name2}", _{name2}, METH_VARARGS, "Register the callback for {device["name"]}::{vector["name"]}::{vectorDef["name"]}"}},')
+                        ################################################################################################
+
+                        register_python_callback_list.append(f'{{"register_{ns}_callback", _register_{ns}_callback, METH_VARARGS, "Registers the callback for {device["name"]}::{vector["name"]}::{vectorDef["name"]}"}},')
+
+                        register_python_callback_list.append(f'{{"set_{ns}_value", _set_{ns}_value, METH_VARARGS, "Sets the value for {device["name"]}::{vector["name"]}::{vectorDef["name"]}"}},')
+
+                        ################################################################################################
 
         with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
 
@@ -511,14 +576,61 @@ static void *worker_routine(void *arg)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-static void ModuleFree(void *mod)
+static PyObject *worker_start(PyObject *self, PyObject *noargs)
 {{
-    if(worker_alive)
+    if(worker_thread == 0)
+    {{
+        if(pthread_create(&worker_thread, NULL, worker_routine, NULL) != 0x00)
+        {{
+            PyErr_SetString(PyExc_RuntimeError, "Failed to start Nyx worker thread");
+
+            worker_alive = false;
+
+            return NULL;
+        }}
+        else
+        {{
+            worker_alive = true;
+
+            Py_RETURN_NONE;
+        }}
+    }}
+
+    Py_RETURN_NONE;
+}}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static PyObject *worker_stop(PyObject *self, PyObject *noargs)
+{{
+    if(worker_thread != 0)
     {{
         worker_alive = false;
 
-        pthread_join(worker_thread, NULL);
+        if(pthread_join(worker_thread, NULL) != 0x00)
+        {{
+            PyErr_SetString(PyExc_RuntimeError, "Failed to stop Nyx worker thread");
+
+            worker_thread = 0;
+
+            return NULL;
+        }}
+        else
+        {{
+            worker_thread = 0;
+
+            Py_RETURN_NONE;
+        }}
     }}
+
+    Py_RETURN_NONE;
+}}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static void ModuleFree(void *module)
+{{
+    worker_stop(NULL, NULL);
 }}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -529,7 +641,9 @@ static void ModuleFree(void *mod)
 
 static PyMethodDef MethodDefs[] = {{
     {f'{LINE_BREAK}    '.join(register_python_callback_list)}
-    {{NULL, NULL, 0, NULL}}
+    {{"start", worker_start, METH_NOARGS, "Starts the node"}},
+    {{"stop", worker_stop, METH_NOARGS, "Stops the node"}},
+    {{NULL, NULL, 0, NULL}},
 }};
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -556,14 +670,7 @@ PyMODINIT_FUNC PyInit_{descr['nodeName']}()
 
     if(module != NULL)
     {{
-        if(pthread_create(&worker_thread, NULL, worker_routine, NULL) != 0x00)
-        {{
-            PyErr_SetString(PyExc_RuntimeError, "Failed to start Nyx worker thread");
 
-            Py_DECREF(module);
-
-            return NULL;
-        }}
     }}
 
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -822,6 +929,12 @@ void loop()
 
 def generate_python_notifier(descr, device, vector, vectorDef):
 
+    ####################################################################################################################
+
+    ns = f'{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}'
+
+    ####################################################################################################################
+
     if descr['mode'] == 'python':
         if   vector['type'] == 'number' and 'd' in vector['type']:
             args = 'Py_BuildValue("(i)", nyx_number_def_get((nyx_dict_t *) def_vector))'
@@ -838,10 +951,10 @@ def generate_python_notifier(descr, device, vector, vectorDef):
     else:
         return '    /* TO BE IMPLEMENTED */'
 
-    name = f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}_python_callback'
+    ####################################################################################################################
 
     return f'''
-    if(modified && {name} != NULL)
+    if(modified && vector_def_{ns}_python_callback != NULL)
     {{
         /*------------------------------------------------------------------------------------------------------------*/
         /* !!! AUTOGENERATED CODE !!!                                                                                 */
@@ -851,7 +964,7 @@ def generate_python_notifier(descr, device, vector, vectorDef):
 
         PyObject *args = {args};
 
-        PyObject *result = PyObject_CallObject({name}, args);
+        PyObject *result = PyObject_CallObject(vector_def_{ns}_python_callback, args);
 
         Py_DECREF(args);
 
@@ -904,13 +1017,15 @@ def generate_devices(driver_path, descr, override):
 
             for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
 
+                ns = f'{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}'
+
                 ########################################################################################################
                 # NUMBER                                                                                               #
                 ########################################################################################################
 
                 if vector['type'] == 'number':
 
-                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_number_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", "{vectorDef["format"]}", {vectorDef["min"]}, {vectorDef["max"]}, {vectorDef["step"]}, {vectorDef["value"]});')
+                    vector_def_list2.append(f'vector_def_{ns} = nyx_number_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", "{vectorDef["format"]}", {vectorDef["min"]}, {vectorDef["max"]}, {vectorDef["step"]}, {vectorDef["value"]});')
 
                 ########################################################################################################
                 # TEXT                                                                                                 #
@@ -918,7 +1033,7 @@ def generate_devices(driver_path, descr, override):
 
                 if vector['type'] == 'text':
 
-                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_text_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", "{vectorDef["value"]}");')
+                    vector_def_list2.append(f'vector_def_{ns} = nyx_text_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", "{vectorDef["value"]}");')
 
                 ########################################################################################################
                 # LIGHT                                                                                                #
@@ -926,7 +1041,7 @@ def generate_devices(driver_path, descr, override):
 
                 if vector['type'] == 'light':
 
-                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_light_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
+                    vector_def_list2.append(f'vector_def_{ns} = nyx_light_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
 
                 ########################################################################################################
                 # SWITCH                                                                                               #
@@ -934,7 +1049,7 @@ def generate_devices(driver_path, descr, override):
 
                 if vector['type'] == 'switch':
 
-                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_switch_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
+                    vector_def_list2.append(f'vector_def_{ns} = nyx_switch_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
 
                 ########################################################################################################
                 # BLOB                                                                                                 #
@@ -942,13 +1057,13 @@ def generate_devices(driver_path, descr, override):
 
                 if vector['type'] == 'blob':
 
-                    vector_def_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = nyx_blob_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
+                    vector_def_list2.append(f'vector_def_{ns} = nyx_blob_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
 
                 ########################################################################################################
 
-                vector_list1.append(f'nyx_dict_t *vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()} = {descr['NULL']};')
+                vector_list1.append(f'nyx_dict_t *vector_def_{ns} = {descr['NULL']};')
 
-                vector_def_list1.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()},')
+                vector_def_list1.append(f'vector_def_{ns},')
 
                 ########################################################################################################
 
@@ -956,7 +1071,7 @@ def generate_devices(driver_path, descr, override):
 
                     callback_list1.append(f'static void _{vector["name"].lower()}_{vectorDef["name"].lower()}_callback(struct nyx_object_s *def_vector, bool modified)\n{{\n{generate_python_notifier(descr, device, vector, vectorDef)}\n}}')
 
-                    callback_list2.append(f'vector_def_{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}->base.in_callback = _{vector["name"].lower()}_{vectorDef["name"].lower()}_callback;')
+                    callback_list2.append(f'vector_def_{ns}->base.in_callback = _{vector["name"].lower()}_{vectorDef["name"].lower()}_callback;')
 
             ############################################################################################################
 
@@ -1184,6 +1299,80 @@ void nyx_glue_finalize()
 
 ########################################################################################################################
 
+def generate_block(driver_path, descr):
+
+    ####################################################################################################################
+
+    parameter_list = []
+
+    callback_list = []
+
+    for device in sorted(descr['devices'].values(), key = lambda x: x['rank']):
+
+        for vector in sorted(device['vectors'].values(), key = lambda x: x['rank']):
+
+            for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
+
+                if vectorDef['callback']:
+
+                    ####################################################################################################
+
+                    ns = f'{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}'
+
+                    ####################################################################################################
+
+                    parameter_list.append(f'''
+  - id: {ns}_variable
+    label: \'{device["name"]}:{vector["name"]}:{vectorDef["name"]}\'
+    dtype: _multiline
+    default: \'\'
+'''[1:])
+
+                    ####################################################################################################
+
+                    callback_list.append(f'''
+    def _{ns}_callback(value):
+        ${{{ns}_variable.replace('\\n', '\\n    ') if {ns}_variable else 'pass'}}
+
+    {descr['nodeName'].lower()}.register_{ns}_callback(_{ns}_callback)
+'''[1:])
+
+    ####################################################################################################################
+
+    template = f'''
+id: {descr['nodeName'].lower()}
+label: {descr['nodeName']}
+category: '[Nyx]/{descr['nodeName']}'
+flags: [ python ]
+
+
+parameters:
+{'\n'.join(parameter_list)}
+
+templates:
+  imports: |
+    import {descr['nodeName']}
+
+  make: |
+    None
+
+    {descr['nodeName']}.start()
+
+{'\n'.join(callback_list)}
+
+file_format: 1
+'''[1:]
+
+    ####################################################################################################################
+
+    filename = os.path.join(driver_path, 'grc', f'{descr['nodeName'].lower()}.block.yml')
+
+    with open(filename, 'wt') as f:
+
+        f.write(template)
+
+########################################################################################################################
+
 def main():
 
     ####################################################################################################################
@@ -1233,19 +1422,19 @@ def main():
 
     ####################################################################################################################
 
-    if os.path.isdir(driver_path):
+    if os.path.isdir(driver_path) and args.override_project:
 
-        if args.override_project:
+        shutil.rmtree(driver_path)
 
-            shutil.rmtree(driver_path)
+    ####################################################################################################################
 
-            # noinspection PyTypeChecker
-            os.makedirs(os.path.join(driver_path, 'src'))
-
-    else:
+    if descr['mode'] == 'python':
 
         # noinspection PyTypeChecker
-        os.makedirs(os.path.join(driver_path, 'src'))
+        os.makedirs(os.path.join(driver_path, 'grc'), exist_ok = True)
+
+    # noinspection PyTypeChecker
+    os.makedirs(os.path.join(driver_path, 'src'), exist_ok = True)
 
     ####################################################################################################################
 
@@ -1256,6 +1445,8 @@ def main():
     generate_main(driver_path, descr, args.override_main)
 
     generate_devices(driver_path, descr, args.override_device)
+
+    generate_block(driver_path, descr)
 
     ####################################################################################################################
 
