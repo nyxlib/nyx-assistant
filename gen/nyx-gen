@@ -1332,7 +1332,7 @@ def generate_block(driver_path, descr):
 
                     callback_list.append(f'''
     def _{ns}_callback(value):
-        ${{{ns}_variable.replace('\\n', '\\n    ') if {ns}_variable else 'pass'}}
+        ${{{ns}_variable.replace('\\n', '\\n    ') if {ns}_variable.strip() else 'pass'}}
 
     {descr['nodeName'].lower()}.register_{ns}_callback(_{ns}_callback)
 '''[1:])
