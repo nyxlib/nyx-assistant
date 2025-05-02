@@ -412,39 +412,40 @@ _err:
 
                 for vectorDef in sorted(vector['defs'].values(), key = lambda x: x['rank']):
 
+
+                    ####################################################################################################
+
+                    ns = f'{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}'
+
+                    ####################################################################################################
+
+                    if   vector['type'] == 'number' and 'd' in vectorDef['format']:
+                        ctype = 'int'
+                        setter = f'nyx_number_def_set_int((nyx_dict_t *) vector_def_{ns}, value);'
+                    elif vector['type'] == 'number' and 'l' in vectorDef['format']:
+                        ctype = 'lond'
+                        setter = f'nyx_number_def_get_long((nyx_dict_t *) vector_def_{ns}, value);'
+                    elif vector['type'] == 'number' and 'f' in vectorDef['format']:
+                        ctype = 'double'
+                        setter = f'nyx_number_def_set_double((nyx_dict_t *) vector_def_{ns}, value);'
+                    elif vector['type'] == 'text':
+                        ctype = 'STR_t'
+                        setter = f'nyx_text_def_set((nyx_dict_t *) vector_def_{ns}, value);'
+                    elif vector['type'] == 'switch':
+                        ctype = 'int'
+                        setter = f'nyx_switch_def_set((nyx_dict_t *) vector_def_{ns}, value);'
+                    elif vector['type'] == 'light':
+                        ctype = 'int'
+                        setter = f'nyx_light_def_set((nyx_dict_t *) vector_def_{ns}, value);'
+                        print('hello')
+                    else:
+                        continue
+
+                    ####################################################################################################
+
                     if vectorDef['callback']:
 
-                        ################################################################################################
-
-                        ns = f'{device["name"].lower()}_{vector["name"].lower()}_{vectorDef["name"].lower()}'
-
-                        ################################################################################################
-
-                        if   vector['type'] == 'number' and 'd' in vectorDef['format']:
-                            ctype = 'int'
-                            setter = f'nyx_number_def_set_int((nyx_dict_t *) vector_def_{ns}, value);'
-                        elif vector['type'] == 'number' and 'l' in vectorDef['format']:
-                            ctype = 'lond'
-                            setter = f'nyx_number_def_get_long((nyx_dict_t *) vector_def_{ns}, value);'
-                        elif vector['type'] == 'number' and 'f' in vectorDef['format']:
-                            ctype = 'double'
-                            setter = f'nyx_number_def_set_double((nyx_dict_t *) vector_def_{ns}, value);'
-                        elif vector['type'] == 'text':
-                            ctype = 'STR_t'
-                            setter = f'nyx_text_def_set((nyx_dict_t *) vector_def_{ns}, value);'
-                        elif vector['type'] == 'switch':
-                            ctype = 'int'
-                            setter = f'nyx_switch_def_set((nyx_dict_t *) vector_def_{ns}, value);'
-                        else:
-                            continue
-
-                        ################################################################################################
-
                         python_callback_list.append(f'''
-/*----------------*/
-/* CALLBACK       */
-/*----------------*/
-
 PyObject *vector_def_{ns}_python_callback = NULL;
 
 static PyObject *_register_{ns}_callback(PyObject *self, PyObject *args)
@@ -469,11 +470,9 @@ static PyObject *_register_{ns}_callback(PyObject *self, PyObject *args)
 
     Py_RETURN_NONE;
 }}
+'''[1:])
 
-/*----------------*/
-/* SETTER         */
-/*----------------*/
-
+                    python_callback_list.append(f'''
 static PyObject *_set_{ns}_value(PyObject *self, PyObject *args)
 {{
     if(worker_alive)
@@ -491,13 +490,15 @@ static PyObject *_set_{ns}_value(PyObject *self, PyObject *args)
     Py_RETURN_NONE;
 }}'''[1:])
 
-                        ################################################################################################
+                    ####################################################################################################
+
+                    if vectorDef['callback']:
 
                         register_python_callback_list.append(f'{{"register_{ns}_callback", _register_{ns}_callback, METH_VARARGS, "Registers the callback for {device["name"]}::{vector["name"]}::{vectorDef["name"]}"}},')
 
-                        register_python_callback_list.append(f'{{"set_{ns}_value", _set_{ns}_value, METH_VARARGS, "Sets the value for {device["name"]}::{vector["name"]}::{vectorDef["name"]}"}},')
+                    register_python_callback_list.append(f'{{"set_{ns}_value", _set_{ns}_value, METH_VARARGS, "Sets the value for {device["name"]}::{vector["name"]}::{vectorDef["name"]}"}},')
 
-                        ################################################################################################
+                    ####################################################################################################
 
         with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
 
