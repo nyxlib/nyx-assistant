@@ -110,7 +110,7 @@ target_link_libraries({descr['nodeName'].lower()} PRIVATE Threads::Threads ${{Py
 
 include(GNUInstallDirs)
 
-install(TARGETS mynode LIBRARY DESTINATION ${{Python3_SITEARCH}})
+install(TARGETS {descr['nodeName'].lower()} LIBRARY DESTINATION ${{Python3_SITEARCH}})
 
 install(FILES ./grc/{descr['nodeName'].lower()}.block.yml DESTINATION ${{CMAKE_INSTALL_DATADIR}}/gnuradio/grc/blocks/)
 
@@ -425,7 +425,7 @@ _err:
                             setter = f'nyx_number_def_set_int((nyx_dict_t *) vector_def_{ns}, value);'
                         elif vector['type'] == 'number' and 'l' in vectorDef['format']:
                             ctype = 'lond'
-                            setter = f'nyx_number_def_get_int((nyx_dict_t *) vector_def_{ns}, value);'
+                            setter = f'nyx_number_def_get_long((nyx_dict_t *) vector_def_{ns}, value);'
                         elif vector['type'] == 'number' and 'f' in vectorDef['format']:
                             ctype = 'double'
                             setter = f'nyx_number_def_set_double((nyx_dict_t *) vector_def_{ns}, value);'
@@ -937,11 +937,11 @@ def generate_python_notifier(descr, device, vector, vectorDef):
 
     if descr['mode'] == 'python':
         if   vector['type'] == 'number' and 'd' in vectorDef['format']:
-            args = 'Py_BuildValue("(i)", nyx_number_def_get((nyx_dict_t *) def_vector))'
+            args = 'Py_BuildValue("(i)", nyx_number_def_get_int((nyx_dict_t *) def_vector))'
         elif vector['type'] == 'number' and 'l' in vectorDef['format']:
-            args = 'Py_BuildValue("(l)", nyx_number_def_get((nyx_dict_t *) def_vector))'
+            args = 'Py_BuildValue("(l)", nyx_number_def_get_long((nyx_dict_t *) def_vector))'
         elif vector['type'] == 'number' and 'f' in vectorDef['format']:
-            args = 'Py_BuildValue("(d)", nyx_number_def_get((nyx_dict_t *) def_vector))'
+            args = 'Py_BuildValue("(d)", nyx_number_def_get_double((nyx_dict_t *) def_vector))'
         elif vector['type'] == 'text':
             args = 'Py_BuildValue("(s)", nyx_text_def_get((nyx_dict_t *) def_vector))'
         elif vector['type'] == 'switch':
