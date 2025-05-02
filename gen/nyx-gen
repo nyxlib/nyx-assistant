@@ -437,7 +437,6 @@ _err:
                     elif vector['type'] == 'light':
                         ctype = 'int'
                         setter = f'nyx_light_def_set((nyx_dict_t *) vector_def_{ns}, value);'
-                        print('hello')
                     else:
                         continue
 
@@ -514,6 +513,10 @@ static PyObject *_set_{ns}_value(PyObject *self, PyObject *args)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+static nyx_node_t *node = NULL;
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 static pthread_t worker_thread = 0;
 
 /*--*/ volatile bool worker_alive = false;
@@ -542,7 +545,7 @@ static void *worker_routine(void *arg)
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    nyx_node_t *node = nyx_node_initialize(
+    node = nyx_node_initialize(
         {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'NULL'},
         {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'NULL'},
         MQTT_USERNAME,
@@ -629,9 +632,19 @@ static PyObject *worker_stop(PyObject *self, PyObject *noargs)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-static void ModuleFree(void *module)
+static PyObject *send_message(PyObject *self, PyObject *args)
 {{
-    worker_stop(NULL, NULL);
+    STR_t device;
+    STR_t message;
+
+    if(!PyArg_ParseTuple(args, "ss", &device, &message))
+    {{
+        return NULL;
+    }}
+
+    nyx_node_send_message(node, device, message);
+
+    Py_RETURN_NONE;
 }}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -642,10 +655,18 @@ static void ModuleFree(void *module)
 
 static PyMethodDef MethodDefs[] = {{
     {f'{LINE_BREAK}    '.join(register_python_callback_list)}
+    {{"send_message", send_message, METH_VARARGS, "Send a message to a device."}},
     {{"start", worker_start, METH_NOARGS, "Starts the node"}},
     {{"stop", worker_stop, METH_NOARGS, "Stops the node"}},
     {{NULL, NULL, 0, NULL}},
 }};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static void ModuleFree(void *module)
+{{
+    worker_stop(NULL, NULL);
+}}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -671,7 +692,13 @@ PyMODINIT_FUNC PyInit_{descr['nodeName']}()
 
     if(module != NULL)
     {{
+		PyModule_AddIntConstant(module, "NYX_STATE_IDLE", NYX_STATE_IDLE);
+		PyModule_AddIntConstant(module, "NYX_STATE_OK", NYX_STATE_OK);
+		PyModule_AddIntConstant(module, "NYX_STATE_BUSY", NYX_STATE_BUSY);
+		PyModule_AddIntConstant(module, "NYX_STATE_ALERT", NYX_STATE_ALERT);
 
+		PyModule_AddIntConstant(module, "NYX_ONOFF_ON", NYX_ONOFF_ON);
+		PyModule_AddIntConstant(module, "NYX_ONOFF_OFF", NYX_ONOFF_OFF);
     }}
 
     /*----------------------------------------------------------------------------------------------------------------*/
