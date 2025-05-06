@@ -12,9 +12,9 @@
         "windows": [
             {
                 "label": "main",
-                "height": 825,
+                "height": 850,
                 "width": 1300,
-                "minHeight": 825,
+                "minHeight": 850,
                 "minWidth": 1300,
                 "visible": true,
                 "maximized": false,
@@ -25,9 +25,9 @@
             },
             {
                 "label": "preview",
-                "height": 825,
+                "height": 850,
                 "width": 1300,
-                "minHeight": 825,
+                "minHeight": 850,
                 "minWidth": 1300,
                 "visible": false,
                 "maximized": false,

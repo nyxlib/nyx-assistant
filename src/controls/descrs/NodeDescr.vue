@@ -355,14 +355,49 @@ onMounted(() => {
                                         <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" required="required" :disabled="!globals.enableMQTT" v-model="globals.mqttURI" />
                                     </div>
 
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-0">
+                                                <label class="form-label" for="C8A2E5EB">Username<sup class="text-secondary">opt</sup></label>
+                                                <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" :disabled="!globals.enableMQTT" v-model="globals.mqttUsername" autocomplete="username" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-0">
+                                                <label class="form-label" for="CC00EA1C">Password<sup class="text-secondary">opt</sup></label>
+                                                <input class="form-control form-control-sm" type="text" id="CC00EA1C" placeholder="Password" :disabled="!globals.enableMQTT" v-model="globals.mqttPassword" v-password-toggle />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- *********************************************************************************** -->
+
+                            <hr />
+
+                            <!-- *********************************************************************************** -->
+
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                    <div class="form-check form-switch mb-3">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="D7EAB517" v-model="globals.enableRedis" :true-value="true" :false-value="false" />
+                                        <label class="form-check-label" for="D7EAB517">Enable Redis</label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-8">
+
                                     <div class="mb-3">
-                                        <label class="form-label" for="C8A2E5EB">Username<sup class="text-secondary">opt</sup></label>
-                                        <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" :disabled="!globals.enableMQTT" v-model="globals.mqttUsername" autocomplete="username" />
+                                        <label class="form-label" for="D197DB2C">URI</label>
+                                        <input class="form-control form-control-sm" type="text" id="D197DB2C" placeholder="e.g. tcp://localhost:6379" required="required" :disabled="!globals.enableRedis" v-model="globals.redisURI" />
                                     </div>
 
                                     <div class="mb-0">
-                                        <label class="form-label" for="CC00EA1C">Password<sup class="text-secondary">opt</sup></label>
-                                        <input class="form-control form-control-sm" type="text" id="CC00EA1C" placeholder="Password" :disabled="!globals.enableMQTT" v-model="globals.mqttPassword" v-password-toggle />
+                                        <label class="form-label" for="D22303F3">Password<sup class="text-secondary">opt</sup></label>
+                                        <input class="form-control form-control-sm" type="text" id="D22303F3" placeholder="Password" :disabled="!globals.enableRedis" v-model="globals.redisPassword" v-password-toggle />
                                     </div>
 
                                 </div>

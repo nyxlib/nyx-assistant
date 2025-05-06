@@ -289,7 +289,7 @@ def generate_main(driver_path, descr, override):
 
         with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
 
-            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n')
+            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'NULL'}\n')
 
         filename = 'main.c'
 
@@ -349,13 +349,15 @@ int main()
     signal(SIGTERM, signal_handler);
 
     nyx_node_t *node = nyx_node_initialize(
+        "{descr['nodeName']}",
+        vector_list,
         {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'NULL'},
         {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'NULL'},
         MQTT_USERNAME,
         MQTT_PASSWORD,
-        "{descr['nodeName']}",
-        vector_list,
         NULL,
+        {('"' + descr['redisURI'] + '"') if descr['enableRedis'] else 'NULL'},
+        REDIS_PASSWORD,
         3000,
         true,
         true
@@ -501,7 +503,7 @@ static PyObject *_set_{ns}_value(PyObject *self, PyObject *args)
 
         with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
 
-            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n')
+            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'NULL'}\n')
 
         filename = 'main.c'
 
@@ -546,13 +548,15 @@ static void *worker_routine(void *arg)
     /*----------------------------------------------------------------------------------------------------------------*/
 
     node = nyx_node_initialize(
+        "{descr['nodeName']}",
+        vector_list,
         {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'NULL'},
         {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'NULL'},
         MQTT_USERNAME,
         MQTT_PASSWORD,
-        "{descr['nodeName']}",
-        vector_list,
         NULL,
+        {('"' + descr['redisURI'] + '"') if descr['enableRedis'] else 'NULL'},
+        REDIS_PASSWORD,
         3000,
         true,
         true
@@ -715,7 +719,7 @@ PyMODINIT_FUNC PyInit_{descr['nodeName']}()
 
         with open(os.path.join(driver_path, 'src', 'credentials.hpp'), 'wt') as f:
 
-            f.write(f'#define WIFI_SSID "{descr["wifiSSID"]}"\n#define WIFI_PASSWORD "{descr["wifiPassword"]}"\n#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'}\n')
+            f.write(f'#define WIFI_SSID "{descr["wifiSSID"]}"\n#define WIFI_PASSWORD "{descr["wifiPassword"]}"\n#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'nullptr'}\n')
 
         filename = 'main.cpp'
 
@@ -792,13 +796,15 @@ void setup()
     /*----------------------------------------------------------------------------------------------------------------*/
 
     node = nyx_node_initialize(
+        "{descr['nodeName']}",
+        vector_list,
         {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'nullptr'},
         {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'nullptr'},
         MQTT_USERNAME,
         MQTT_PASSWORD,
-        "{descr['nodeName']}",
-        vector_list,
         NULL,
+        {('"' + descr['redisURI'] + '"') if descr['enableRedis'] else 'nullptr'},
+        REDIS_PASSWORD,
         3000,
         true,
         false
@@ -826,7 +832,7 @@ void loop()
 
         with open(os.path.join(driver_path, 'src', 'credentials.hpp'), 'wt') as f:
 
-            f.write(f'#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'}\n')
+            f.write(f'#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'nullptr'}\n')
 
         template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -909,13 +915,15 @@ void setup()
     /*----------------------------------------------------------------------------------------------------------------*/
 
     node = nyx_node_initialize(
+        "{descr['nodeName']}",
+        vector_list,
         {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'nullptr'},
         {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'nullptr'},
         MQTT_USERNAME,
         MQTT_PASSWORD,
-        "{descr['nodeName']}",
-        vector_list,
         NULL,
+        {('"' + descr['redisURI'] + '"') if descr['enableRedis'] else 'nullptr'},
+        REDIS_PASSWORD,
         3000,
         true,
         false
@@ -1368,8 +1376,8 @@ def generate_block(driver_path, descr):
     ####################################################################################################################
 
     template = f'''
-id: {descr['nodeName'].lower()}
-label: {descr['nodeName']}
+id: nyx-{descr['nodeName'].replace('_', '-').lower()}
+label: "Nyx {descr['nodeName']}"
 category: '[Nyx]/{descr['nodeName']}'
 flags: [ python ]
 

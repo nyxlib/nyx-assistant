@@ -51,6 +51,10 @@ const DEFAULT_GLOBALS = {
     mqttURI: '',
     mqttUsername: '',
     mqttPassword: '',
+    /* REDIS */
+    enableRedis: false,
+    redisURI: '',
+    redisPassword: '',
     /* TCP */
     enableTCP: false,
     tcpURI: '',
