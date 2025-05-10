@@ -112,7 +112,11 @@ include(GNUInstallDirs)
 
 install(TARGETS {descr['nodeName'].lower()} LIBRARY DESTINATION ${{Python3_SITEARCH}})
 
-install(FILES ./grc/{descr['nodeName'].lower()}.block.yml DESTINATION ${{CMAKE_INSTALL_DATADIR}}/gnuradio/grc/blocks/)
+install(FILES ./src/__init__.py DESTINATION ${{Python3_SITEARCH}}/gnuradio/nyx_{descr['nodeName'].lower()}/)
+
+install(FILES ./grc/nyx_{descr['nodeName'].lower()}.block.yml DESTINATION ${{CMAKE_INSTALL_DATADIR}}/gnuradio/grc/blocks/)
+
+install(FILES ./grc/nyx_{descr['nodeName'].lower()}_sink.block.yml DESTINATION ${{CMAKE_INSTALL_DATADIR}}/gnuradio/grc/blocks/)
 
 ########################################################################################################################
 '''[1:]
@@ -513,6 +517,18 @@ static PyObject *_set_{ns}_value(PyObject *self, PyObject *args)
 #include "glue.h"
 #include "credentials.h"
 
+__NULLABLE__ str_t nyx_string_dup(
+    __NULLABLE__ STR_t s
+);
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static str_t mqtt_url = NULL;
+static str_t mqtt_username = NULL;
+static str_t mqtt_password = NULL;
+static str_t redis_url = NULL;
+static str_t redis_password = NULL;
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 static nyx_node_t *node = NULL;
@@ -551,12 +567,12 @@ static void *worker_routine(void *arg)
         "{descr['nodeName']}",
         vector_list,
         {('"' + descr['tcpURI'] + '"') if descr['enableTCP'] else 'NULL'},
-        {('"' + descr['mqttURI'] + '"') if descr['enableMQTT'] else 'NULL'},
-        MQTT_USERNAME,
-        MQTT_PASSWORD,
+        mqtt_url,
+        mqtt_username,
+        mqtt_password,
         NULL,
-        {('"' + descr['redisURI'] + '"') if descr['enableRedis'] else 'NULL'},
-        REDIS_PASSWORD,
+        redis_url,
+        redis_password,
         3000,
         true,
         true
@@ -575,6 +591,14 @@ static void *worker_routine(void *arg)
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    nyx_memory_free(mqtt_url);
+    nyx_memory_free(mqtt_username);
+    nyx_memory_free(mqtt_password);
+    nyx_memory_free(redis_url);
+    nyx_memory_free(redis_password);
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
     nyx_memory_finalize();
 
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -584,13 +608,45 @@ static void *worker_routine(void *arg)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-static PyObject *worker_start(PyObject *self, PyObject *noargs)
+static PyObject *worker_start(PyObject *self, PyObject *args)
 {{
     if(worker_thread == 0)
     {{
+        /*------------------------------------------------------------------------------------------------------------*/
+
+        STR_t py_mqtt_url = NULL;
+        STR_t py_mqtt_username = NULL;
+        STR_t py_mqtt_password = NULL;
+        STR_t py_redis_url = NULL;
+        STR_t py_redis_password = NULL;
+
+        if(!PyArg_ParseTuple(args, "|zzzzz",
+            &py_mqtt_url,
+            &py_mqtt_username,
+            &py_mqtt_password,
+            &py_redis_url,
+            &py_redis_password
+        )) {{
+            return NULL;
+        }}
+
+        mqtt_url = nyx_string_dup(py_mqtt_url);
+        mqtt_username = nyx_string_dup(py_mqtt_username);
+        mqtt_password = nyx_string_dup(py_mqtt_password);
+        redis_url = nyx_string_dup(py_redis_url);
+        redis_password = nyx_string_dup(py_redis_password);
+
+        /*------------------------------------------------------------------------------------------------------------*/
+
         if(pthread_create(&worker_thread, NULL, worker_routine, NULL) != 0x00)
         {{
             PyErr_SetString(PyExc_RuntimeError, "Failed to start Nyx worker thread");
+
+            nyx_memory_free(mqtt_url);
+            nyx_memory_free(mqtt_username);
+            nyx_memory_free(mqtt_password);
+            nyx_memory_free(redis_url);
+            nyx_memory_free(redis_password);
 
             worker_alive = false;
 
@@ -602,6 +658,8 @@ static PyObject *worker_start(PyObject *self, PyObject *noargs)
 
             Py_RETURN_NONE;
         }}
+
+        /*------------------------------------------------------------------------------------------------------------*/
     }}
 
     Py_RETURN_NONE;
@@ -653,6 +711,88 @@ static PyObject *send_message(PyObject *self, PyObject *args)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+static PyObject *redis_pub(PyObject *self, PyObject *args)
+{{
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    STR_t stream;
+    Py_ssize_t max_len;
+    PyObject *field_dict;
+
+    if(!PyArg_ParseTuple(args, "snO!", &stream, &max_len, &PyDict_Type, &field_dict))
+    {{
+        return NULL;
+    }}
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    Py_ssize_t n_fields = PyDict_Size(field_dict);
+
+    STR_t  *names = nyx_memory_alloc(n_fields * sizeof(STR_t ));
+    size_t *sizes = nyx_memory_alloc(n_fields * sizeof(size_t));
+    buff_t *buffs = nyx_memory_alloc(n_fields * sizeof(buff_t));
+
+    if(names == NULL || sizes == NULL || buffs == NULL)
+    {{
+        nyx_memory_free(names);
+        nyx_memory_free(sizes);
+        nyx_memory_free(buffs);
+
+        PyErr_NoMemory();
+        return NULL;
+    }}
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    PyObject *keys = PyDict_Keys(field_dict);
+
+    for(Py_ssize_t i = 0; i < n_fields; i++)
+    {{
+        PyObject *key = PyList_GetItem(keys, i);
+        PyObject *val = PyDict_GetItem(field_dict, key);
+
+        if(!PyUnicode_Check(key)
+           ||
+           !PyBytes_Check(val)
+        ) {{
+            goto _error_type;
+        }}
+
+        names[i] = PyUnicode_AsUTF8(key);
+        sizes[i] = (size_t) PyBytes_Size(val);
+        buffs[i] = (buff_t) PyBytes_AsString(val);
+    }}
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    nyx_redis_pub(node, stream, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    nyx_memory_free(names);
+    nyx_memory_free(sizes);
+    nyx_memory_free(buffs);
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+    Py_RETURN_NONE;
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
+_error_type:
+    PyErr_SetString(PyExc_TypeError, "Each field must be {{name: bytes}}");
+
+    nyx_memory_free(names);
+    nyx_memory_free(sizes);
+    nyx_memory_free(buffs);
+
+    return NULL;
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+}}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 {f'{LINE_BREAK}{LINE_BREAK}/*--------------------------------------------------------------------------------------------------------------------*/{LINE_BREAK}{LINE_BREAK}'.join(python_callback_list)}
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -660,8 +800,9 @@ static PyObject *send_message(PyObject *self, PyObject *args)
 static PyMethodDef MethodDefs[] = {{
     {f'{LINE_BREAK}    '.join(register_python_callback_list)}
     {{"send_message", send_message, METH_VARARGS, "Send a message to a device."}},
-    {{"start", worker_start, METH_NOARGS, "Starts the node"}},
-    {{"stop", worker_stop, METH_NOARGS, "Stops the node"}},
+    {{"redis_pub", redis_pub, METH_VARARGS, "Publishes an entry to a stream."}},
+    {{"start", worker_start, METH_VARARGS, "Starts the node."}},
+    {{"stop", worker_stop, METH_NOARGS, "Stops the node."}},
     {{NULL, NULL, 0, NULL}},
 }};
 
@@ -1339,6 +1480,129 @@ def generate_block(driver_path, descr):
 
     ####################################################################################################################
 
+    template = f'''
+########################################################################################################################
+
+import json
+import {descr['nodeName']}
+
+import numpy as np
+
+from gnuradio import gr
+
+########################################################################################################################
+
+class nyx_sink(gr.sync_block):
+
+    """
+    docstring for block broadcaster
+    """
+
+    ####################################################################################################################
+
+    def __init__(self, samp_rate = 2.0e6, frequency = 100e6, fft_size = 8192, redis_stream = "spectrum"):
+
+        ################################################################################################################
+
+        gr.sync_block.__init__(self, name = "Nyx Sink", in_sig = [(np.float32, fft_size)], out_sig = None)
+
+        ################################################################################################################
+
+        self.samp_rate = samp_rate
+        self.frequency = frequency
+
+        self.redis_stream = redis_stream
+
+    ####################################################################################################################
+
+    def work(self, input_items, output_items):
+
+        ################################################################################################################
+
+        samp_rate = f'{{self.samp_rate}}'.encode('utf-8')
+        frequency = f'{{self.frequency}}'.encode('utf-8')
+
+        ################################################################################################################
+
+        for msg in input_items[0]:
+
+            samples = np.round(msg, decimals = 1).tobytes()
+
+            data = {{
+                "samp_rate": samp_rate,
+                "frequency": frequency,
+                "#samples": samples,
+            }}
+
+            {descr['nodeName']}.redis_pub(self.redis_stream, 100, data)
+
+        ################################################################################################################
+
+        self.consume(0, len(input_items[0]))
+
+        ################################################################################################################
+
+        return 0
+
+########################################################################################################################
+'''[1:]
+
+    ####################################################################################################################
+
+    filename = os.path.join(driver_path, 'src', f'__init__.py')
+
+    with open(filename, 'wt') as f:
+
+        f.write(template)
+
+    ####################################################################################################################
+
+    template = f'''
+id: nyx_{descr['nodeName'].replace('-', '_').lower()}_sink
+label: "Nyx {descr['nodeName']} sink"
+category: '[Nyx]/{descr['nodeName']}'
+flags: [ python ]
+
+templates:
+  imports: from gnuradio import nyx_{descr['nodeName'].lower()}
+
+  make: nyx_{descr['nodeName'].lower()}.nyx_sink(${{samp_rate}}, ${{frequency}}, ${{fft_size}})
+
+parameters:
+- id: samp_rate
+  label: Sample Rate
+  dtype: float
+  default: samp_rate
+
+- id: frequency
+  label: Frequency
+  dtype: float
+  default: 100e6
+
+- id: fft_size
+  label: FFT Size
+  dtype: int
+  default: 8192
+
+inputs:
+- label: in
+  domain: stream
+  dtype: float
+  vlen: ${{fft_size}}
+
+file_format: 1
+'''[1:]
+
+    ####################################################################################################################
+
+    filename = os.path.join(driver_path, 'grc', f'nyx_{descr['nodeName'].lower()}_sink.block.yml')
+
+    with open(filename, 'wt') as f:
+
+        f.write(template)
+
+    ####################################################################################################################
+
     parameter_list = []
 
     callback_list = []
@@ -1360,8 +1624,10 @@ def generate_block(driver_path, descr):
                     parameter_list.append(f'''
   - id: {ns}_variable
     label: \'{device["name"]}:{vector["name"]}:{vectorDef["name"]}\'
+    category: 'Callbacks'
     dtype: _multiline
     default: \'\'
+    hide: part
 '''[1:])
 
                     ####################################################################################################
@@ -1376,13 +1642,41 @@ def generate_block(driver_path, descr):
     ####################################################################################################################
 
     template = f'''
-id: nyx-{descr['nodeName'].replace('_', '-').lower()}
+id: nyx_{descr['nodeName'].replace('-', '_').lower()}
 label: "Nyx {descr['nodeName']}"
 category: '[Nyx]/{descr['nodeName']}'
 flags: [ python ]
 
 
 parameters:
+  - id: mqtt_url
+    label: MQTT URL
+    dtype: string
+    default: ''
+
+  - id: mqtt_username
+    label: MQTT username
+    dtype: string
+    default: ''
+    hide: part
+
+  - id: mqtt_password
+    label: MQTT password
+    dtype: string
+    default: ''
+    hide: part
+
+  - id: redis_url
+    label: Redis URL
+    dtype: string
+    default: ''
+
+  - id: redis_password
+    label: Redis password
+    dtype: string
+    default: ''
+    hide: part
+
 {'\n'.join(parameter_list)}
 
 templates:
@@ -1392,7 +1686,7 @@ templates:
   make: |
     None
 
-    {descr['nodeName']}.start()
+    {descr['nodeName']}.start(${{mqtt_url}}, ${{mqtt_username}}, ${{mqtt_password}}, ${{redis_url}}', ${{redis_password}}')
 
 {'\n'.join(callback_list)}
 
@@ -1401,7 +1695,7 @@ file_format: 1
 
     ####################################################################################################################
 
-    filename = os.path.join(driver_path, 'grc', f'{descr['nodeName'].lower()}.block.yml')
+    filename = os.path.join(driver_path, 'grc', f'nyx_{descr['nodeName'].lower()}.block.yml')
 
     with open(filename, 'wt') as f:
 
