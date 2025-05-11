@@ -719,7 +719,7 @@ static PyObject *redis_pub(PyObject *self, PyObject *args)
 
         Py_ssize_t n_fields = PyDict_Size(field_dict);
 
-        STR_t  *names = nyx_memory_alloc(n_fields * sizeof(STR_t ));
+        str_t  *names = nyx_memory_alloc(n_fields * sizeof(str_t ));
         size_t *sizes = nyx_memory_alloc(n_fields * sizeof(size_t));
         buff_t *buffs = nyx_memory_alloc(n_fields * sizeof(buff_t));
 
@@ -749,7 +749,7 @@ static PyObject *redis_pub(PyObject *self, PyObject *args)
                 goto _error_type;
             }}
 
-            names[i] = PyUnicode_AsUTF8(key);
+            names[i] = (str_t) PyUnicode_AsUTF8(key);
             sizes[i] = (size_t) PyBytes_Size(val);
             buffs[i] = (buff_t) PyBytes_AsString(val);
         }}
@@ -1563,7 +1563,7 @@ templates:
 parameters:
 
 - id: redis_stream
-  label: Redis stream
+  label: Redis Stream
   dtype: string
   default: 'spectrum'
 
@@ -1653,13 +1653,13 @@ parameters:
     default: ''
 
   - id: mqtt_username
-    label: MQTT username
+    label: MQTT Username
     dtype: string
     default: ''
     hide: part
 
   - id: mqtt_password
-    label: MQTT password
+    label: MQTT Password
     dtype: string
     default: ''
     hide: part
@@ -1670,7 +1670,7 @@ parameters:
     default: ''
 
   - id: redis_password
-    label: Redis password
+    label: Redis Password
     dtype: string
     default: ''
     hide: part
