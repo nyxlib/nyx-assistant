@@ -1645,7 +1645,6 @@ label: "Nyx {descr['nodeName']}"
 category: '[Nyx]/{descr['nodeName']}'
 flags: [ python ]
 
-
 parameters:
   - id: mqtt_url
     label: MQTT URL
@@ -1679,10 +1678,13 @@ parameters:
 
 templates:
   imports: |
+    import atexit
     import {descr['nodeName']}
 
   make: |
     None
+
+    atexit.register(lambda: {descr['nodeName']}.stop())
 
     {descr['nodeName']}.start(${{mqtt_url}}, ${{mqtt_username}}, ${{mqtt_password}}, ${{redis_url}}, ${{redis_password}})
 
