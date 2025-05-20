@@ -395,9 +395,19 @@ onMounted(() => {
                                         <input class="form-control form-control-sm" type="text" id="D197DB2C" placeholder="e.g. tcp://localhost:6379" required="required" :disabled="!globals.enableRedis" v-model="globals.redisURI" />
                                     </div>
 
-                                    <div class="mb-0">
-                                        <label class="form-label" for="D22303F3">Password<sup class="text-secondary">opt</sup></label>
-                                        <input class="form-control form-control-sm" type="text" id="D22303F3" placeholder="Password" :disabled="!globals.enableRedis" v-model="globals.redisPassword" v-password-toggle />
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-0">
+                                                <label class="form-label" for="C0AC7C07">Username<sup class="text-secondary">opt</sup></label>
+                                                <input class="form-control form-control-sm" type="text" id="C0AC7C07" placeholder="Username" :disabled="!globals.enableRedis" v-model="globals.redisUsername" v-password-toggle />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-0">
+                                                <label class="form-label" for="D22303F3">Password<sup class="text-secondary">opt</sup></label>
+                                                <input class="form-control form-control-sm" type="text" id="D22303F3" placeholder="Password" :disabled="!globals.enableRedis" v-model="globals.redisPassword" v-password-toggle />
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>

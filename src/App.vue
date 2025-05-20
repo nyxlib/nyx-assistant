@@ -54,6 +54,7 @@ const DEFAULT_GLOBALS = {
     /* REDIS */
     enableRedis: false,
     redisURI: '',
+    redisUsername: '',
     redisPassword: '',
     /* TCP */
     enableTCP: false,
