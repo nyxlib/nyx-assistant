@@ -293,7 +293,7 @@ def generate_main(driver_path, descr, override):
 
         with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
 
-            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'NULL'}\n')
+            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define REDIS_USERNAME {('"' + descr['redisUsername'] + '"') if descr['enableRedis'] else 'NULL'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'NULL'}\n')
 
         filename = 'main.c'
 
@@ -361,6 +361,7 @@ int main()
         MQTT_PASSWORD,
         NULL,
         {('"' + descr['redisURI'] + '"') if descr['enableRedis'] else 'NULL'},
+        REDIS_USERNAME,
         REDIS_PASSWORD,
         3000,
         true,
@@ -507,7 +508,7 @@ static PyObject *_set_{ns}_value(PyObject *self, PyObject *args)
 
         with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
 
-            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'NULL'}\n')
+            f.write(f'#define MQTT_USERNAME {('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'NULL'}\n#define REDIS_USERNAME {('"' + descr['redisUsername'] + '"') if descr['enableRedis'] else 'NULL'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'NULL'}\n')
 
         filename = 'main.c'
 
@@ -527,6 +528,7 @@ static char mqtt_url[1024];
 static char mqtt_username[1024];
 static char mqtt_password[1024];
 static char redis_url[1024];
+static char redis_username[1024];
 static char redis_password[1024];
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -572,6 +574,7 @@ static void *worker_routine(void *arg)
         mqtt_password,
         NULL,
         redis_url,
+        redis_username,
         redis_password,
         3000,
         true,
@@ -610,13 +613,15 @@ static PyObject *worker_start(PyObject *self, PyObject *args)
         STR_t py_mqtt_username = NULL;
         STR_t py_mqtt_password = NULL;
         STR_t py_redis_url = NULL;
+        STR_t py_redis_username = NULL;
         STR_t py_redis_password = NULL;
 
-        if(!PyArg_ParseTuple(args, "|zzzzz",
+        if(!PyArg_ParseTuple(args, "|zzzzzz",
             &py_mqtt_url,
             &py_mqtt_username,
             &py_mqtt_password,
             &py_redis_url,
+            &py_redis_username,
             &py_redis_password
         )) {{
             return NULL;
@@ -626,6 +631,7 @@ static PyObject *worker_start(PyObject *self, PyObject *args)
         strcpy(mqtt_username, py_mqtt_username);
         strcpy(mqtt_password, py_mqtt_password);
         strcpy(redis_url, py_redis_url);
+        strcpy(redis_username, py_redis_username);
         strcpy(redis_password, py_redis_password);
 
         /*------------------------------------------------------------------------------------------------------------*/
@@ -852,7 +858,7 @@ PyMODINIT_FUNC PyInit_{descr['nodeName']}()
 
         with open(os.path.join(driver_path, 'src', 'credentials.hpp'), 'wt') as f:
 
-            f.write(f'#define WIFI_SSID "{descr["wifiSSID"]}"\n#define WIFI_PASSWORD "{descr["wifiPassword"]}"\n#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'nullptr'}\n')
+            f.write(f'#define WIFI_SSID "{descr["wifiSSID"]}"\n#define WIFI_PASSWORD "{descr["wifiPassword"]}"\n#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'}\n#define REDIS_USERNAME {('"' + descr['redisUsername'] + '"') if descr['enableRedis'] else 'NULL'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'nullptr'}\n')
 
         filename = 'main.cpp'
 
@@ -937,6 +943,7 @@ void setup()
         MQTT_PASSWORD,
         NULL,
         {('"' + descr['redisURI'] + '"') if descr['enableRedis'] else 'nullptr'},
+        REDIS_USERNAME,
         REDIS_PASSWORD,
         3000,
         true,
@@ -965,7 +972,7 @@ void loop()
 
         with open(os.path.join(driver_path, 'src', 'credentials.hpp'), 'wt') as f:
 
-            f.write(f'#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'nullptr'}\n')
+            f.write(f'#define MQTT_USERNAME "{('"' + descr['mqttUsername'] + '"') if descr['enableMQTT'] else 'nullptr'}"\n#define MQTT_PASSWORD {('"' + descr['mqttPassword'] + '"') if descr['enableMQTT'] else 'nullptr'}\n#define REDIS_USERNAME {('"' + descr['redisUsername'] + '"') if descr['enableRedis'] else 'NULL'}\n#define REDIS_PASSWORD {('"' + descr['redisPassword'] + '"') if descr['enableRedis'] else 'nullptr'}\n')
 
         template = f'''
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -1056,6 +1063,7 @@ void setup()
         MQTT_PASSWORD,
         NULL,
         {('"' + descr['redisURI'] + '"') if descr['enableRedis'] else 'nullptr'},
+        REDIS_USERNAME,
         REDIS_PASSWORD,
         3000,
         true,
@@ -1668,6 +1676,12 @@ parameters:
     dtype: string
     default: ''
 
+  - id: redis_username
+    label: Redis Username
+    dtype: string
+    default: ''
+    hide: part
+
   - id: redis_password
     label: Redis Password
     dtype: string
@@ -1686,7 +1700,7 @@ templates:
 
     atexit.register(lambda: {descr['nodeName']}.stop())
 
-    {descr['nodeName']}.start(${{mqtt_url}}, ${{mqtt_username}}, ${{mqtt_password}}, ${{redis_url}}, ${{redis_password}})
+    {descr['nodeName']}.start(${{mqtt_url}}, ${{mqtt_username}}, ${{mqtt_password}}, ${{redis_url}}, ${{redis_username}}, ${{redis_password}})
 
 {'\n'.join(callback_list)}
 
