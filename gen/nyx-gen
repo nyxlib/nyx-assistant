@@ -712,11 +712,12 @@ static PyObject *redis_pub(PyObject *self, PyObject *args)
     {{
         /*------------------------------------------------------------------------------------------------------------*/
 
-        STR_t stream;
+        STR_t device_name;
+        STR_t stream_name;
         Py_ssize_t max_len;
         PyObject *field_dict;
 
-        if(!PyArg_ParseTuple(args, "snO!", &stream, &max_len, &PyDict_Type, &field_dict))
+        if(!PyArg_ParseTuple(args, "ssnO!", &device_name, &stream_name, &max_len, &PyDict_Type, &field_dict))
         {{
             return NULL;
         }}
@@ -762,7 +763,7 @@ static PyObject *redis_pub(PyObject *self, PyObject *args)
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        nyx_redis_pub(node, stream, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
+        nyx_redis_pub(node, device_name, stream_name, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
 
         /*------------------------------------------------------------------------------------------------------------*/
 
@@ -1500,7 +1501,7 @@ class nyx_sink(gr.sync_block):
 
     ####################################################################################################################
 
-    def __init__(self, redis_stream = "spectrum", samp_rate = 2.0e6, frequency = 100e6, fft_size = 8192):
+    def __init__(self, device_name = "", stream_name = "spectrum", samp_rate = 2.0e6, frequency = 100e6, fft_size = 8192):
 
         ################################################################################################################
 
@@ -1508,7 +1509,8 @@ class nyx_sink(gr.sync_block):
 
         ################################################################################################################
 
-        self.redis_stream = redis_stream
+        self.device_name = device_name
+        self.stream_name = stream_name
 
         self.samp_rate = samp_rate
         self.frequency = frequency
@@ -1534,7 +1536,7 @@ class nyx_sink(gr.sync_block):
                 "#samples": samples,
             }}
 
-            {descr['nodeName']}.redis_pub(self.redis_stream, 100, data)
+            {descr['nodeName']}.redis_pub(self.device_name, self.stream_name, 100, data)
 
         ################################################################################################################
 
@@ -1566,12 +1568,17 @@ flags: [ python ]
 templates:
   imports: from gnuradio import nyx_{descr['nodeName'].lower()}
 
-  make: nyx_{descr['nodeName'].lower()}.nyx_sink(${{redis_stream}}, ${{samp_rate}}, ${{frequency}}, ${{fft_size}})
+  make: nyx_{descr['nodeName'].lower()}.nyx_sink(${{device_name}}, ${{stream_name}}, ${{samp_rate}}, ${{frequency}}, ${{fft_size}})
 
 parameters:
 
-- id: redis_stream
-  label: Redis Stream
+- id: device_name
+  label: Device name
+  dtype: string
+  default: ''
+
+- id: stream_name
+  label: Stream name
   dtype: string
   default: 'spectrum'
 
