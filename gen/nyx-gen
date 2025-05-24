@@ -1238,6 +1238,14 @@ def generate_devices(driver_path, descr, override):
                     vector_def_list2.append(f'vector_def_{ns} = nyx_blob_def_new("{vectorDef["name"]}", "{vectorDef["label"]}", {vectorDef["value"]});')
 
                 ########################################################################################################
+                # STREAM                                                                                               #
+                ########################################################################################################
+
+                if vector['type'] == 'stream':
+
+                    continue
+
+                ########################################################################################################
 
                 vector_list1.append(f'nyx_dict_t *vector_def_{ns} = {descr['NULL']};')
 
@@ -1278,11 +1286,22 @@ def generate_devices(driver_path, descr, override):
 
             ############################################################################################################
 
-            defs_and_opts = f'''{f'{LINE_BREAK}    '.join(vector_def_list2)}
+            if vector['type'] != 'stream':
+
+                defs_and_opts = f'''{f'{LINE_BREAK}    '.join(vector_def_list2)}
 
     nyx_dict_t *{device['name'].lower()}_{vector['name'].lower()}_defs[] = {{
         {f'{LINE_BREAK}        '.join(vector_def_list1)}
     }};
+
+    nyx_opts_t {device['name'].lower()}_{vector['name'].lower()}_opts = {{
+        {f'{LINE_BREAK}        '.join(option_list)}
+    }};
+'''
+
+            else:
+
+                defs_and_opts = f'''{f'{LINE_BREAK}    '.join(vector_def_list2)}
 
     nyx_opts_t {device['name'].lower()}_{vector['name'].lower()}_opts = {{
         {f'{LINE_BREAK}        '.join(option_list)}
@@ -1376,6 +1395,21 @@ def generate_devices(driver_path, descr, override):
         {vector['state']},
         {vector['perm']},
         {device['name'].lower()}_{vector['name'].lower()}_defs,
+        &{device['name'].lower()}_{vector['name'].lower()}_opts
+    );
+''')
+
+            ############################################################################################################
+            # STREAM                                                                                                   #
+            ############################################################################################################
+
+            elif vector['type'] == 'stream':
+
+                vector_list2.append(f'''{defs_and_opts}
+    vector_{device['name'].lower()}_{vector['name'].lower()} = nyx_stream_def_new(
+        "{device['name']}",
+        "{vector['name']}",
+        {vector['state']},
         &{device['name'].lower()}_{vector['name'].lower()}_opts
     );
 ''')
