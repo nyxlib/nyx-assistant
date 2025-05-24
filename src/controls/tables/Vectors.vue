@@ -158,6 +158,7 @@ const vectorUp = (vector1) => {
                                 <option value="light">Light</option>
                                 <option value="switch">Switch</option>
                                 <option value="blob">BLOB</option>
+                                <option value="stream">Stream</option>
                             </select>
                         </td>
                     </tr>

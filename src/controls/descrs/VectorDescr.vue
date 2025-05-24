@@ -61,7 +61,7 @@ defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="CB4E3E4D">Timeout<sup class="text-secondary">opt</sup> [ms]</label>
-                                <input class="form-control form-control-sm" type="number" min="1" step="1" id="CB4E3E4D" placeholder="Timeout" :disabled="vector.type === 'light'" v-model="vector.timeout" />
+                                <input class="form-control form-control-sm" type="number" min="1" step="1" id="CB4E3E4D" placeholder="Timeout" :disabled="['light', 'stream'].includes(vector.type)" v-model="vector.timeout" />
                             </div>
 
                         </div>
@@ -69,7 +69,7 @@ defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="DB1F21AD">Message<sup class="text-secondary">opt</sup></label>
-                                <input class="form-control form-control-sm" type="text" id="DB1F21AD" placeholder="Message" v-model="vector.message" />
+                                <input class="form-control form-control-sm" type="text" id="DB1F21AD" placeholder="Message" :disabled="['stream'].includes(vector.type)" v-model="vector.message" />
                             </div>
 
                         </div>
@@ -92,7 +92,7 @@ defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="C3E07382">Permission</label>
-                                <select class="form-select form-select-sm" id="C3E07382" :disabled="vector.type === 'light'" v-model="vector.perm">
+                                <select class="form-select form-select-sm" id="C3E07382" :disabled="['light', 'stream'].includes(vector.type)" v-model="vector.perm">
                                     <option value="NYX_PERM_RO">RO</option>
                                     <option value="NYX_PERM_WO">WO</option>
                                     <option value="NYX_PERM_RW">RW</option>
@@ -101,7 +101,7 @@ defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="E9BE4567">Rule</label>
-                                <select class="form-select form-select-sm" id="E9BE4567" :disabled="vector.type !== 'switch'" v-model="vector.rule">
+                                <select class="form-select form-select-sm" id="E9BE4567" :disabled="!['switch'].includes(vector.type)" v-model="vector.rule">
                                     <option value="NYX_RULE_ONE_OF_MANY">One of many</option>
                                     <option value="NYX_RULE_AT_MOST_ONE">At most one</option>
                                     <option value="NYX_RULE_ANY_OF_MANY">Any of many</option>
@@ -121,7 +121,7 @@ defineProps({
                     <!-- ******************************************************************************************* -->
 
                     <div class="form-check form-switch mb-0">
-                        <input class="form-check-input" type="checkbox" role="switch" id="B8C30ADF" v-model="vector.callback" :true-value="true" :false-value="false" />
+                        <input class="form-check-input" type="checkbox" role="switch" id="B8C30ADF" :disabled="['stream'].includes(vector.type)" v-model="vector.callback" :true-value="true" :false-value="false" />
                         <label class="form-check-label" for="B8C30ADF">Implement callback</label>
                     </div>
 
