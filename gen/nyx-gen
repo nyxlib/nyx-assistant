@@ -764,11 +764,7 @@ static PyObject *stream_pub(PyObject *self, PyObject *args)
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        if(stream_check) {{
-            nyx_stream_pub(node, device_name, stream_name, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
-        }} else {{
-            nyx_redis_pub(node, device_name, stream_name, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
-        }}
+        nyx_stream_pub(node, device_name, stream_name, stream_check, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
 
         /*------------------------------------------------------------------------------------------------------------*/
 
