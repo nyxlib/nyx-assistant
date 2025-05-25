@@ -712,13 +712,13 @@ static PyObject *stream_pub(PyObject *self, PyObject *args)
     {{
         /*------------------------------------------------------------------------------------------------------------*/
 
-        STR_t device;
-        STR_t stream;
-        bool check;
+        STR_t device_name;
+        STR_t stream_name;
+        bool stream_check;
         Py_ssize_t max_len;
         PyObject *field_dict;
 
-        if(!PyArg_ParseTuple(args, "sspnO!", &device, &stream, &check, &max_len, &PyDict_Type, &field_dict))
+        if(!PyArg_ParseTuple(args, "sspnO!", &device_name, &stream_name, &stream_check, &max_len, &PyDict_Type, &field_dict))
         {{
             return NULL;
         }}
@@ -764,10 +764,10 @@ static PyObject *stream_pub(PyObject *self, PyObject *args)
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        if(check) {{
-            nyx_stream_pub(node, device, stream, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
+        if(stream_check) {{
+            nyx_stream_pub(node, device_name, stream_name, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
         }} else {{
-            nyx_redis_pub(node, device, stream, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
+            nyx_redis_pub(node, device_name, stream_name, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
         }}
 
         /*------------------------------------------------------------------------------------------------------------*/
@@ -1540,7 +1540,7 @@ class nyx_sink(gr.sync_block):
 
     ####################################################################################################################
 
-    def __init__(self, device_name = "", stream_name = "spectrum", check = False, samp_rate = 2.0e6, frequency = 100e6, fft_size = 8192):
+    def __init__(self, device_name = "", stream_name = "spectrum", stream_check = False, samp_rate = 2.0e6, frequency = 100e6, fft_size = 8192):
 
         ################################################################################################################
 
@@ -1550,6 +1550,7 @@ class nyx_sink(gr.sync_block):
 
         self.device_name = device_name
         self.stream_name = stream_name
+        self.stream_check = stream_check
 
         self.samp_rate = samp_rate
         self.frequency = frequency
@@ -1575,7 +1576,7 @@ class nyx_sink(gr.sync_block):
                 "#samples": samples,
             }}
 
-            {descr['nodeName']}.stream_pub(self.device_name, self.stream_name, check, 100, data)
+            {descr['nodeName']}.stream_pub(self.device_name, self.stream_name, stream_check, 100, data)
 
         ################################################################################################################
 
