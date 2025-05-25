@@ -1406,7 +1406,7 @@ def generate_devices(driver_path, descr, override):
             elif vector['type'] == 'stream':
 
                 vector_list2.append(f'''{defs_and_opts}
-    vector_{device['name'].lower()}_{vector['name'].lower()} = nyx_stream_def_new(
+    vector_{device['name'].lower()}_{vector['name'].lower()} = nyx_stream_def_vector_new(
         "{device['name']}",
         "{vector['name']}",
         {vector['state']},
