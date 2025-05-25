@@ -1576,7 +1576,7 @@ class nyx_sink(gr.sync_block):
                 "#samples": samples,
             }}
 
-            {descr['nodeName']}.stream_pub(self.device_name, self.stream_name, stream_check, 100, data)
+            {descr['nodeName']}.stream_pub(self.device_name, self.stream_name, self.stream_check, 100, data)
 
         ################################################################################################################
 
