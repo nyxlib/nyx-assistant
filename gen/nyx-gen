@@ -1607,7 +1607,7 @@ flags: [ python ]
 templates:
   imports: from gnuradio import nyx_{descr['nodeName'].lower()}
 
-  make: nyx_{descr['nodeName'].lower()}.nyx_sink(${{device_name}}, ${{stream_name}}, ${{check}}, ${{samp_rate}}, ${{frequency}}, ${{fft_size}})
+  make: nyx_{descr['nodeName'].lower()}.nyx_sink(${{device_name}}, ${{stream_name}}, ${{stream_check}}, ${{samp_rate}}, ${{frequency}}, ${{fft_size}})
 
 parameters:
 
@@ -1621,8 +1621,8 @@ parameters:
   dtype: string
   default: 'spectrum'
 
-- id: check
-  label: Check
+- id: stream_check
+  label: Stream check
   dtype: bool
   default: False
 
