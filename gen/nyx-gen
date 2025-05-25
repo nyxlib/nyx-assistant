@@ -714,10 +714,11 @@ static PyObject *redis_pub(PyObject *self, PyObject *args)
 
         STR_t device_name;
         STR_t stream_name;
+        bool check;
         Py_ssize_t max_len;
         PyObject *field_dict;
 
-        if(!PyArg_ParseTuple(args, "ssnO!", &device_name, &stream_name, &max_len, &PyDict_Type, &field_dict))
+        if(!PyArg_ParseTuple(args, "sspnO!", &device_name, &stream_name, &check, &max_len, &PyDict_Type, &field_dict))
         {{
             return NULL;
         }}
@@ -763,7 +764,11 @@ static PyObject *redis_pub(PyObject *self, PyObject *args)
 
         /*------------------------------------------------------------------------------------------------------------*/
 
-        nyx_redis_pub(node, device_name, stream_name, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
+        if(check) {
+            nyx_stream_pub(node, device_name, stream_name, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
+        } else {
+            nyx_redis_pub(node, device_name, stream_name, (size_t) max_len, (size_t) n_fields, names, sizes, buffs);
+        }
 
         /*------------------------------------------------------------------------------------------------------------*/
 
@@ -1602,7 +1607,7 @@ flags: [ python ]
 templates:
   imports: from gnuradio import nyx_{descr['nodeName'].lower()}
 
-  make: nyx_{descr['nodeName'].lower()}.nyx_sink(${{device_name}}, ${{stream_name}}, ${{samp_rate}}, ${{frequency}}, ${{fft_size}})
+  make: nyx_{descr['nodeName'].lower()}.nyx_sink(${{device_name}}, ${{stream_name}}, ${{check}}, ${{samp_rate}}, ${{frequency}}, ${{fft_size}})
 
 parameters:
 
@@ -1615,6 +1620,11 @@ parameters:
   label: Stream name
   dtype: string
   default: 'spectrum'
+
+- id: check
+  label: Check
+  dtype: bool
+  default: False
 
 - id: samp_rate
   label: Sample Rate
