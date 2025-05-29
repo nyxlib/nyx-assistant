@@ -1244,7 +1244,7 @@ def generate_devices(driver_path, descr, override):
 
                 if vector['type'] == 'stream':
 
-                    continue
+                    vector_def_list2.append(f'vector_def_{ns} = nyx_stream_def_new("{vectorDef["name"]}", "{vectorDef["label"]}");')
 
                 ########################################################################################################
 
@@ -1287,22 +1287,11 @@ def generate_devices(driver_path, descr, override):
 
             ############################################################################################################
 
-            if vector['type'] != 'stream':
-
-                defs_and_opts = f'''{f'{LINE_BREAK}    '.join(vector_def_list2)}
+            defs_and_opts = f'''{f'{LINE_BREAK}    '.join(vector_def_list2)}
 
     nyx_dict_t *{device['name'].lower()}_{vector['name'].lower()}_defs[] = {{
         {f'{LINE_BREAK}        '.join(vector_def_list1)}
     }};
-
-    nyx_opts_t {device['name'].lower()}_{vector['name'].lower()}_opts = {{
-        {f'{LINE_BREAK}        '.join(option_list)}
-    }};
-'''
-
-            else:
-
-                defs_and_opts = f'''{f'{LINE_BREAK}    '.join(vector_def_list2)}
 
     nyx_opts_t {device['name'].lower()}_{vector['name'].lower()}_opts = {{
         {f'{LINE_BREAK}        '.join(option_list)}
@@ -1411,6 +1400,7 @@ def generate_devices(driver_path, descr, override):
         "{device['name']}",
         "{vector['name']}",
         {vector['state']},
+        {device['name'].lower()}_{vector['name'].lower()}_defs,
         &{device['name'].lower()}_{vector['name'].lower()}_opts
     );
 ''')
