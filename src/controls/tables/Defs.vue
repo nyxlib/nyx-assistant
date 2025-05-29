@@ -103,7 +103,7 @@ const defUp = (def1) => {
 
     <!-- *********************************************************************************************************** -->
 
-    <div class="card mb-3" v-if="type !== 'stream'">
+    <div class="card mb-3">
         <div class="card-header px-3 py-2">
             <i class="bi bi-code"></i>
             Vector defs
@@ -180,7 +180,7 @@ const defUp = (def1) => {
                             <div class="row">
                                 <div class="col-md-6">
 
-                                    <div class="row mb-2" v-if="type !== 'blob'">
+                                    <div class="row mb-2" v-if="!['blob', 'stream'].includes(type)">
                                         <label class="col-form-label col-sm-3 py-1" :for="`C12596CE_${idx}`">Value</label>
                                         <div class="col-sm-9">
 
@@ -273,7 +273,7 @@ const defUp = (def1) => {
                             <!--************************************************************************************ -->
 
                             <div class="form-check form-switch mb-0">
-                                <input class="form-check-input" type="checkbox" role="switch" :id="`FBB508E4_${idx}`" v-model="def.callback" :true-value="true" :false-value="false" />
+                                <input class="form-check-input" type="checkbox" role="switch" :id="`FBB508E4_${idx}`" :disabled="type === 'stream'" v-model="def.callback" :true-value="true" :false-value="false" />
                                 <label class="form-check-label" :for="`FBB508E4_${idx}`">Implement callback</label>
                             </div>
 
@@ -290,12 +290,6 @@ const defUp = (def1) => {
             <!-- *************************************************************************************************** -->
 
         </div>
-    </div>
-
-    <!-- *************************************************************************************************** -->
-
-    <div v-else>
-        ø
     </div>
 
     <!-- *********************************************************************************************************** -->
