@@ -1547,8 +1547,8 @@ class nyx_sink(gr.sync_block):
 
         ################################################################################################################
 
-        samp_rate = f'{{self.samp_rate}}'.encode('utf-8')
-        frequency = f'{{self.frequency}}'.encode('utf-8')
+        samp_rate = np.float32(self.samp_rate).tobytes()
+        frequency = np.float32(self.frequency).tobytes()
 
         ################################################################################################################
 
@@ -1559,7 +1559,7 @@ class nyx_sink(gr.sync_block):
             data = {{
                 "samp_rate": samp_rate,
                 "frequency": frequency,
-                "#samples": samples,
+                "samples": samples,
             }}
 
             {descr['nodeName']}.stream_pub(self.device_name, self.stream_name, self.stream_check, 100, data)
