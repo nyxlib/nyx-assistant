@@ -34,7 +34,7 @@ const DEFAULT_GLOBALS = {
     /* NODE */
     nodeName: '',
     nodeTimeout: 1000,
-    mode: 'posix',
+    mode: 'posix-c',
     /* POSIX */
     hardcoded: true,
     static: false,

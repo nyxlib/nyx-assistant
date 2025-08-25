@@ -207,7 +207,7 @@ onMounted(() => {
                             <div class="row">
                                 <div class="col-md-6">
 
-                                    <div class="form-check form-switch mb-3" :hidden="!['posix', 'python'].includes(globals.mode)">
+                                    <div class="form-check form-switch mb-3" :hidden="!['posix-c', 'posix-c++', 'python'].includes(globals.mode)">
                                         <input class="form-check-input" type="checkbox" role="switch" id="A313C013" v-model="globals.hardcoded" :true-value="true" :false-value="false" />
                                         <label class="form-check-label" for="A313C013">Hardcoded configuration</label>
                                     </div>
@@ -227,7 +227,7 @@ onMounted(() => {
                                 </div>
                                 <div class="col-md-6">
 
-                                    <div class="form-check form-switch mb-3" :hidden="!['posix', 'python'].includes(globals.mode)">
+                                    <div class="form-check form-switch mb-3" :hidden="!['posix-c', 'posix-c++', 'python'].includes(globals.mode)">
                                         <input class="form-check-input" type="checkbox" role="switch" id="FAD1B43F" v-model="globals.static" :true-value="true" :false-value="false" />
                                         <label class="form-check-label" for="FAD1B43F">Statically-linked executable</label>
                                     </div>
