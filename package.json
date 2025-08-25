@@ -16,7 +16,8 @@
         "lint": "eslint",
         "tauri-dev": "tauri dev --verbose",
         "tauri-prod": "tauri build --verbose",
-        "tauri-android-deploy": "adb install ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk"
+        "tauri-android-deploy": "adb install ./src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk",
+        "snap-prod": "snapcraft pack && snap install *.snap --devmode --dangerous"
     },
     "dependencies": {
         "@tauri-apps/api": "^2.4.1",
