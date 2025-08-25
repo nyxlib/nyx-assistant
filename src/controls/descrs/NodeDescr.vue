@@ -173,7 +173,8 @@ onMounted(() => {
 
                     <div class="card mb-3">
                         <select class="card-header form-select border-0 border-bottom px-3 py-2" v-model="globals.mode">
-                            <option value="posix">Node for POSIX systems</option>
+                            <option value="posix-c">Node in C for POSIX systems</option>
+                            <option value="posix-c++">Node in C++ for POSIX systems</option>
                             <option value="python">Node for Python or GNU Radio</option>
                             <option value="arduino-wifi">Node for Arduino board - WiFi version</option>
                             <option value="arduino-ethernet">Node for Arduino board - Ethernet version</option>
