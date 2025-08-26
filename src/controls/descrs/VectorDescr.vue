@@ -27,7 +27,7 @@ defineProps({
 
             <!-- *************************************************************************************************** -->
 
-            <div class="card mb-3">
+            <div class="card shadow mb-3">
                 <div class="card-header px-3 py-2">
                     Vector <i class="bi bi-question-circle-fill" :title="`Id: ${vector.id}`" v-tooltip></i>
                 </div>

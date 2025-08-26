@@ -21,7 +21,7 @@ def generate_cmake_lists(driver_path, descr, override):
 
     ####################################################################################################################
 
-    if descr['mode'] == 'posix':
+    if descr['mode'] == 'posix-c':
 
         filename = 'CMakeLists.txt'
 
@@ -289,7 +289,7 @@ def generate_main(driver_path, descr, override):
 
     ####################################################################################################################
 
-    if descr['mode'] == 'posix':
+    if descr['mode'] == 'posix-c':
 
         with open(os.path.join(driver_path, 'src', 'credentials.h'), 'wt') as f:
 
@@ -1092,7 +1092,7 @@ void loop()
 
     else:
 
-        raise ValueError('Invalid mode')
+        raise ValueError(f'Invalid mode: {descr["mode"]}')
 
     ####################################################################################################################
 
@@ -1439,7 +1439,7 @@ void device_{device['name'].lower()}_finalize()
 /*--------------------------------------------------------------------------------------------------------------------*/
 '''[1:]
 
-        filename = os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.cpp' if descr['mode'] != 'posix' and descr['mode'] != 'python' else f'device_{device["name"].lower()}.c')
+        filename = os.path.join(driver_path, 'src', f'device_{device["name"].lower()}.cpp' if descr['mode'] != 'posix-c' and descr['mode'] != 'python' else f'device_{device["name"].lower()}.c')
 
         if override or not os.path.isfile(filename):
 
@@ -1789,7 +1789,7 @@ def main():
 
     ####################################################################################################################
 
-    if descr['mode'] == 'posix' or descr['mode'] == 'python':
+    if descr['mode'] == 'posix-c' or descr['mode'] == 'python':
         descr['NULL'] = 'NULL'
         descr['SRC_EXT'] = 'c'
         descr['HEAD_EXT'] = 'h'

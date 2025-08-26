@@ -41,7 +41,7 @@ const props = defineProps({
 
                     <!-- ******************************************************************************************* -->
 
-                    <div class="card mb-3">
+                    <div class="card shadow mb-3">
                         <div class="card-header px-3 py-2">
                             Device <i class="bi bi-question-circle-fill" :title="`Id: ${device.id}`" v-tooltip></i>
                         </div>
