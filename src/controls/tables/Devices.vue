@@ -43,6 +43,8 @@ const deviceAppend = () => {
         id: id,
         rank: rank,
         name: '',
+        parentClass: '',
+        additionalHeaders: '',
         disabled: false,
         vectors: {},
     };

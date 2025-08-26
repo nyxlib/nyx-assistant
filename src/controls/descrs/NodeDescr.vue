@@ -464,7 +464,7 @@ onMounted(() => {
 
         <tab-pane :title="device.name || 'noname'" icon="cpu" :rank="device.rank" v-for="device in Object.values(props.globals.devices)" :key="`${device.id}-${device.rank}`">
 
-            <device-descr :device="device" />
+            <device-descr :mode="globals.mode" :device="device" />
 
         </tab-pane>
 
