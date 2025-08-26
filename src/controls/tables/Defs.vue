@@ -2,7 +2,9 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {computed} from 'vue';
+import {ref, watchEffect} from 'vue';
+
+import draggable from 'vuedraggable';
 
 import * as uuid from 'uuid';
 
@@ -23,19 +25,34 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedDefs = computed(() => [...Object.values(props.defs)].sort((x, y) => x.rank - y.rank));
+const sortedDefs = ref([]);
+
+watchEffect(() => {
+
+    sortedDefs.value = [...Object.values(props.defs)].sort((a, b) => a.rank - b.rank);
+});
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-let rank = 0;
+const onDragEnd = () => {
+
+    for(let i = 0; i < sortedDefs.value.length; i++)
+    {
+        const addon = sortedDefs.value[i];
+
+        props.defs[addon.id].rank = i;
+    }
+};
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const defAppend = () => {
 
     const id = `def:${uuid.v4()}`;
+
+    const rank = Date.now();
 
     props.defs[id] = {
         id: id,
@@ -51,8 +68,6 @@ const defAppend = () => {
         blobSize: 0,
         callback: false,
     };
-
-    rank++;
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -60,40 +75,6 @@ const defAppend = () => {
 const defRm = (def) => {
 
     delete props.defs[def.id];
-};
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-const defDw = (def1) => {
-
-    const array = sortedDefs.value;
-
-    const index = array.findIndex((def2) => def2.id === def1.id);
-
-    if(index > 0x00000000000000)
-    {
-        const def2 = array[index - 1];
-
-        def1.rank--;
-        def2.rank++;
-    }
-};
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-const defUp = (def1) => {
-
-    const array = sortedDefs.value;
-
-    const index = array.findIndex((def2) => def2.id === def1.id);
-
-    if(index < array.length - 1)
-    {
-        const def2 = array[index + 1];
-
-        def1.rank++;
-        def2.rank--;
-    }
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -135,153 +116,150 @@ const defUp = (def1) => {
 
                 <!-- *********************************************************************************************** -->
 
-                <tbody>
-                    <tr v-for="(def, idx) in sortedDefs" :key="idx">
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-link" type="button" @click="defDw(def)">
-                                <i class="bi bi-caret-up-fill"></i>
-                            </button>
-                            <button class="btn btn-sm btn-link" type="button" @click="defUp(def)">
-                                <i class="bi bi-caret-down-fill"></i>
-                            </button>
-                            <button class="btn btn-sm btn-link" type="button" @click="defRm(def)">
-                                <i class="bi bi-trash2 text-danger"></i>
-                            </button>
-                        </td>
-                        <td class="text-start">
+                <draggable tag="tbody" handle=".drag-handle" item-key="id" v-model="sortedDefs" @end="onDragEnd">
+                    <template #item="{element: def}">
+                        <tr :key="def.id">
+                            <td class="text-center">
+                                <i class="bi bi-list drag-handle" style="cursor: grab;"></i>
+                                <button class="btn btn-sm btn-link" type="button" @click="defRm(def)">
+                                    <i class="bi bi-trash2 text-danger"></i>
+                                </button>
+                            </td>
+                            <td class="text-start">
 
-                            <!--************************************************************************************ -->
+                                <!--******************************************************************************** -->
 
-                            <div class="row">
-                                <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-6">
 
-                                    <div class="row mb-2">
-                                        <label class="col-form-label col-sm-3 py-1" :for="`D18B255D_${idx}`">Name</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`D18B255D_${idx}`" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="def.name" />
+                                        <div class="row mb-2">
+                                            <label class="col-form-label col-sm-3 py-1" :for="`D18B255D_${def.id}`">Name</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control form-control-sm" type="text" :id="`D18B255D_${def.id}`" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="def.name" />
+                                            </div>
                                         </div>
-                                    </div>
 
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="row mb-2">
+                                            <label class="col-form-label col-sm-3 py-1" :for="`FB921875_${def.id}`">Label<sup class="text-secondary">opt</sup></label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control form-control-sm" type="text" :id="`FB921875_${def.id}`" v-model="def.label" />
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
 
-                                    <div class="row mb-2">
-                                        <label class="col-form-label col-sm-3 py-1" :for="`FB921875_${idx}`">Label<sup class="text-secondary">opt</sup></label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`FB921875_${idx}`" v-model="def.label" />
+                                <!--******************************************************************************** -->
+
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <div class="row mb-2" v-if="!['blob', 'stream'].includes(type)">
+                                            <label class="col-form-label col-sm-3 py-1" :for="`C12596CE_${def.id}`">Value</label>
+                                            <div class="col-sm-9">
+
+                                                <input class="form-control form-control-sm" type="number" :id="`C12596CE_${def.id}`" required="required" v-model="def.value" v-if="type === 'number'" />
+
+                                                <input class="form-control form-control-sm" type="text" :id="`C12596CE_${def.id}`" xxxxxxxx="xxxxxxxx" v-model="def.value" v-if="type === 'text'" />
+
+                                                <select class="form-select form-select-sm" :id="`C12596CE_${def.id}`" v-model="def.value" v-if="type === 'light'">
+                                                    <option value="NYX_STATE_IDLE">Idle</option>
+                                                    <option value="NYX_STATE_OK">Ok</option>
+                                                    <option value="NYX_STATE_BUSY">Busy</option>
+                                                    <option value="NYX_STATE_ALERT">Alert</option>
+                                                </select>
+
+                                                <select class="form-select form-select-sm" :id="`C12596CE_${def.id}`" v-model="def.value" v-if="type === 'switch'">
+                                                    <option value="NYX_ONOFF_ON">On</option>
+                                                    <option value="NYX_ONOFF_OFF">Off</option>
+                                                </select>
+
+                                            </div>
                                         </div>
-                                    </div>
 
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="row mb-2" v-if="type === 'number'">
+                                            <label class="col-form-label col-sm-3 py-1" :for="`A5704230_${def.id}`">Format</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control form-control-sm" type="text" :id="`A5704230_${def.id}`" required="required" v-model="def.format" />
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!--************************************************************************************ -->
+                                <!--******************************************************************************** -->
 
-                            <div class="row">
-                                <div class="col-md-6">
+                                <div class="row" v-if="type === 'number'">
+                                    <div class="col-md-6">
 
-                                    <div class="row mb-2" v-if="!['blob', 'stream'].includes(type)">
-                                        <label class="col-form-label col-sm-3 py-1" :for="`C12596CE_${idx}`">Value</label>
-                                        <div class="col-sm-9">
-
-                                            <input class="form-control form-control-sm" type="number" :id="`C12596CE_${idx}`" required="required" v-model="def.value" v-if="type === 'number'" />
-
-                                            <input class="form-control form-control-sm" type="text" :id="`C12596CE_${idx}`" xxxxxxxx="xxxxxxxx" v-model="def.value" v-if="type === 'text'" />
-
-                                            <select class="form-select form-select-sm" :id="`C12596CE_${idx}`" v-model="def.value" v-if="type === 'light'">
-                                                <option value="NYX_STATE_IDLE">Idle</option>
-                                                <option value="NYX_STATE_OK">Ok</option>
-                                                <option value="NYX_STATE_BUSY">Busy</option>
-                                                <option value="NYX_STATE_ALERT">Alert</option>
-                                            </select>
-
-                                            <select class="form-select form-select-sm" :id="`C12596CE_${idx}`" v-model="def.value" v-if="type === 'switch'">
-                                                <option value="NYX_ONOFF_ON">On</option>
-                                                <option value="NYX_ONOFF_OFF">Off</option>
-                                            </select>
-
+                                        <div class="row mb-2">
+                                            <label class="col-form-label col-sm-3 py-1" :for="`D18B255D_${def.id}`">Min</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control form-control-sm" type="text" :id="`D18B255D_${def.id}`" required="required" v-model="def.min" />
+                                            </div>
                                         </div>
-                                    </div>
 
+                                        <div class="row mb-2">
+                                            <label class="col-form-label col-sm-3 py-1" :for="`F340D803_${def.id}`">Max</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control form-control-sm" type="text" :id="`F340D803_${def.id}`" required="required" v-model="def.max" />
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <label class="col-form-label col-sm-3 py-1" :for="`CF0F2894_${def.id}`">Step</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control form-control-sm" type="text" :id="`CF0F2894_${def.id}`" required="required" v-model="def.step" />
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
 
-                                    <div class="row mb-2" v-if="type === 'number'">
-                                        <label class="col-form-label col-sm-3 py-1" :for="`A5704230_${idx}`">Format</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`A5704230_${idx}`" required="required" v-model="def.format" />
+                                <!--******************************************************************************** -->
+
+                                <div class="row" v-if="type === 'blob'">
+                                    <div class="col-md-6">
+
+                                        <div class="row mb-2">
+                                            <label class="col-form-label col-sm-3 py-1" :for="`ECF6D0D6_${def.id}`">Format</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control form-control-sm" type="text" :id="`ECF6D0D6_${def.id}`" required="required" v-model="def.blobFormat" />
+                                            </div>
                                         </div>
-                                    </div>
 
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="row mb-2">
+                                            <label class="col-form-label col-sm-3 py-1" :for="`C7D94FF3_${def.id}`">Size</label>
+                                            <div class="col-sm-9">
+                                                <input class="form-control form-control-sm" type="number" :id="`C7D94FF3_${def.id}`" readonly="readonly" v-model="def.blobSize" />
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!--************************************************************************************ -->
+                                <!--******************************************************************************** -->
 
-                            <div class="row" v-if="type === 'number'">
-                                <div class="col-md-6">
-
-                                    <div class="row mb-2">
-                                        <label class="col-form-label col-sm-3 py-1" :for="`D18B255D_${idx}`">Min</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`D18B255D_${idx}`" required="required" v-model="def.min" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-2">
-                                        <label class="col-form-label col-sm-3 py-1" :for="`F340D803_${idx}`">Max</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`F340D803_${idx}`" required="required" v-model="def.max" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-2">
-                                        <label class="col-form-label col-sm-3 py-1" :for="`CF0F2894_${idx}`">Step</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`CF0F2894_${idx}`" required="required" v-model="def.step" />
-                                        </div>
-                                    </div>
-
+                                <div class="form-check form-switch mb-0">
+                                    <input class="form-check-input" type="checkbox" role="switch" :id="`FBB508E4_${def.id}`" :disabled="type === 'stream'" v-model="def.callback" :true-value="true" :false-value="false" />
+                                    <label class="form-check-label" :for="`FBB508E4_${def.id}`">Implement callback</label>
                                 </div>
-                            </div>
 
-                            <!--************************************************************************************ -->
+                                <!--******************************************************************************** -->
 
-                            <div class="row" v-if="type === 'blob'">
-                                <div class="col-md-6">
-
-                                    <div class="row mb-2">
-                                        <label class="col-form-label col-sm-3 py-1" :for="`ECF6D0D6_${idx}`">Format</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="text" :id="`ECF6D0D6_${idx}`" required="required" v-model="def.blobFormat" />
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="col-md-6">
-
-                                    <div class="row mb-2">
-                                        <label class="col-form-label col-sm-3 py-1" :for="`C7D94FF3_${idx}`">Size</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control form-control-sm" type="number" :id="`C7D94FF3_${idx}`" readonly="readonly" v-model="def.blobSize" />
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <!--************************************************************************************ -->
-
-                            <div class="form-check form-switch mb-0">
-                                <input class="form-check-input" type="checkbox" role="switch" :id="`FBB508E4_${idx}`" :disabled="type === 'stream'" v-model="def.callback" :true-value="true" :false-value="false" />
-                                <label class="form-check-label" :for="`FBB508E4_${idx}`">Implement callback</label>
-                            </div>
-
-                            <!--************************************************************************************ -->
-
-                        </td>
-                    </tr>
-                </tbody>
+                            </td>
+                        </tr>
+                    </template>
+                </draggable>
 
                 <!-- *********************************************************************************************** -->
 

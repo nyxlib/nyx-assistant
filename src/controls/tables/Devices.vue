@@ -1,7 +1,9 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {computed} from 'vue';
+import {ref, watchEffect} from 'vue';
+
+import draggable from 'vuedraggable';
 
 import * as uuid from 'uuid';
 
@@ -18,14 +20,15 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const sortedDevices = computed(() => [...Object.values(props.devices)].sort((x, y) => x.rank - y.rank));
+const sortedDevices = ref([]);
+
+watchEffect(() => {
+
+    sortedDevices.value = [...Object.values(props.devices)].sort((a, b) => a.rank - b.rank);
+});
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-let rank = 0;
-
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const templateAppend = () => {
@@ -35,9 +38,23 @@ const templateAppend = () => {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+const onDragEnd = () => {
+
+    for(let i = 0; i < sortedDevices.value.length; i++)
+    {
+        const addon = sortedDevices.value[i];
+
+        props.devices[addon.id].rank = i;
+    }
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 const deviceAppend = () => {
 
     const id = `device:${uuid.v4()}`;
+
+    const rank = Date.now();
 
     props.devices[id] = {
         id: id,
@@ -48,8 +65,6 @@ const deviceAppend = () => {
         disabled: false,
         vectors: {},
     };
-
-    rank++;
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -57,40 +72,6 @@ const deviceAppend = () => {
 const deviceRm = (device) => {
 
     delete props.devices[device.id];
-};
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-const deviceDw = (device1) => {
-
-    const array = sortedDevices.value;
-
-    const index = array.findIndex((device2) => device2.id === device1.id);
-
-    if(index > 0x00000000000000)
-    {
-        const device2 = array[index - 1];
-
-        device1.rank--;
-        device2.rank++;
-    }
-};
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-const deviceUp = (device1) => {
-
-    const array = sortedDevices.value;
-
-    const index = array.findIndex((device2) => device2.id === device1.id);
-
-    if(index < array.length - 1)
-    {
-        const device2 = array[index + 1];
-
-        device1.rank++;
-        device2.rank--;
-    }
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -136,24 +117,21 @@ const deviceUp = (device1) => {
 
                 <!-- *********************************************************************************************** -->
 
-                <tbody>
-                    <tr v-for="device in sortedDevices" :key="device.id">
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-link" type="button" @click="deviceDw(device)">
-                                <i class="bi bi-caret-up-fill"></i>
-                            </button>
-                            <button class="btn btn-sm btn-link" type="button" @click="deviceUp(device)">
-                                <i class="bi bi-caret-down-fill"></i>
-                            </button>
-                            <button class="btn btn-sm btn-link" type="button" @click="deviceRm(device)">
-                                <i class="bi bi-trash2 text-danger"></i>
-                            </button>
-                        </td>
-                        <td class="text-start">
-                            <input class="form-control form-control-sm" type="text" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="device.name" />
-                        </td>
-                    </tr>
-                </tbody>
+                <draggable tag="tbody" handle=".drag-handle" item-key="id" v-model="sortedDevices" @end="onDragEnd">
+                    <template #item="{element: device}">
+                        <tr :key="device.id">
+                            <td class="text-center">
+                                <i class="bi bi-list drag-handle" style="cursor: grab;"></i>
+                                <button class="btn btn-sm btn-link" type="button" @click="deviceRm(device)">
+                                    <i class="bi bi-trash2 text-danger"></i>
+                                </button>
+                            </td>
+                            <td class="text-start">
+                                <input class="form-control form-control-sm" type="text" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="device.name" />
+                            </td>
+                        </tr>
+                    </template>
+                </draggable>
 
                 <!-- *********************************************************************************************** -->
 
