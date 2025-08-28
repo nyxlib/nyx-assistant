@@ -57,8 +57,8 @@ const props = defineProps({
                             <!-- *********************************************************************************** -->
 
                             <div class="mb-3">
-                                <label class="form-label" for="F981816D">Parent device (default: Nyx::BaseDevice)</label>
-                                <input class="form-control form-control-sm" type="text" id="F981816D" placeholder="Parent device" :disabled="props.mode != 'posix-c++'" v-model="device.parentClass" />
+                                <label class="form-label" for="F981816D">Parent C++ class (default: Nyx::BaseDevice)</label>
+                                <input class="form-control form-control-sm" type="text" id="F981816D" placeholder="Parent C++ class" :disabled="props.mode != 'posix-c++'" v-model="device.parentClass" />
                             </div>
 
                             <!-- *********************************************************************************** -->
