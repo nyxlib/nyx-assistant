@@ -1,0 +1,341 @@
+{
+  "nodeName": "INDI Focuser",
+  "nodeTimeout": 1000,
+  "mode": "posix-c",
+  "hardcoded": true,
+  "static": false,
+  "board": "",
+  "wifiSSID": "",
+  "wifiPassword": "",
+  "ethernetController": "w5500",
+  "ethernetCSPin": 0,
+  "enableMQTT": false,
+  "mqttURI": "",
+  "mqttUsername": "",
+  "mqttPassword": "",
+  "enableRedis": false,
+  "redisURI": "",
+  "redisUsername": "",
+  "redisPassword": "",
+  "enableTCP": false,
+  "tcpURI": "",
+  "devices": {
+    "device:8d8ad2aa-cfc6-4414-89b7-355693dba856": {
+      "id": "device:8d8ad2aa-cfc6-4414-89b7-355693dba856",
+      "rank": 1756404033966,
+      "name": "focuser",
+      "parentClass": "",
+      "additionalHeaders": "",
+      "disabled": false,
+      "vectors": {
+        "vector:61ff96a9-41f6-45de-b2eb-7127bbed6359": {
+          "id": "vector:61ff96a9-41f6-45de-b2eb-7127bbed6359",
+          "rank": 1756404057019,
+          "name": "FOCUS_SPEED",
+          "type": "number",
+          "label": "",
+          "group": "",
+          "state": "NYX_STATE_OK",
+          "perm": "NYX_PERM_RW",
+          "rule": "NYX_RULE_ONE_OF_MANY",
+          "timeout": null,
+          "message": "",
+          "disabled": false,
+          "callback": true,
+          "defs": {
+            "def:30152a1b-13fe-40e3-9412-053834c6e266": {
+              "id": "def:30152a1b-13fe-40e3-9412-053834c6e266",
+              "rank": 1756404067099,
+              "name": "FOCUS_SPEED_VALUE",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            }
+          }
+        },
+        "vector:ba5255bd-c9bd-4908-b544-74011e28578e": {
+          "id": "vector:ba5255bd-c9bd-4908-b544-74011e28578e",
+          "rank": 1756404071004,
+          "name": "FOCUS_MOTION",
+          "type": "switch",
+          "label": "",
+          "group": "",
+          "state": "NYX_STATE_OK",
+          "perm": "NYX_PERM_RW",
+          "rule": "NYX_RULE_ONE_OF_MANY",
+          "timeout": null,
+          "message": "",
+          "disabled": false,
+          "callback": true,
+          "defs": {
+            "def:32b742fc-728c-4a66-9c0c-f0761f5e84dd": {
+              "id": "def:32b742fc-728c-4a66-9c0c-f0761f5e84dd",
+              "rank": 1756404080058,
+              "name": "FOCUS_INWARD",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            },
+            "def:f50a4755-c5e0-4ffe-b796-1e5fa9193289": {
+              "id": "def:f50a4755-c5e0-4ffe-b796-1e5fa9193289",
+              "rank": 1756404080607,
+              "name": "FOCUS_OUTWARD",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            }
+          }
+        },
+        "vector:f7332d6c-cbef-4e75-a404-5bee19cd0546": {
+          "id": "vector:f7332d6c-cbef-4e75-a404-5bee19cd0546",
+          "rank": 1756404088595,
+          "name": "FOCUS_TIMER",
+          "type": "number",
+          "label": "",
+          "group": "",
+          "state": "NYX_STATE_OK",
+          "perm": "NYX_PERM_RW",
+          "rule": "NYX_RULE_ONE_OF_MANY",
+          "timeout": null,
+          "message": "",
+          "disabled": false,
+          "callback": true,
+          "defs": {
+            "def:2bf12161-7688-4f0c-98d7-c1e52e41be06": {
+              "id": "def:2bf12161-7688-4f0c-98d7-c1e52e41be06",
+              "rank": 1756404104471,
+              "name": "FOCUS_TIMER_VALUE",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            }
+          }
+        },
+        "vector:15acdec4-a3ef-4e39-b47c-5c78d49b3119": {
+          "id": "vector:15acdec4-a3ef-4e39-b47c-5c78d49b3119",
+          "rank": 1756404111823,
+          "name": "REL_FOCUS_POSITION",
+          "type": "number",
+          "label": "",
+          "group": "",
+          "state": "NYX_STATE_OK",
+          "perm": "NYX_PERM_RW",
+          "rule": "NYX_RULE_ONE_OF_MANY",
+          "timeout": null,
+          "message": "",
+          "disabled": false,
+          "callback": true,
+          "defs": {
+            "def:218ae5dc-9714-4d04-a7a9-c0e0e2325990": {
+              "id": "def:218ae5dc-9714-4d04-a7a9-c0e0e2325990",
+              "rank": 1756404123415,
+              "name": "FOCUS_RELATIVE_POSITION",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            }
+          }
+        },
+        "vector:2a5e2b64-be2f-4cea-9d2d-03729a5732e4": {
+          "id": "vector:2a5e2b64-be2f-4cea-9d2d-03729a5732e4",
+          "rank": 1756404136544,
+          "name": "ABS_FOCUS_POSITION",
+          "type": "number",
+          "label": "",
+          "group": "",
+          "state": "NYX_STATE_OK",
+          "perm": "NYX_PERM_RW",
+          "rule": "NYX_RULE_ONE_OF_MANY",
+          "timeout": null,
+          "message": "",
+          "disabled": false,
+          "callback": true,
+          "defs": {
+            "def:11930409-ea61-49f8-9592-643a6331b1e1": {
+              "id": "def:11930409-ea61-49f8-9592-643a6331b1e1",
+              "rank": 1756404148040,
+              "name": "FOCUS_ABSOLUTE_POSITION",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            }
+          }
+        },
+        "vector:dc0f6f87-ecf5-4fad-a8a5-2a7f862557eb": {
+          "id": "vector:dc0f6f87-ecf5-4fad-a8a5-2a7f862557eb",
+          "rank": 1756404153436,
+          "name": "FOCUS_MAX",
+          "type": "number",
+          "label": "",
+          "group": "",
+          "state": "NYX_STATE_OK",
+          "perm": "NYX_PERM_RW",
+          "rule": "NYX_RULE_ONE_OF_MANY",
+          "timeout": null,
+          "message": "",
+          "disabled": false,
+          "callback": true,
+          "defs": {
+            "def:9a7b9683-f609-4c37-957a-b9471d10cbf1": {
+              "id": "def:9a7b9683-f609-4c37-957a-b9471d10cbf1",
+              "rank": 1756404160753,
+              "name": "FOCUS_MAX_VALUE",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            }
+          }
+        },
+        "vector:ede0b7eb-e706-4318-ba4a-50f57921782f": {
+          "id": "vector:ede0b7eb-e706-4318-ba4a-50f57921782f",
+          "rank": 1756404166028,
+          "name": "FOCUS_REVERSE_MOTION",
+          "type": "switch",
+          "label": "",
+          "group": "",
+          "state": "NYX_STATE_OK",
+          "perm": "NYX_PERM_RW",
+          "rule": "NYX_RULE_ONE_OF_MANY",
+          "timeout": null,
+          "message": "",
+          "disabled": false,
+          "callback": true,
+          "defs": {
+            "def:f45600cd-a1d5-41b1-b940-b911f1774f66": {
+              "id": "def:f45600cd-a1d5-41b1-b940-b911f1774f66",
+              "rank": 1756404171874,
+              "name": "ENABLED",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            },
+            "def:b6f7356d-e144-4364-af15-e91ea77aca76": {
+              "id": "def:b6f7356d-e144-4364-af15-e91ea77aca76",
+              "rank": 1756404172071,
+              "name": "DISABLED",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            }
+          }
+        },
+        "vector:e541e9df-d03e-47fa-b854-24982b54f106": {
+          "id": "vector:e541e9df-d03e-47fa-b854-24982b54f106",
+          "rank": 1756404184354,
+          "name": "FOCUS_ABORT_MOTION",
+          "type": "switch",
+          "label": "",
+          "group": "",
+          "state": "NYX_STATE_OK",
+          "perm": "NYX_PERM_RW",
+          "rule": "NYX_RULE_ONE_OF_MANY",
+          "timeout": null,
+          "message": "",
+          "disabled": false,
+          "callback": true,
+          "defs": {
+            "def:63c56c91-edfc-4d7d-b1fa-606ae8cc6abd": {
+              "id": "def:63c56c91-edfc-4d7d-b1fa-606ae8cc6abd",
+              "rank": 1756404194659,
+              "name": "ABORT",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            }
+          }
+        },
+        "vector:c95e1efc-217a-4062-9233-6dc108e071d5": {
+          "id": "vector:c95e1efc-217a-4062-9233-6dc108e071d5",
+          "rank": 1756404198384,
+          "name": "FOCUS_SYNC",
+          "type": "number",
+          "label": "",
+          "group": "",
+          "state": "NYX_STATE_OK",
+          "perm": "NYX_PERM_RW",
+          "rule": "NYX_RULE_ONE_OF_MANY",
+          "timeout": null,
+          "message": "",
+          "disabled": false,
+          "callback": true,
+          "defs": {
+            "def:ddeab3cc-7658-4012-b1d9-3c19da0d6a2a": {
+              "id": "def:ddeab3cc-7658-4012-b1d9-3c19da0d6a2a",
+              "rank": 1756404208412,
+              "name": "FOCUS_SYNC_VALUE",
+              "label": "",
+              "value": null,
+              "format": "%f",
+              "min": 0,
+              "max": 0,
+              "step": 0,
+              "blobFormat": "",
+              "blobSize": 0,
+              "callback": false
+            }
+          }
+        }
+      }
+    }
+  }
+}
