@@ -1,7 +1,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {ref, watchEffect} from 'vue';
+import {ref, toRaw, reactive, watchEffect, onMounted} from 'vue';
 
 import draggable from 'vuedraggable';
 
@@ -20,6 +20,12 @@ const props = defineProps({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+const state = reactive({
+    templates: {},
+});
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 const sortedDevices = ref([]);
 
 watchEffect(() => {
@@ -29,13 +35,6 @@ watchEffect(() => {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-const templateAppend = () => {
-
-    alert('To be implemented');
-};
-
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const onDragEnd = () => {
@@ -65,6 +64,24 @@ const deviceAppend = () => {
         disabled: false,
         vectors: {},
     };
+
+    return id;
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const templateAppend = (template) => {
+
+    for(const device of Object.values(state.templates[template]))
+    {
+        const id = `device:${uuid.v4()}`;
+
+        const rank = Date.now();
+
+        props.devices[id] = structuredClone(toRaw(device));
+        props.devices[id].id = id;
+        props.devices[id].rank = rank;
+    }
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -73,6 +90,18 @@ const deviceRm = (device) => {
 
     delete props.devices[device.id];
 };
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+/* INITIALIZED                                                                                                        */
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+onMounted(() => {
+
+    for(const module of Object.values(import.meta.glob('@/assets/templates/*.json', {eager: true})))
+    {
+        state.templates[module.default.nodeName] = module.default.devices;
+    }
+});
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
@@ -90,10 +119,17 @@ const deviceRm = (device) => {
                 <i class="bi bi-plus-lg"></i>
                 Add device
             </button>
-            <button class="btn btn-xs btn-primary me-0" type="button" @click="templateAppend()">
-                <i class="bi bi-plus-lg"></i>
-                Add from template
-            </button>
+            <div class="btn-group me-0">
+                <button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-plus-lg"></i>
+                    Add from template
+                </button>
+                <ul class="dropdown-menu">
+                    <li v-for="name in Object.keys(state.templates)" :key="name">
+                        <a class="dropdown-item" href="#" @click="templateAppend(name)">{{ name }}</a>
+                    </li>
+                </ul>
+            </div>
             ]
         </div>
         <div class="card-body px-3 py-2">
