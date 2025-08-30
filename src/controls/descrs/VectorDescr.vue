@@ -61,7 +61,7 @@ defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="CB4E3E4D">Timeout<sup class="text-secondary">opt</sup> [ms]</label>
-                                <input class="form-control form-control-sm" type="number" min="1" step="1" id="CB4E3E4D" placeholder="Timeout" :disabled="['light', 'stream'].includes(vector.type)" v-model="vector.timeout" />
+                                <input class="form-control form-control-sm" type="number" min="0" step="1" id="CB4E3E4D" placeholder="Timeout" :disabled="['light', 'stream'].includes(vector.type)" v-model="vector.timeout" />
                             </div>
 
                         </div>
