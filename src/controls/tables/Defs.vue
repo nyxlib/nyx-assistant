@@ -161,7 +161,7 @@ const defRm = (def) => {
                                             <label class="col-form-label col-sm-3 py-1" :for="`C12596CE_${def.id}`">Value</label>
                                             <div class="col-sm-9">
 
-                                                <input class="form-control form-control-sm" type="number" :id="`C12596CE_${def.id}`" required="required" v-model="def.value" v-if="type === 'number'" />
+                                                <input class="form-control form-control-sm" type="text" :id="`C12596CE_${def.id}`" required="required" v-model="def.value" v-if="type === 'number'" />
 
                                                 <input class="form-control form-control-sm" type="text" :id="`C12596CE_${def.id}`" xxxxxxxx="xxxxxxxx" v-model="def.value" v-if="type === 'text'" />
 
