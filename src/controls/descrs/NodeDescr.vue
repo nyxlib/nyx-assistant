@@ -28,6 +28,10 @@ const std = inject('std');
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const props = defineProps({
+    theme: {
+        type: String,
+        default: 'light',
+    },
     globals: {
         type: Object,
         required: true,
@@ -464,7 +468,7 @@ onMounted(() => {
 
         <tab-pane :title="device.name || 'noname'" icon="cpu" :rank="device.rank" v-for="device in Object.values(props.globals.devices)" :key="`${device.id}-${device.rank}`">
 
-            <device-descr :mode="globals.mode" :device="device" />
+            <device-descr :theme="theme" :mode="globals.mode" :device="device" />
 
         </tab-pane>
 

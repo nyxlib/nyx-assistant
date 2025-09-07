@@ -13,6 +13,10 @@ import VectorDescr from './VectorDescr.vue';
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const props = defineProps({
+    theme: {
+        type: String,
+        default: 'light',
+    },
     mode: {
         type: String,
         required: true,
@@ -100,7 +104,7 @@ const props = defineProps({
 
         <tab-pane :title="`${vector.name || 'noname'} (${vector.type || 'notype'})`" icon="braces" :rank="vector.rank" v-for="vector in Object.values(props.device.vectors)" :key="`${vector.id}-${vector.rank}`">
 
-            <vector-descr :vector="vector" v-if="vector.type" />
+            <vector-descr :theme="theme" :vector="vector" v-if="vector.type" />
 
         </tab-pane>
 

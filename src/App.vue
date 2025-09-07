@@ -511,7 +511,7 @@ onUnmounted(() => {
 
         <form class="d-flex flex-column overflow-y-auto h-100 p-3" v-if="state.appMode !== 'preview'">
 
-            <node-descr :globals="state.globals" :changed="state.changed" :path="state.path" />
+            <node-descr :theme="state.theme" :globals="state.globals" :changed="state.changed" :path="state.path" />
 
         </form>
 
