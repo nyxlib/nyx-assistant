@@ -56,6 +56,7 @@ const vectorAppend = () => {
         type: '',
         label: '',
         group: '',
+        hints: '',
         state: 'NYX_STATE_OK',
         perm: 'NYX_PERM_RW',
         rule: 'NYX_RULE_ONE_OF_MANY',
