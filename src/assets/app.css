@@ -8,6 +8,8 @@
 
 @import url("@vueform/multiselect/themes/default.css");
 
+@import url("md-editor-v3/lib/style.css");
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 :root {
