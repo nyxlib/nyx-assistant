@@ -428,13 +428,13 @@ _err:
 
                     if   vector['type'] == 'number' and 'd' in vectorDef['format']:
                         ctype = 'int'
-                        setter = f'nyx_number_def_set_int((nyx_dict_t *) vector_def_{ns}, value);'
+                        setter = f'nyx_number_def_set_double((nyx_dict_t *) vector_def_{ns}, (double) value);'
                     elif vector['type'] == 'number' and 'l' in vectorDef['format']:
                         ctype = 'lond'
-                        setter = f'nyx_number_def_get_long((nyx_dict_t *) vector_def_{ns}, value);'
+                        setter = f'nyx_number_def_set_double((nyx_dict_t *) vector_def_{ns}, (double) value);'
                     elif vector['type'] == 'number' and 'f' in vectorDef['format']:
                         ctype = 'double'
-                        setter = f'nyx_number_def_set_double((nyx_dict_t *) vector_def_{ns}, value);'
+                        setter = f'nyx_number_def_set_double((nyx_dict_t *) vector_def_{ns}, (double) value);'
                     elif vector['type'] == 'text':
                         ctype = 'STR_t'
                         setter = f'nyx_text_def_set((nyx_dict_t *) vector_def_{ns}, value);'
@@ -1116,11 +1116,11 @@ def generate_python_notifier(descr, device, vector, vectorDef):
 
     if descr['mode'] == 'python':
         if   vector['type'] == 'number' and 'd' in vectorDef['format']:
-            args = 'Py_BuildValue("(i)", nyx_number_def_get_int((nyx_dict_t *) def_vector))'
+            args = 'Py_BuildValue("(i)", (int) nyx_number_def_get_double((nyx_dict_t *) def_vector))'
         elif vector['type'] == 'number' and 'l' in vectorDef['format']:
-            args = 'Py_BuildValue("(l)", nyx_number_def_get_long((nyx_dict_t *) def_vector))'
+            args = 'Py_BuildValue("(l)", (long) nyx_number_def_get_double((nyx_dict_t *) def_vector))'
         elif vector['type'] == 'number' and 'f' in vectorDef['format']:
-            args = 'Py_BuildValue("(d)", nyx_number_def_get_double((nyx_dict_t *) def_vector))'
+            args = 'Py_BuildValue("(d)", (double) nyx_number_def_get_double((nyx_dict_t *) def_vector))'
         elif vector['type'] == 'text':
             args = 'Py_BuildValue("(s)", nyx_text_def_get((nyx_dict_t *) def_vector))'
         elif vector['type'] == 'switch':
