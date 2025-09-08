@@ -16,8 +16,8 @@ const _LOCKER_HTML = `
 
     <div id="DEC2F4DE">
         <div class="align-self-center text-center">
-            <div class="spinner-border" role="status" style="width: 4rem; height: 4rem;"></div>
-            <div class="display-4" role="status">please wait…</div>
+            <div class="spinner-border" style="width: 4rem; height: 4rem;"></div>
+            <div class="display-4">please wait…</div>
         </div>
     </div>
 
@@ -57,7 +57,7 @@ const _LOCKER_HTML = `
 
         body[data-environment="tauri"][data-maximized="false"] > #DEC2F4DE {
 
-            top: 41px !important;
+            top: 40px !important;
             bottom: 01px !important;
 
             left: 01px !important;
@@ -88,7 +88,7 @@ const _lock = () => {
     {
         _curLockCnt++;
     }
-}
+};
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -110,7 +110,7 @@ const _unlock = () => {
 /* DIALOGS                                                                                                            */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const _notify_step2 = (title, body) => {
+const _notify_step2 = (body, title) => {
 
     notification.sendNotification({
         title: title,
@@ -120,9 +120,7 @@ const _notify_step2 = (title, body) => {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const _notify = (title, body) => {
-
-    body = (body || '').trim();
+const _notify = (body, title) => {
 
     if(!body)
     {
@@ -131,10 +129,12 @@ const _notify = (title, body) => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
+    console.log(`${title}: ${body}`);
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+
     if(typeof window['__TAURI__'] !== 'undefined')
     {
-        /*------------------------------------------------------------------------------------------------------------*/
-
         notification.isPermissionGranted().then((granted) => {
 
             if(!granted)
@@ -152,21 +152,7 @@ const _notify = (title, body) => {
                 _notify_step2(title, body);
             }
         });
-
-        /*------------------------------------------------------------------------------------------------------------*/
     }
-    else
-    {
-        /*------------------------------------------------------------------------------------------------------------*/
-
-        alert(`${title}: ${body}`);
-
-        /*------------------------------------------------------------------------------------------------------------*/
-    }
-
-    /*----------------------------------------------------------------------------------------------------------------*/
-
-    console.log(`${title}: ${body}`);
 
     /*----------------------------------------------------------------------------------------------------------------*/
 };
@@ -190,7 +176,7 @@ const _success = (message) => {
         }, 500);
     }
 
-    _notify('Success', message);
+    _notify(message, 'Success');
     _unlock();
 
     return {then: () => {}};
@@ -215,7 +201,7 @@ const _warning = (message) => {
         }, 500);
     }
 
-    _notify('Warning', message);
+    _notify(message, 'Warning');
     _unlock();
 
     return {then: () => {}};
@@ -240,7 +226,7 @@ const _error = (message) => {
         }, 500);
     }
 
-    _notify('Error', message);
+    _notify(message, 'Error');
     _unlock();
 
     return {then: () => {}};

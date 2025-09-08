@@ -26,6 +26,10 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    tabClass: {
+        type: String,
+        default: '',
+    },
     rank: {
         type: Number,
         default: -1,
@@ -45,7 +49,7 @@ const isFirst = ref(false);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const tabId = `nyx_tab_${uuid.v4().substring(0, 8)}`;
+const tabId = `nyx_tab_${uuid.v4()}`;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
@@ -77,7 +81,7 @@ const onHidden = (e) => {
 
 onMounted(() => {
 
-    isFirst.value = addTab(tabId, props.rank, props.title, props.icon, onShow, onShown, onHide, onHidden);
+    isFirst.value = addTab(tabId, props.rank, props.title, props.icon, props.tabClass, onShow, onShown, onHide, onHidden);
 
     watch(() => props.title, (title) => {
 
