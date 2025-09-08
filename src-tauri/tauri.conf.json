@@ -13,9 +13,9 @@
             {
                 "label": "main",
                 "height": 850,
-                "width": 1300,
+                "width": 1500,
                 "minHeight": 850,
-                "minWidth": 1300,
+                "minWidth": 1500,
                 "visible": true,
                 "maximized": false,
                 "title": "Nyx Assistant",
@@ -26,9 +26,9 @@
             {
                 "label": "preview",
                 "height": 850,
-                "width": 1300,
+                "width": 1500,
                 "minHeight": 850,
-                "minWidth": 1300,
+                "minWidth": 1500,
                 "visible": false,
                 "maximized": false,
                 "title": "Preview",
