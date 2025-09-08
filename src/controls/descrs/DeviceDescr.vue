@@ -47,7 +47,7 @@ const props = defineProps({
 
                     <div class="card shadow mb-3">
                         <div class="card-header px-3 py-2">
-                            Device <i class="bi bi-question-circle-fill" :title="`Id: ${device.id}`" v-tooltip></i>
+                            Device <i class="bi bi-info-circle-fill" :title="`Id: ${device.id}`" v-tooltip></i>
                         </div>
                         <div class="card-body px-3 py-2">
 
@@ -55,21 +55,21 @@ const props = defineProps({
 
                             <div class="mb-3">
                                 <label class="form-label" for="C29507AB">Device name</label>
-                                <input class="form-control form-control-sm" type="text" id="C29507AB" placeholder="Device name" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="device.name" />
+                                <input class="form-control form-control-sm" type="text" id="C29507AB" placeholder="Device name" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model.trim="device.name" />
                             </div>
 
                             <!-- *********************************************************************************** -->
 
                             <div class="mb-3">
                                 <label class="form-label" for="F981816D">Parent C++ class (default: Nyx::BaseDevice)</label>
-                                <input class="form-control form-control-sm" type="text" id="F981816D" placeholder="Parent C++ class" :disabled="props.mode != 'posix-c++'" v-model="device.parentClass" />
+                                <input class="form-control form-control-sm" type="text" id="F981816D" placeholder="Parent C++ class" :disabled="props.mode != 'posix-c++'" v-model.trim="device.parentClass" />
                             </div>
 
                             <!-- *********************************************************************************** -->
 
                             <div class="mb-3">
                                 <label class="form-label" for="E36C71AB">Additional C++ headers</label>
-                                <textarea class="form-control form-control-sm" rows="6" id="E36C71AB" placeholder="#include <...>" :disabled="props.mode != 'posix-c++'" v-model="device.additionalHeaders"></textarea>
+                                <textarea class="form-control form-control-sm" rows="6" id="E36C71AB" placeholder="#include <...>" :disabled="props.mode != 'posix-c++'" v-model.trim="device.additionalHeaders"></textarea>
                             </div>
 
                             <!-- *********************************************************************************** -->

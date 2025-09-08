@@ -127,7 +127,7 @@ const vectorRm = (vector) => {
                                 </button>
                             </td>
                             <td class="text-start">
-                                <input class="form-control form-control-sm" type="text" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="vector.name" />
+                                <input class="form-control form-control-sm" type="text" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model.trim="vector.name" />
                             </td>
                             <td class="text-start">
                                 <select class="form-select form-select-sm" v-model="vector.type">

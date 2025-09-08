@@ -135,7 +135,7 @@ const defRm = (def) => {
                                         <div class="row mb-2">
                                             <label class="col-form-label col-sm-3 py-1" :for="`D18B255D_${def.id}`">Name</label>
                                             <div class="col-sm-9">
-                                                <input class="form-control form-control-sm" type="text" :id="`D18B255D_${def.id}`" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="def.name" />
+                                                <input class="form-control form-control-sm" type="text" :id="`D18B255D_${def.id}`" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model.trim="def.name" />
                                             </div>
                                         </div>
 
@@ -145,7 +145,7 @@ const defRm = (def) => {
                                         <div class="row mb-2">
                                             <label class="col-form-label col-sm-3 py-1" :for="`FB921875_${def.id}`">Label<sup class="text-secondary">opt</sup></label>
                                             <div class="col-sm-9">
-                                                <input class="form-control form-control-sm" type="text" :id="`FB921875_${def.id}`" v-model="def.label" />
+                                                <input class="form-control form-control-sm" type="text" :id="`FB921875_${def.id}`" v-model.trim="def.label" />
                                             </div>
                                         </div>
 
@@ -161,9 +161,9 @@ const defRm = (def) => {
                                             <label class="col-form-label col-sm-3 py-1" :for="`C12596CE_${def.id}`">Value</label>
                                             <div class="col-sm-9">
 
-                                                <input class="form-control form-control-sm" type="text" :id="`C12596CE_${def.id}`" required="required" v-model="def.value" v-if="type === 'number'" />
+                                                <input class="form-control form-control-sm" type="text" :id="`C12596CE_${def.id}`" required="required" v-model.trim="def.value" v-if="type === 'number'" />
 
-                                                <input class="form-control form-control-sm" type="text" :id="`C12596CE_${def.id}`" xxxxxxxx="xxxxxxxx" v-model="def.value" v-if="type === 'text'" />
+                                                <input class="form-control form-control-sm" type="text" :id="`C12596CE_${def.id}`" xxxxxxxx="xxxxxxxx" v-model.trim="def.value" v-if="type === 'text'" />
 
                                                 <select class="form-select form-select-sm" :id="`C12596CE_${def.id}`" v-model="def.value" v-if="type === 'light'">
                                                     <option value="NYX_STATE_IDLE">Idle</option>
@@ -186,7 +186,7 @@ const defRm = (def) => {
                                         <div class="row mb-2" v-if="type === 'number'">
                                             <label class="col-form-label col-sm-3 py-1" :for="`A5704230_${def.id}`">Format</label>
                                             <div class="col-sm-9">
-                                                <input class="form-control form-control-sm" type="text" :id="`A5704230_${def.id}`" required="required" v-model="def.format" />
+                                                <input class="form-control form-control-sm" type="text" :id="`A5704230_${def.id}`" required="required" v-model.trim="def.format" />
                                             </div>
                                         </div>
 
@@ -201,21 +201,21 @@ const defRm = (def) => {
                                         <div class="row mb-2">
                                             <label class="col-form-label col-sm-3 py-1" :for="`D18B255D_${def.id}`">Min</label>
                                             <div class="col-sm-9">
-                                                <input class="form-control form-control-sm" type="text" :id="`D18B255D_${def.id}`" required="required" v-model="def.min" />
+                                                <input class="form-control form-control-sm" type="text" :id="`D18B255D_${def.id}`" required="required" v-model.number="def.min" />
                                             </div>
                                         </div>
 
                                         <div class="row mb-2">
                                             <label class="col-form-label col-sm-3 py-1" :for="`F340D803_${def.id}`">Max</label>
                                             <div class="col-sm-9">
-                                                <input class="form-control form-control-sm" type="text" :id="`F340D803_${def.id}`" required="required" v-model="def.max" />
+                                                <input class="form-control form-control-sm" type="text" :id="`F340D803_${def.id}`" required="required" v-model.number="def.max" />
                                             </div>
                                         </div>
 
                                         <div class="row mb-2">
                                             <label class="col-form-label col-sm-3 py-1" :for="`CF0F2894_${def.id}`">Step</label>
                                             <div class="col-sm-9">
-                                                <input class="form-control form-control-sm" type="text" :id="`CF0F2894_${def.id}`" required="required" v-model="def.step" />
+                                                <input class="form-control form-control-sm" type="text" :id="`CF0F2894_${def.id}`" required="required" v-model.number="def.step" />
                                             </div>
                                         </div>
 
@@ -230,7 +230,7 @@ const defRm = (def) => {
                                         <div class="row mb-2">
                                             <label class="col-form-label col-sm-3 py-1" :for="`ECF6D0D6_${def.id}`">Format</label>
                                             <div class="col-sm-9">
-                                                <input class="form-control form-control-sm" type="text" :id="`ECF6D0D6_${def.id}`" required="required" v-model="def.blobFormat" />
+                                                <input class="form-control form-control-sm" type="text" :id="`ECF6D0D6_${def.id}`" required="required" v-model.trim="def.blobFormat" />
                                             </div>
                                         </div>
 
@@ -240,7 +240,7 @@ const defRm = (def) => {
                                         <div class="row mb-2">
                                             <label class="col-form-label col-sm-3 py-1" :for="`C7D94FF3_${def.id}`">Size</label>
                                             <div class="col-sm-9">
-                                                <input class="form-control form-control-sm" type="number" :id="`C7D94FF3_${def.id}`" readonly="readonly" v-model="def.blobSize" />
+                                                <input class="form-control form-control-sm" type="number" :id="`C7D94FF3_${def.id}`" readonly="readonly" v-model.number="def.blobSize" />
                                             </div>
                                         </div>
 

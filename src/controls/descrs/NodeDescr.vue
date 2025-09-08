@@ -192,7 +192,7 @@ onMounted(() => {
 
                                     <div class="mb-3">
                                         <label class="form-label" for="F7F2361C">Node name</label>
-                                        <input class="form-control form-control-sm" type="text" id="F7F2361C" placeholder="Node name" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model="globals.nodeName" />
+                                        <input class="form-control form-control-sm" type="text" id="F7F2361C" placeholder="Node name" pattern="[a-zA-Z_][a-zA-Z0-9_]*" required="required" v-model.trim="globals.nodeName" />
                                     </div>
 
                                 </div>
@@ -200,7 +200,7 @@ onMounted(() => {
 
                                     <div class="mb-3">
                                         <label class="form-label" for="A75F14A0">Node timeout [ms]</label>
-                                        <input class="form-control form-control-sm" type="number" min="1" step="1" id="A75F14A0" placeholder="Node timeout" required="required" v-model="globals.nodeTimeout" />
+                                        <input class="form-control form-control-sm" type="number" min="1" step="1" id="A75F14A0" placeholder="Node timeout" required="required" v-model.number="globals.nodeTimeout" />
                                     </div>
 
                                 </div>
@@ -218,7 +218,7 @@ onMounted(() => {
 
                                     <div class="mb-3" :hidden="globals.mode !== 'arduino-wifi'">
                                         <label class="form-label" for="EFCECA87">WiFi SSID</label>
-                                        <input class="form-control form-control-sm" type="text" id="EFCECA87" placeholder="WiFi SSID" required="required" v-model="globals.wifiSSID" autocomplete="username" />
+                                        <input class="form-control form-control-sm" type="text" id="EFCECA87" placeholder="WiFi SSID" required="required" v-model.trim="globals.wifiSSID" autocomplete="username" />
                                     </div>
 
                                     <div class="mb-3" :hidden="globals.mode !== 'arduino-ethernet'">
@@ -238,12 +238,12 @@ onMounted(() => {
 
                                     <div class="mb-3" :hidden="globals.mode !== 'arduino-wifi'">
                                         <label class="form-label" for="E87BBCE3">WiFi password</label>
-                                        <input class="form-control form-control-sm" type="text" id="E87BBCE3" placeholder="WiFi password" required="required" v-model="globals.wifiPassword" v-password-toggle />
+                                        <input class="form-control form-control-sm" type="text" id="E87BBCE3" placeholder="WiFi password" required="required" v-model.trim="globals.wifiPassword" v-password-toggle />
                                     </div>
 
                                     <div class="mb-3" :hidden="globals.mode !== 'arduino-ethernet'">
                                         <label class="form-label" for="EAEEA67C">Ethernet CS pin</label>
-                                        <input class="form-control form-control-sm" type="number" min="0" id="EAEEA67C" placeholder="Ethernet CS pin" required="required" v-model="globals.ethernetCSPin" />
+                                        <input class="form-control form-control-sm" type="number" min="0" id="EAEEA67C" placeholder="Ethernet CS pin" required="required" v-model.number="globals.ethernetCSPin" />
                                     </div>
 
                                 </div>
@@ -357,20 +357,20 @@ onMounted(() => {
 
                                     <div class="mb-3">
                                         <label class="form-label" for="F23468E8">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" required="required" :disabled="!globals.enableMQTT" v-model="globals.mqttURI" />
+                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" required="required" :disabled="!globals.enableMQTT" v-model.trim="globals.mqttURI" />
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-0">
                                                 <label class="form-label" for="C8A2E5EB">Username<sup class="text-secondary">opt</sup></label>
-                                                <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" :disabled="!globals.enableMQTT" v-model="globals.mqttUsername" autocomplete="username" />
+                                                <input class="form-control form-control-sm" type="text" id="C8A2E5EB" placeholder="Username" :disabled="!globals.enableMQTT" v-model.trim="globals.mqttUsername" autocomplete="username" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-0">
                                                 <label class="form-label" for="CC00EA1C">Password<sup class="text-secondary">opt</sup></label>
-                                                <input class="form-control form-control-sm" type="text" id="CC00EA1C" placeholder="Password" :disabled="!globals.enableMQTT" v-model="globals.mqttPassword" v-password-toggle />
+                                                <input class="form-control form-control-sm" type="text" id="CC00EA1C" placeholder="Password" :disabled="!globals.enableMQTT" v-model.trim="globals.mqttPassword" v-password-toggle />
                                             </div>
                                         </div>
                                     </div>
@@ -397,20 +397,20 @@ onMounted(() => {
 
                                     <div class="mb-3">
                                         <label class="form-label" for="D197DB2C">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="D197DB2C" placeholder="e.g. tcp://localhost:6379" required="required" :disabled="!globals.enableRedis" v-model="globals.redisURI" />
+                                        <input class="form-control form-control-sm" type="text" id="D197DB2C" placeholder="e.g. tcp://localhost:6379" required="required" :disabled="!globals.enableRedis" v-model.trim="globals.redisURI" />
                                     </div>
 
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="mb-0">
                                                 <label class="form-label" for="C0AC7C07">Username<sup class="text-secondary">opt</sup></label>
-                                                <input class="form-control form-control-sm" type="text" id="C0AC7C07" placeholder="Username" :disabled="!globals.enableRedis" v-model="globals.redisUsername" v-password-toggle />
+                                                <input class="form-control form-control-sm" type="text" id="C0AC7C07" placeholder="Username" :disabled="!globals.enableRedis" v-model.trim="globals.redisUsername" v-password-toggle />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="mb-0">
                                                 <label class="form-label" for="D22303F3">Password<sup class="text-secondary">opt</sup></label>
-                                                <input class="form-control form-control-sm" type="text" id="D22303F3" placeholder="Password" :disabled="!globals.enableRedis" v-model="globals.redisPassword" v-password-toggle />
+                                                <input class="form-control form-control-sm" type="text" id="D22303F3" placeholder="Password" :disabled="!globals.enableRedis" v-model.trim="globals.redisPassword" v-password-toggle />
                                             </div>
                                         </div>
                                     </div>
@@ -437,7 +437,7 @@ onMounted(() => {
 
                                     <div class="mb-0">
                                         <label class="form-label" for="B6FB4EA2">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" required="required" :disabled="!globals.enableTCP" v-model="globals.tcpURI" />
+                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" required="required" :disabled="!globals.enableTCP" v-model.trim="globals.tcpURI" />
                                     </div>
 
                                 </div>

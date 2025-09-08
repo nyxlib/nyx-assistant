@@ -57,7 +57,7 @@ const COLORS = {
                     {{ defNumber['@label'] || defNumber['@name'] }}
                 </span>
 
-                <input class="form-control" type="number" :min="defNumber['@min']" :max="defNumber['@max']" :step="defNumber['@step']" :readonly="defNumberVector['@perm'] === 'ro'" v-model="defNumber['$']" />
+                <input class="form-control" type="number" :min="defNumber['@min']" :max="defNumber['@max']" :step="defNumber['@step']" :readonly="defNumberVector['@perm'] === 'ro'" v-model.number="defNumber['$']" />
 
             </div>
 

@@ -57,7 +57,7 @@ const COLORS = {
                     {{ defText['@label'] || defText['@name'] }}
                 </span>
 
-                <input class="form-control" type="text" :readonly="defTextVector['@perm'] === 'ro'" v-model="defText['$']" />
+                <input class="form-control" type="text" :readonly="defTextVector['@perm'] === 'ro'" v-model.trim="defText['$']" />
 
             </div>
 
