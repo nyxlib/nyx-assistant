@@ -49,10 +49,6 @@ const TOOLBARS = [
     'table',
     'mermaid',
     'katex',
-    '-',
-    'revoke',
-    'next',
-    'save',
     '=',
     'pageFullscreen',
     'fullscreen',
@@ -197,7 +193,7 @@ const TOOLBARS = [
 
                 <tab-pane title="Hints">
 
-                    <MdEditor class="shadow" language="en-US" :theme="theme" :toolbars="TOOLBARS" v-model="vector.hints" style="border-radius: 0.5rem; height: 590px;" />
+                    <md-editor class="shadow" language="en-US" :theme="theme" :toolbars="TOOLBARS" v-model="vector.hints" style="border-radius: 0.5rem; height: 590px;" />
 
                 </tab-pane>
 
