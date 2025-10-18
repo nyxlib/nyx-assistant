@@ -87,11 +87,11 @@ const defRm = (def) => {
     <div class="card shadow mb-3">
         <div class="card-header px-3 py-2">
             <i class="bi bi-code"></i>
-            Vector defs
+            Properties
             [
             <button class="btn btn-xs btn-primary" type="button" @click="defAppend">
                 <i class="bi bi-plus-lg"></i>
-                Add vector def
+                Add property
             </button>
             ]
         </div>

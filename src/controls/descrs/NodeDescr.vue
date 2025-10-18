@@ -179,7 +179,7 @@ onMounted(() => {
                         <select class="card-header form-select border-0 border-bottom px-3 py-2" v-model="globals.mode">
                             <option value="posix-c">Node in C for POSIX systems</option>
                             <option value="posix-c++">Node in C++ for POSIX systems</option>
-                            <option value="python">Node for Python or GNU Radio</option>
+                            <option value="gnuradio">Node for Python or GNU Radio</option>
                             <option value="arduino-wifi">Node for Arduino board - WiFi version</option>
                             <option value="arduino-ethernet">Node for Arduino board - Ethernet version</option>
                         </select>
@@ -211,7 +211,7 @@ onMounted(() => {
                             <div class="row">
                                 <div class="col-md-6">
 
-                                    <div class="form-check form-switch mb-3" :hidden="!['posix-c', 'posix-c++', 'python'].includes(globals.mode)">
+                                    <div class="form-check form-switch mb-3" :hidden="!['posix-c', 'posix-c++', 'gnuradio'].includes(globals.mode)">
                                         <input class="form-check-input" type="checkbox" role="switch" id="A313C013" v-model="globals.hardcoded" :true-value="true" :false-value="false" />
                                         <label class="form-check-label" for="A313C013">Hardcoded configuration</label>
                                     </div>
@@ -231,7 +231,7 @@ onMounted(() => {
                                 </div>
                                 <div class="col-md-6">
 
-                                    <div class="form-check form-switch mb-3" :hidden="!['posix-c', 'posix-c++', 'python'].includes(globals.mode)">
+                                    <div class="form-check form-switch mb-3" :hidden="!['posix-c', 'posix-c++', 'gnuradio'].includes(globals.mode)">
                                         <input class="form-check-input" type="checkbox" role="switch" id="FAD1B43F" v-model="globals.static" :true-value="true" :false-value="false" />
                                         <label class="form-check-label" for="FAD1B43F">Statically-linked executable</label>
                                     </div>

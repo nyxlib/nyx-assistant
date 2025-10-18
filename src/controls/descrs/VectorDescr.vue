@@ -9,7 +9,7 @@ import {MdEditor} from 'md-editor-v3';
 import NavTabs from '../NavTabs.vue';
 import TabPane from '../TabPane.vue';
 
-import Defs from '../tables/Defs.vue';
+import Props from '../tables/Props.vue';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
@@ -185,7 +185,7 @@ const TOOLBARS = [
 
                 <tab-pane title="Vectors">
 
-                    <Defs :type="vector.type" :defs="vector.defs" />
+                    <Props :type="vector.type" :defs="vector.defs" />
 
                 </tab-pane>
 
