@@ -1,8 +1,8 @@
 .idea
 .DS_Store
 
+gen
 dist
-build
 target
 node_modules
 
