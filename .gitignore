@@ -5,7 +5,6 @@ dist
 target
 node_modules
 
-/gen/
 /src-tauri/gen/
 /src-tauri/binaries/
 
