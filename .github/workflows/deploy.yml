@@ -84,6 +84,6 @@ jobs:
                     ssh-keyscan -H "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
                     chmod 644 ~/.ssh/known_hosts
 
-                    rsync -avz --delete "./dist/ ${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/assistant/"
+                    rsync -avz --delete ./dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/assistant/"
 
                     scp ./src-tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/download/linux/x86_64/nyx-assistant.AppImage"
