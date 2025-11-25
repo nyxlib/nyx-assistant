@@ -35,39 +35,43 @@ const COLORS = {
 
     <!-- *********************************************************************************************************** -->
 
-    <div class="row">
+    <div class="row mx-0 w-100">
 
         <!-- ******************************************************************************************************* -->
 
-        <div class="col-sm-2">
+        <div class="col-lg-3">
 
             <i :class="['bi', 'bi-circle-fill', `text-${COLORS[defTextVector['@state']]}`]"></i>
 
-            {{ defTextVector['@label'] || defTextVector['@name'] }}
+            <span class="ms-1" tabindex="0" ref="popoverRef">{{ defTextVector['@label'] || defTextVector['@name'] }}</span>
 
         </div>
 
         <!-- ******************************************************************************************************* -->
 
-        <div :class="{'col-sm-10': defTextVector['@perm'] === 'ro', 'col-sm-9': defTextVector['@perm'] !== 'ro'}">
+        <div class="col-lg-7">
 
-            <div class="input-group input-group-sm mb-1" v-for="defText in sortedDefs" :key="`${defText['@name']}-${defText['@rank']}`">
+            <template v-for="defText in sortedDefs" :key="defText">
 
-                <span class="input-group-text" style="min-width: 175px;">
-                    {{ defText['@label'] || defText['@name'] }}
-                </span>
+                <div class="input-group input-group-sm mb-1">
 
-                <input class="form-control" type="text" :readonly="defTextVector['@perm'] === 'ro'" v-model.trim="defText['$']" />
+                    <span class="input-group-text" style="min-width: 200px;">
+                        {{ defText['@label'] || defText['@name'] }}
+                    </span>
 
-            </div>
+                    <input class="form-control" type="text" :readonly="defTextVector['@perm'] === 'ro'" v-model="defText['$']" />
+
+                </div>
+
+            </template>
 
         </div>
 
         <!-- ******************************************************************************************************* -->
 
-        <div class="col-sm-1 pb-1" v-if="defTextVector['@perm'] !== 'ro'">
+        <div class="col-lg-2 pb-1" v-if="defTextVector['@perm'] !== 'ro'">
 
-            <button class="btn btn-xs btn-outline-primary h-100 w-100">
+            <button class="btn btn-xs btn-outline-primary h-100 w-100" @click="sendMessage">
                 Apply
             </button>
 

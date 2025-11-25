@@ -356,8 +356,8 @@ onMounted(() => {
                                 <div class="col-md-8">
 
                                     <div class="mb-3">
-                                        <label class="form-label" for="F23468E8">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" required="required" :disabled="!globals.enableMQTT" v-model.trim="globals.mqttURI" />
+                                        <label class="form-label" for="F23468E8">URL</label>
+                                        <input class="form-control form-control-sm" type="text" id="F23468E8" placeholder="e.g. mqtt://localhost:1883" required="required" :disabled="!globals.enableMQTT" v-model.trim="globals.mqttURL" />
                                     </div>
 
                                     <div class="row">
@@ -396,8 +396,8 @@ onMounted(() => {
                                 <div class="col-md-8">
 
                                     <div class="mb-3">
-                                        <label class="form-label" for="D197DB2C">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="D197DB2C" placeholder="e.g. tcp://localhost:6379" required="required" :disabled="!globals.enableRedis" v-model.trim="globals.redisURI" />
+                                        <label class="form-label" for="D197DB2C">URL</label>
+                                        <input class="form-control form-control-sm" type="text" id="D197DB2C" placeholder="e.g. tcp://localhost:6379" required="required" :disabled="!globals.enableRedis" v-model.trim="globals.redisURL" />
                                     </div>
 
                                     <div class="row">
@@ -428,16 +428,16 @@ onMounted(() => {
                                 <div class="col-md-4">
 
                                     <div class="form-check form-switch mb-3">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="A925CE04" v-model="globals.enableTCP" :true-value="true" :false-value="false" />
-                                        <label class="form-check-label" for="A925CE04">Enable TCP</label>
+                                        <input class="form-check-input" type="checkbox" role="switch" id="A925CE04" v-model="globals.enableINDI" :true-value="true" :false-value="false" />
+                                        <label class="form-check-label" for="A925CE04">Enable INDI</label>
                                     </div>
 
                                 </div>
                                 <div class="col-md-8">
 
                                     <div class="mb-0">
-                                        <label class="form-label" for="B6FB4EA2">URI</label>
-                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" required="required" :disabled="!globals.enableTCP" v-model.trim="globals.tcpURI" />
+                                        <label class="form-label" for="B6FB4EA2">URL</label>
+                                        <input class="form-control form-control-sm" type="text" id="B6FB4EA2" placeholder="e.g. tcp://0.0.0.0:7625" required="required" :disabled="!globals.enableINDI" v-model.trim="globals.indiURL" />
                                     </div>
 
                                 </div>

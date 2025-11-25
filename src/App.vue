@@ -22,7 +22,7 @@ import convert from './nyx.js';
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const HAS_TAURI = typeof window['__TAURI__'] !== 'undefined';
+const HAS_TAURI = typeof window['__TAURI__'] !== 'undefined', HAS_TAURI_AND_NOT_MOBILE = HAS_TAURI && !['android', 'ios'].includes(window['__NYX_OS_TYPE__']);
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -48,17 +48,17 @@ const DEFAULT_GLOBALS = {
     ethernetCSPin: 0,
     /* MQTT */
     enableMQTT: false,
-    mqttURI: '',
+    mqttURL: '',
     mqttUsername: '',
     mqttPassword: '',
     /* REDIS */
     enableRedis: false,
-    redisURI: '',
+    redisURL: '',
     redisUsername: '',
     redisPassword: '',
-    /* TCP */
-    enableTCP: false,
-    tcpURI: '',
+    /* INDI */
+    enableINDI: false,
+    indiURL: '',
     /* DEVICES */
     devices: {},
 };
@@ -265,7 +265,7 @@ const htmlMessageHandler = (e) => devices.value = e.data;
 
 const devices = ref({});
 
-let unlisten;
+let unlisten = null;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -273,7 +273,7 @@ onMounted(async () => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    if(!HAS_TAURI || /android/i.test(navigator.userAgent))
+    if(!HAS_TAURI_AND_NOT_MOBILE)
     {
         document.body.setAttribute('data-environment', 'browser');
     }
@@ -372,13 +372,13 @@ onMounted(async () => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    if(HAS_TAURI)
+    if(!HAS_TAURI)
     {
-        unlisten = await listen('preview', tauriMessageHandler);
+        window.addEventListener('message', htmlMessageHandler);
     }
     else
     {
-        window.addEventListener('message', htmlMessageHandler);
+        unlisten = await listen('preview', tauriMessageHandler);
     }
 
     /*----------------------------------------------------------------------------------------------------------------*/
@@ -388,13 +388,13 @@ onMounted(async () => {
 
 onUnmounted(() => {
 
-    if(HAS_TAURI)
+    if(!HAS_TAURI)
     {
-        if(unlisten) unlisten(/*- 'preview', tauriMessageHandler -*/);
+        window.removeEventListener('message', htmlMessageHandler);
     }
     else
     {
-        window.removeEventListener('message', htmlMessageHandler);
+        if(unlisten) unlisten(/*- 'preview', tauriMessageHandler -*/);
     }
 });
 
@@ -482,15 +482,15 @@ onUnmounted(() => {
 
             <div class="d-flex ms-2 py-1">
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrentWindow().minimize()" :hidden="!HAS_TAURI">
+                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrentWindow().minimize()" :hidden="!HAS_TAURI_AND_NOT_MOBILE">
                     <i class="bi bi-dash-lg"></i>
                 </button>
 
-                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrentWindow().toggleMaximize()" :hidden="!HAS_TAURI">
+                <button class="btn btn-sm btn-primary me-1" type="button" @click="() => getCurrentWindow().toggleMaximize()" :hidden="!HAS_TAURI_AND_NOT_MOBILE">
                     <i class="bi bi-collection"></i>
                 </button>
 
-                <button class="btn btn-sm btn-primary me-0" type="button" @click="() => getCurrentWindow().close()" :hidden="!HAS_TAURI">
+                <button class="btn btn-sm btn-primary me-0" type="button" @click="() => getCurrentWindow().close()" :hidden="!HAS_TAURI_AND_NOT_MOBILE">
                     <i class="bi bi-x-lg"></i>
                 </button>
 

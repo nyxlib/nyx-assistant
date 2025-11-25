@@ -35,39 +35,45 @@ const COLORS = {
 
     <!-- *********************************************************************************************************** -->
 
-    <div class="row">
+    <div class="row mx-0 w-100">
 
         <!-- ******************************************************************************************************* -->
 
-        <div class="col-lg-2">
+        <div class="col-lg-3">
 
             <i :class="['bi', 'bi-circle-fill', `text-${COLORS[defNumberVector['@state']]}`]"></i>
 
-            {{ defNumberVector['@label'] || defNumberVector['@name'] }}
+            <span class="ms-1" tabindex="0" ref="popoverRef">{{ defNumberVector['@label'] || defNumberVector['@name'] }}</span>
 
         </div>
 
         <!-- ******************************************************************************************************* -->
 
-        <div :class="{'col-lg-10': defNumberVector['@perm'] === 'ro', 'col-lg-9': defNumberVector['@perm'] !== 'ro'}">
+        <div class="col-lg-7">
 
-            <div class="input-group input-group-sm mb-1" v-for="defNumber in sortedDefs" :key="`${defNumber['@name']}-${defNumber['@rank']}`">
+            <template v-for="defNumber in sortedDefs" :key="defNumber">
 
-                <span class="input-group-text" style="min-width: 175px;">
-                    {{ defNumber['@label'] || defNumber['@name'] }}
-                </span>
+                <div class="input-group input-group-sm mb-1">
 
-                <input class="form-control" type="number" :min="defNumber['@min']" :max="defNumber['@max']" :step="defNumber['@step']" :readonly="defNumberVector['@perm'] === 'ro'" v-model.number="defNumber['$']" />
+                    <span class="input-group-text" style="min-width: 200px;">
+                        {{ defNumber['@label'] || defNumber['@name'] }}
+                    </span>
 
-            </div>
+                    <sexagesimal :format="defNumber['@format']" v-model="defNumber['$']" :readonly="defNumberVector['@perm'] === 'ro'" v-if="defNumber['@format'].match(/%(\d+)\.(\d+)m/)" />
+
+                    <input class="form-control" :type="defNumberVector['@perm'] === 'ro' ? 'text' : 'number'" :min="defNumber['@min']" :max="defNumber['@max']" :step="defNumber['@step']" :readonly="defNumberVector['@perm'] === 'ro'" v-model="defNumber['$']" v-else />
+
+                </div>
+
+            </template>
 
         </div>
 
         <!-- ******************************************************************************************************* -->
 
-        <div class="col-lg-1 pb-1" v-if="defNumberVector['@perm'] !== 'ro'">
+        <div class="col-lg-2 pb-1" v-if="defNumberVector['@perm'] !== 'ro'">
 
-            <button class="btn btn-xs btn-outline-primary h-100 w-100">
+            <button class="btn btn-xs btn-outline-primary h-100 w-100" @click="sendMessage">
                 Apply
             </button>
 

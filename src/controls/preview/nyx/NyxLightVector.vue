@@ -35,21 +35,21 @@ const COLORS = {
 
     <!-- *********************************************************************************************************** -->
 
-    <div class="row">
+    <div class="row mx-0 w-100">
 
         <!-- ******************************************************************************************************* -->
 
-        <div class="col-sm-2">
+        <div class="col-lg-3">
 
             <i :class="['bi', 'bi-circle-fill', `text-${COLORS[defLightVector['@state']]}`]"></i>
 
-            {{ defLightVector['@label'] || defLightVector['@name'] }}
+            <span class="ms-1" tabindex="0" ref="popoverRef">{{ defLightVector['@label'] || defLightVector['@name'] }}</span>
 
         </div>
 
         <!-- ******************************************************************************************************* -->
 
-        <div class="col-sm-10">
+        <div class="col-lg-7">
 
             <div v-for="defLight in sortedDefs" :key="`${defLight['@name']}-${defLight['@rank']}`">
 
