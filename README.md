@@ -16,15 +16,17 @@
 Nyx Assistant
 =============
 
+The `Nyx` project introduces a protocol, backward-compatible with [INDI 1.7](docs/specs/INDI.pdf) (and `indiserver`), for controlling
+astronomical hardware. It enhances INDI by supporting multiple independent nodes, each with its own embedded protocol
+stack. Nodes can communicate via an [MQTT](https://mqtt.org/) broker, a [Redis](https://redis.io/) cache (data streams)
+or directly over TCP, offering flexibility and scalability for distributed systems.
+
 TODO
 
 Downloading Nyx Assistant
 =========================
 
-The last build can be downloaded [there](https://gitlab.in2p3.fr/lpsc-kid/nyx-assistant/-/artifacts).
-
-Installing Nyx Assistant
-========================
+The last build can be downloaded [there](https://nyxlib.org/installing).
 
 Before using Nyx Assistant, make sure that `libfuse2` is installed:
 
@@ -36,13 +38,24 @@ sudo apt-get install libfuse2
 sudo apt-get install libfuse2t64
 ```
 
-Developer
-=========
+# Developer
 
 * [Jérôme ODIER](https://annuaire.in2p3.fr/4121-4467/jerome-odier) ([CNRS/LPSC](http://lpsc.in2p3.fr/))
+
+# A bit of classical culture
+
+In Greek mythology, Nyx is the goddess and personification of the night. She is one of the primordial deities, born
+from Chaos at the dawn of creation.
+
+Mysterious and powerful, Nyx dwells in the deepest shadows of the cosmos, from where she gives birth to many other
+divine figures, including Hypnos (Sleep) and Thanatos (Death).
+
+<div style="text-align: center;">
+    <img src="https://raw.githubusercontent.com/nyxlib/nyx-node/refs/heads/main/docs/img/nyx.png" style="width: 600px;" />
+</div>
 
 [Build Status]:https://github.com/nyxlib/nyx-assistant/actions/workflows/deploy.yml
 [Build Status img]:https://github.com/nyxlib/nyx-assistant/actions/workflows/deploy.yml/badge.svg
 
-[License]:http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.txt
-[License img]:https://img.shields.io/badge/License-CeCILL_C-blue.svg
+[License]:https://www.gnu.org/licenses/gpl-3.0.txt
+[License img]:https://img.shields.io/badge/License-GPL_3.0_or_later-blue.svg
