@@ -71,7 +71,7 @@ const generate = (override = null) => {
     {
         /*------------------------------------------------------------------------------------------------------------*/
 
-        const args = ['--output', getPath(props.path), '--descr', props.path];
+        const args = ['--output', getPath(props.path), props.path];
 
         if(override === 'override-cmake') {
             args.push('--override-cmake');
