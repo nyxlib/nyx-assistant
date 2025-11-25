@@ -3,7 +3,7 @@ name = "nyx-assistant"
 version = "1.0.0"
 description = "Nyx Assistant"
 authors = ["Jérôme ODIER"]
-license = "AGPL"
+license = "GPL-3.0-or-later"
 repository = "https://gitlab.in2p3.fr/lpsc-kid/nyx-assistant"
 edition = "2021"
 
