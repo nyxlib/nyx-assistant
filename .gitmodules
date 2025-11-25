@@ -1,3 +1,4 @@
 [submodule "gen"]
 	path = gen
 	url = https://github.com/nyxlib/nyx-gen.git
+    branch = main
