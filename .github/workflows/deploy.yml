@@ -65,8 +65,8 @@ jobs:
                     npm install
                     npm run tauri-prod
 
-            -   name: Build project 2/2
-                uses: snapcore/action-build@v1
+#            -   name: Build project 2/2
+#                uses: snapcore/action-build@v1
 
             -   name: Deploy project
                 shell: bash
@@ -87,5 +87,5 @@ jobs:
                     ssh-keyscan -H "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
                     chmod 644 ~/.ssh/known_hosts
 
-                    scp ./nyx-assistant_*_amd64.snap "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/download/linux/x86_64/nyx-assistant.snap"
+#                    scp ./nyx-assistant_*_amd64.snap "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/download/linux/x86_64/nyx-assistant.snap"
                     scp ./src-tauri/target/release/bundle/appimage/nyx-assistant_*.AppImage "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/nyxlib.org/download/linux/x86_64/nyx-assistant.AppImage"
