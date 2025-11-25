@@ -1,11 +1,11 @@
 .idea
 .DS_Store
 
-gen
 dist
 target
 node_modules
 
+/gen/
 /src-tauri/gen/
 /src-tauri/binaries/
 
