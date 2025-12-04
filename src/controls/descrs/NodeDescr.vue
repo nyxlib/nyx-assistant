@@ -388,8 +388,8 @@ onMounted(() => {
                                 <div class="col-md-4">
 
                                     <div class="form-check form-switch mb-3">
-                                        <input class="form-check-input" type="checkbox" role="switch" id="D7EAB517" v-model="globals.enableRedis" :true-value="true" :false-value="false" />
-                                        <label class="form-check-label" for="D7EAB517">Enable Redis</label>
+                                        <input class="form-check-input" type="checkbox" role="switch" id="D7EAB517" v-model="globals.enableNSS" :true-value="true" :false-value="false" />
+                                        <label class="form-check-label" for="D7EAB517">Enable Streaming</label>
                                     </div>
 
                                 </div>
@@ -397,22 +397,7 @@ onMounted(() => {
 
                                     <div class="mb-3">
                                         <label class="form-label" for="D197DB2C">URL</label>
-                                        <input class="form-control form-control-sm" type="text" id="D197DB2C" placeholder="e.g. tcp://localhost:6379" required="required" :disabled="!globals.enableRedis" v-model.trim="globals.redisURL" />
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-0">
-                                                <label class="form-label" for="C0AC7C07">Username<sup class="text-secondary">opt</sup></label>
-                                                <input class="form-control form-control-sm" type="text" id="C0AC7C07" placeholder="Username" :disabled="!globals.enableRedis" v-model.trim="globals.redisUsername" v-password-toggle />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-0">
-                                                <label class="form-label" for="D22303F3">Password<sup class="text-secondary">opt</sup></label>
-                                                <input class="form-control form-control-sm" type="text" id="D22303F3" placeholder="Password" :disabled="!globals.enableRedis" v-model.trim="globals.redisPassword" v-password-toggle />
-                                            </div>
-                                        </div>
+                                        <input class="form-control form-control-sm" type="text" id="D197DB2C" placeholder="e.g. tcp://localhost:8888" required="required" :disabled="!globals.enableNSS" v-model.trim="globals.nssURL" />
                                     </div>
 
                                 </div>
@@ -429,7 +414,7 @@ onMounted(() => {
 
                                     <div class="form-check form-switch mb-3">
                                         <input class="form-check-input" type="checkbox" role="switch" id="A925CE04" v-model="globals.enableINDI" :true-value="true" :false-value="false" />
-                                        <label class="form-check-label" for="A925CE04">Enable INDI</label>
+                                        <label class="form-check-label" for="A925CE04">Enable INDI compat</label>
                                     </div>
 
                                 </div>

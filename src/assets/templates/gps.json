@@ -13,10 +13,8 @@
   "mqttURL": "",
   "mqttUsername": "",
   "mqttPassword": "",
-  "enableRedis": false,
-  "redisURL": "",
-  "redisUsername": "",
-  "redisPassword": "",
+  "enableNSS": false,
+  "nssURL": "",
   "enableINDI": false,
   "indiURL": "",
   "devices": {
