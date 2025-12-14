@@ -167,6 +167,12 @@ const exportDrv = () => {
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
+/ INITIALIZATION                                                                                                      */
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+/* TODO */
+
+/*--------------------------------------------------------------------------------------------------------------------*/
 </script>
 
 <template>
@@ -183,7 +189,7 @@ const exportDrv = () => {
 
     <teleport to="#nyx_toolbar">
 
-        <button class="btn btn-sm btn-outline-primary me-1" type="button" @click="resetDrv">
+        <button class="btn btn-sm btn-outline-warning me-1" type="button" @click="resetDrv">
             <i class="bi bi-recycle"></i> Reset
         </button>
 
