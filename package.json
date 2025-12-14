@@ -1,0 +1,39 @@
+{
+    "name": "nyx-assistant",
+    "description": "Nyx Assistant",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "src/plugin.js",
+    "scripts": {
+        "build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js --config webpack.config.js",
+        "lint": "eslint"
+    },
+    "author": "Jérôme ODIER",
+    "license": "ISC",
+    "dependencies": {
+        "@tauri-apps/plugin-http": "^2.5.4",
+        "@tauri-apps/plugin-shell": "^2.3.3",
+        "@vueform/multiselect": "^2.6.11",
+        "bootstrap": "^5.3.8",
+        "md-editor-v3": "^6.2.1",
+        "uuid": "^13.0.0",
+        "vue": "^3.5.25",
+        "vue-router": "^4.6.4",
+        "vuedraggable": "^4.1.0"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.28.5",
+        "@vitejs/plugin-vue": "^6.0.3",
+        "babel-loader": "^10.0.0",
+        "css-loader": "^7.1.2",
+        "eslint": "^9.29.0",
+        "eslint-plugin-vue": "^9.33.0",
+        "file-loader": "^6.2.0",
+        "nyx-webpack-plugin": "github:nyxlib/nyx-webpack-plugin",
+        "style-loader": "^4.0.0",
+        "terser-webpack-plugin": "^5.3.16",
+        "vue-loader": "^17.4.2",
+        "webpack": "^5.103.0",
+        "webpack-cli": "^6.0.1"
+    }
+}
