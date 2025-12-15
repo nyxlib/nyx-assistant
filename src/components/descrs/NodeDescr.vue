@@ -285,38 +285,48 @@ onMounted(() => {
 
                                             <!-- ******************************************************************* -->
 
-                                            <button class="btn btn-success" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate()">
-                                                <i class="bi bi-tornado"></i> Generate
-                                            </button>
+                                            <div class="btn-group">
 
-                                            <button class="btn btn-success dropdown-toggle dropdown-toggle-split border-start" type="button" data-bs-toggle="dropdown">
-                                                <span class="visually-hidden">Toggle Dropdown</span>
-                                            </button>
+                                                <!-- *************************************************************** -->
 
-                                            <!-- ******************************************************************* -->
+                                                <button class="btn btn-outline-success" type="button" :disabled="!globals.nodeName || changed || !path" style="border-radius: 0 !important;" @click="generate()">
+                                                    <i class="bi bi-tornado"></i> Generate
+                                                </button>
 
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-cmake')">
-                                                        <i class="bi bi-exclamation-triangle text-danger"></i> Override CMake
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-main')">
-                                                        <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-device')">
-                                                        <i class="bi bi-exclamation-triangle text-danger"></i> Override devices
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-project')">
-                                                        <i class="bi bi-exclamation-triangle text-danger"></i> Override project
-                                                    </button>
-                                                </li>
-                                            </ul>
+                                                <!-- *************************************************************** -->
+
+                                                <button class="btn btn-outline-warning dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown">
+                                                    <span class="visually-hidden">Toggle Dropdown</span>
+                                                </button>
+
+                                                <!-- *************************************************************** -->
+
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-cmake')">
+                                                            <i class="bi bi-exclamation-triangle text-danger"></i> Override CMake
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-main')">
+                                                            <i class="bi bi-exclamation-triangle text-danger"></i> Override main.c
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-device')">
+                                                            <i class="bi bi-exclamation-triangle text-danger"></i> Override devices
+                                                        </button>
+                                                    </li>
+                                                    <li>
+                                                        <button class="dropdown-item" type="button" :disabled="!globals.nodeName || changed || !path" @click="generate('override-project')">
+                                                            <i class="bi bi-exclamation-triangle text-danger"></i> Override project
+                                                        </button>
+                                                    </li>
+                                                </ul>
+
+                                                <!-- *************************************************************** -->
+
+                                            </div>
 
                                             <!-- ******************************************************************* -->
 

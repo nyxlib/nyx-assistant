@@ -131,7 +131,7 @@ onMounted(() => {
                 <i class="bi bi-plus-lg"></i>
                 Add device
             </button>
-            <div class="btn-group me-0">
+            <div class="btn-group">
                 <button class="btn btn-xs btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     <i class="bi bi-plus-lg"></i>
                     Add from template
