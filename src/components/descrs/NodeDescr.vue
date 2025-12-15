@@ -173,13 +173,18 @@ onMounted(() => {
                     <!-- ******************************************************************************************* -->
 
                     <div class="card shadow-sm mb-3">
-                        <select class="card-header form-select border-0 border-bottom px-3 py-2" v-model="globals.mode">
-                            <option value="posix-c">Node in C for POSIX systems</option>
-                            <option value="posix-c++">Node in C++ for POSIX systems</option>
-                            <option value="gnuradio">Node for Python or GNU Radio</option>
-                            <option value="arduino-wifi">Node for Arduino board - WiFi version</option>
-                            <option value="arduino-ethernet">Node for Arduino board - Ethernet version</option>
-                        </select>
+                        <div class="card-header input-group overflow-hidden p-0">
+                            <select class="form-select bg-transparent rounded-0 border-0 px-3 py-2" v-model="globals.mode">
+                                <option value="posix-c">Node in C for POSIX systems</option>
+                                <option value="posix-c++">Node in C++ for POSIX systems</option>
+                                <option value="gnuradio">Node for Python or GNU Radio</option>
+                                <option value="arduino-wifi">Node for Arduino board - WiFi version</option>
+                                <option value="arduino-ethernet">Node for Arduino board - Ethernet version</option>
+                            </select>
+                            <span class="input-group-text rounded-0 border-0">
+                                click to change
+                            </span>
+                        </div>
                         <div class="card-body px-3 py-2">
 
                             <!-- *********************************************************************************** -->
