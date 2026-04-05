@@ -116,61 +116,51 @@ const resetDrv = () => {
 
 const importDrv = () => {
 
-    try
-    {
-        dialog.open('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json']).catch(dialog.error).then(([json, path]) => {
+    dialog.open('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json']).then((file) => {
 
-            state.globals = confDup(JSON.parse(json), DEFAULT_GLOBALS);
+        if(file)
+        {
+            try
+            {
+                state.globals = confDup(JSON.parse(file.text), DEFAULT_GLOBALS);
 
-            setTimeout(() => {
+                setTimeout(() => {
 
-                state.changed = false;
+                    state.changed = false;
 
-                state.path = path;
+                    state.path = path;
 
-            }, 500);
+                }, 500);
 
-            dialog.success();
-        });
-    }
-    catch(e)
-    {
-        dialog.error(e);
-    }
+                dialog.success();
+            }
+            catch(e)
+            {
+                dialog.error(e);
+            }
+        }
+    });
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const exportDrv = () => {
 
-    try
-    {
-        const config = confDup(state.globals, DEFAULT_GLOBALS);
+    const config = confDup(state.globals, DEFAULT_GLOBALS);
 
-        dialog.save('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json'], JSON.stringify(config, null, 2)).catch(dialog.error).then((path) => {
+    dialog.save('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json'], JSON.stringify(config, null, 2)).then((path) => {
 
-            setTimeout(() => {
+        setTimeout(() => {
 
-                state.changed = false;
+            state.changed = false;
 
-                state.path = path;
+            state.path = path;
 
-            }, 500);
+        }, 500);
 
-            dialog.success();
-        });
-    }
-    catch(e)
-    {
-        dialog.error(e);
-    }
+        dialog.success();
+    });
 };
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-/* INITIALIZATION                                                                                                     */
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-/* TODO */
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
