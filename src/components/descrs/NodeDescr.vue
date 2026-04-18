@@ -353,7 +353,7 @@ onBeforeUnmount(() => {
                                         </div>
 
                                         <div class="form-text" v-else>
-                                            <i class="bi bi-laptop"></i> <a href="https://nyxlib.org/installation/" target="_blank">Download Nyx Lab desktop</a>
+                                            <i class="bi bi-download"></i> <a href="https://nyxlib.org/installation/" target="_blank">Download Nyx Lab desktop.</a>
                                         </div>
 
                                     </div>
