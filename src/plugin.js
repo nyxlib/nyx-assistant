@@ -1,8 +1,6 @@
 // noinspection JSUnresolvedReference, JSUnusedGlobalSymbols
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import std from './plugins/std.js';
-
 import AssistantConf from './confs/AssistantConf.vue';
 
 import AssistantView from './views/AssistantView.vue';
@@ -24,10 +22,6 @@ export default {
 
     start(addon, addonName)
     {
-        /*------------------------------------------------------------------------------------------------------------*/
-
-        addon.app.use(std);
-
         /*------------------------------------------------------------------------------------------------------------*/
 
         addon.registerConfPanel(

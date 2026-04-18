@@ -23,7 +23,6 @@ const configStore = inject('addon').configStore();
 
 const dialog = inject('dialog');
 const addon = inject('addon');
-const std = inject('std');
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -116,9 +115,9 @@ const generate = (override = null) => {
                 dialog.unlock();
             }
 
-        }).catch((error) => {
+        }).catch((e) => {
 
-            dialog.error(error.stderr);
+            dialog.error(e);
 
             dialog.unlock();
         });
@@ -137,7 +136,7 @@ onMounted(() => {
 
     dialog.lock();
 
-    std.fetch('https://addons.nyxlib.org/api/platformio/boards/', {method: 'GET'}).then((response) => {
+    runtime.fetch('https://addons.nyxlib.org/api/platformio/boards/', {method: 'GET'}).then((response) => {
 
         response.json().then((result) => {
 
