@@ -289,7 +289,7 @@ onMounted(() => {
                                 </div>
                                 <div class="col-md-6">
 
-                                    <div class="mb-0">
+                                    <div class="mb-1">
 
                                         <label class="form-label" for="B6BD1084">Generate</label>
 
@@ -390,13 +390,13 @@ onMounted(() => {
 
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="mb-0">
+                                            <div class="mb-3">
                                                 <label class="form-label" for="C8A2E5EB">Username<sup class="text-secondary">opt</sup></label>
                                                 <input class="form-control form-control-sm" type="text" placeholder="Username" :disabled="!globals.enableMQTT" autocomplete="username" id="C8A2E5EB" v-model.trim="globals.mqttUsername" />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="mb-0">
+                                            <div class="mb-3">
                                                 <label class="form-label" for="CC00EA1C">Password<sup class="text-secondary">opt</sup></label>
                                                 <input class="form-control form-control-sm" type="text" placeholder="Password" :disabled="!globals.enableMQTT" v-password-toggle id="CC00EA1C" v-model.trim="globals.mqttPassword" />
                                             </div>
@@ -405,10 +405,6 @@ onMounted(() => {
 
                                 </div>
                             </div>
-
-                            <!-- *********************************************************************************** -->
-
-                            <hr />
 
                             <!-- *********************************************************************************** -->
 
@@ -433,10 +429,6 @@ onMounted(() => {
 
                             <!-- *********************************************************************************** -->
 
-                            <hr />
-
-                            <!-- *********************************************************************************** -->
-
                             <div class="row">
                                 <div class="col-md-4">
 
@@ -448,7 +440,7 @@ onMounted(() => {
                                 </div>
                                 <div class="col-md-8">
 
-                                    <div class="mb-0">
+                                    <div class="mb-1">
                                         <label class="form-label" for="B6FB4EA2">URL</label>
                                         <input class="form-control form-control-sm" type="text" placeholder="e.g. tcp://0.0.0.0:7625" required="required" :disabled="!globals.enableINDI" id="B6FB4EA2" v-model.trim="globals.indiURL" />
                                     </div>
