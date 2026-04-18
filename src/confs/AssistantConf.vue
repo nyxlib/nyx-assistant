@@ -24,7 +24,7 @@ const configStore = addon.configStore();
 
         <!-- *********************************************************************************************************** -->
 
-        <div class="card shadow-sm mx-auto mb-3 w-50">
+        <div class="card shadow-sm mx-auto mb-3 w-100 w-lg-50">
             <div class="card-header">
                 Nyx Gen
             </div>
