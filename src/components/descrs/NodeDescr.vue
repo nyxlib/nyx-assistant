@@ -6,6 +6,8 @@ import {inject, reactive, onMounted} from 'vue';
 
 import Multiselect from '@vueform/multiselect';
 
+import {Tooltip} from 'bootstrap';
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 import DeviceTable from '../tables/DeviceTable.vue';
@@ -13,6 +15,10 @@ import DeviceDescr from '../descrs/DeviceDescr.vue';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* VARIABLES                                                                                                          */
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const configStore = inject('addon').configStore();
+
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const dialog = inject('dialog');
@@ -49,6 +55,10 @@ const props = defineProps({
 const state = reactive({
     boards: [],
 });
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+let tooltip = null;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
@@ -91,7 +101,7 @@ const generate = (override = null) => {
 
         dialog.lock();
 
-        std.exec('nyx-gen', args).then((output) => {
+        std.exec(configStore.globals.nyx_assistant.nyx_gen_path || 'nyx-gen', args).then((output) => {
 
             if(output.code === 0)
             {
@@ -153,6 +163,16 @@ onMounted(() => {
     });
 
     /*----------------------------------------------------------------------------------------------------------------*/
+
+    tooltip = new Tooltip(document.querySelector('#E4760D6D'), {
+        title: 'Select target here',
+        trigger: 'manual',
+        offset: [0, -8],
+    });
+
+    tooltip.show();
+
+    /*----------------------------------------------------------------------------------------------------------------*/
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -166,26 +186,21 @@ onMounted(() => {
 
         <!-- ******************************************************************************************************* -->
 
-        <tab-pane title="Node" icon="hdd-network">
+        <tab-pane title="Node" icon="hdd-network" @show="() => tooltip?.show()" @hide="() => tooltip?.hide()">
 
-            <div class="row">
+            <div class="row mt-4">
                 <div class="col-md-6">
 
                     <!-- ******************************************************************************************* -->
 
-                    <div class="card shadow-sm mb-3">
-                        <div class="card-header input-group overflow-hidden p-0">
-                            <select class="form-select bg-transparent rounded-0 border-0 px-3 py-2" id="E4760D6D" v-model="globals.mode">
-                                <option value="posix-c">Node in C for POSIX systems</option>
-                                <option value="posix-c++">Node in C++ for POSIX systems</option>
-                                <option value="gnuradio">Node for Python or GNU Radio</option>
-                                <option value="arduino-wifi">Node for Arduino board - WiFi version</option>
-                                <option value="arduino-ethernet">Node for Arduino board - Ethernet version</option>
-                            </select>
-                            <label class="input-group-text rounded-0 border-0" for="E4760D6D">
-                                click to change
-                            </label>
-                        </div>
+                    <div class="card shadow-sm mb-3" id="E4760D6D">
+                        <select class="card-header form-select border-0 border-bottom px-3 py-2" v-model="globals.mode">
+                            <option value="posix-c">Node in C for POSIX systems</option>
+                            <option value="posix-c++">Node in C++ for POSIX systems</option>
+                            <option value="gnuradio">Node for Python or GNU Radio</option>
+                            <option value="arduino-wifi">Node for Arduino board - WiFi version</option>
+                            <option value="arduino-ethernet">Node for Arduino board - Ethernet version</option>
+                        </select>
                         <div class="card-body px-3 py-2">
 
                             <!-- *********************************************************************************** -->
@@ -286,7 +301,7 @@ onMounted(() => {
 
                                             <!-- ******************************************************************* -->
 
-                                            <div class="btn-group">
+                                            <div class="btn-group btn-group-sm">
 
                                                 <!-- *************************************************************** -->
 
@@ -296,7 +311,7 @@ onMounted(() => {
 
                                                 <!-- *************************************************************** -->
 
-                                                <button class="btn btn-outline-warning dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown">
+                                                <button class="btn btn-outline-success dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown">
                                                     <span class="visually-hidden">Toggle Dropdown</span>
                                                 </button>
 
@@ -334,7 +349,7 @@ onMounted(() => {
                                         </div>
 
                                         <div class="form-text" v-else>
-                                            <i class="bi bi-laptop"></i> <a href="https://nyxlib.org/installation/" target="_blank">Download the desktop application</a>
+                                            <i class="bi bi-laptop"></i> <a href="https://nyxlib.org/installation/" target="_blank">Download Nyx Lab desktop</a>
                                         </div>
 
                                     </div>

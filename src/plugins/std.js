@@ -1,35 +1,39 @@
 // noinspection JSUnusedGlobalSymbols
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import * as shell from '@tauri-apps/plugin-shell';
+//import * as shell from '@tauri-apps/plugin-shell';
 
-import * as http from '@tauri-apps/plugin-http';
+//import * as http from '@tauri-apps/plugin-http';
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const _exec = (program, args) => {
-
+/*
     if(window['__TAURI__'] !== undefined)
     {
         return shell.Command.sidecar(`binaries/${program}`, args).execute();
     }
     else
     {
-        return Promise.reject({
-            stderr: 'Not supported',
-            stdout: '',
-            code: 1,
-        });
-    }
+ */
+    return Promise.reject({
+        stderr: 'Not supported',
+        stdout: '',
+        code: 1,
+    });
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const _fetch = (url, init) => {
 
+    /*
     return (window['__TAURI__'] !== undefined) ? http.fetch(url, init)
                                                : window.fetch(url, init)
     ;
+    */
+
+    return window.fetch(url, init);
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/

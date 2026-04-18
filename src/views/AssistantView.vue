@@ -72,7 +72,6 @@ const state = reactive({
     path: null,
 });
 
-
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -126,9 +125,9 @@ const importDrv = () => {
 
                 setTimeout(() => {
 
-                    state.changed = false;
+                    state.path = file.name;
 
-                    state.path = path;
+                    state.changed = false;
 
                 }, 500);
 
@@ -148,13 +147,13 @@ const exportDrv = () => {
 
     const config = confDup(state.globals, DEFAULT_GLOBALS);
 
-    dialog.save('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json'], JSON.stringify(config, null, 2)).then((path) => {
+    dialog.save('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json'], JSON.stringify(config, null, 2)).then((file) => {
 
         setTimeout(() => {
 
-            state.changed = false;
+            state.path = file.name;
 
-            state.path = path;
+            state.changed = false;
 
         }, 500);
 
