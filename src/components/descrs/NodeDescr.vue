@@ -194,7 +194,7 @@ onBeforeUnmount(() => {
 
         <tab-pane title="Node" icon="hdd-network" @show="() => tooltipInstance?.show()" @hide="() => tooltipInstance?.hide()">
 
-            <div class="row mt-4">
+            <div class="row">
                 <div class="col-md-6">
 
                     <!-- ******************************************************************************************* -->
