@@ -101,24 +101,24 @@ const generate = (override = null) => {
 
         dialog.lock();
 
-        std.exec(configStore.globals.nyx_assistant.nyx_gen_path || 'nyx-gen', args).then((output) => {
+        runtime.exec(configStore.globals.nyx_assistant.nyx_gen_path || 'nyx-gen', args).then((result) => {
 
-            if(output.code === 0)
+            if(result.code === 0)
             {
-                dialog.success(output.stdout);
+                dialog.success(result.stdout);
 
                 dialog.unlock();
             }
             else
             {
-                dialog.error(output.stderr);
+                dialog.error(result.stderr);
 
                 dialog.unlock();
             }
 
-        }).catch((e) => {
+        }).catch((error) => {
 
-            dialog.error(/**/e/**/);
+            dialog.error(error.stderr);
 
             dialog.unlock();
         });
@@ -179,7 +179,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
 
-    tooltipInstance?.destroy();
+    tooltipInstance?.hide();
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
