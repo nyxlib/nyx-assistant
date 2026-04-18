@@ -2,7 +2,7 @@
 <script setup>
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-import {inject, reactive, onMounted} from 'vue';
+import {inject, reactive, onMounted, onBeforeUnmount} from 'vue';
 
 import Multiselect from '@vueform/multiselect';
 
@@ -58,7 +58,7 @@ const state = reactive({
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-let tooltip = null;
+let tooltipInstance = null;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* FUNCTIONS                                                                                                          */
@@ -164,15 +164,22 @@ onMounted(() => {
 
     /*----------------------------------------------------------------------------------------------------------------*/
 
-    tooltip = new Tooltip(document.querySelector('#E4760D6D'), {
+    tooltipInstance = new Tooltip(document.querySelector('#E4760D6D'), {
         title: 'Select target here',
         trigger: 'manual',
         offset: [0, -8],
     });
 
-    tooltip.show();
+    tooltipInstance.show();
 
     /*----------------------------------------------------------------------------------------------------------------*/
+});
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+onBeforeUnmount(() => {
+
+    tooltipInstance?.destroy();
 });
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -186,7 +193,7 @@ onMounted(() => {
 
         <!-- ******************************************************************************************************* -->
 
-        <tab-pane title="Node" icon="hdd-network" @show="() => tooltip?.show()" @hide="() => tooltip?.hide()">
+        <tab-pane title="Node" icon="hdd-network" @show="() => tooltipInstance?.show()" @hide="() => tooltipInstance?.hide()">
 
             <div class="row mt-4">
                 <div class="col-md-6">
@@ -314,8 +321,6 @@ onMounted(() => {
                                                 <button class="btn btn-outline-success dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown">
                                                     <span class="visually-hidden">Toggle Dropdown</span>
                                                 </button>
-
-                                                <!-- *************************************************************** -->
 
                                                 <ul class="dropdown-menu">
                                                     <li>
