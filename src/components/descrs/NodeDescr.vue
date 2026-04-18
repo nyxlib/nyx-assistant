@@ -15,12 +15,13 @@ import DeviceDescr from '../descrs/DeviceDescr.vue';
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const HAS_TAURI = window['__TAURI__'] !== undefined;
+const dialog = inject('dialog');
+const addon = inject('addon');
+const std = inject('std');
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const dialog = inject('dialog');
-const std = inject('std');
+const runtime = addon.runtime();
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -277,7 +278,7 @@ onMounted(() => {
 
                                         <label class="form-label" for="B6BD1084">Generate</label>
 
-                                        <div class="input-group input-group-sm w-100" v-if="HAS_TAURI">
+                                        <div class="input-group input-group-sm w-100" v-if="runtime.isDesktop">
 
                                             <!-- ******************************************************************* -->
 
@@ -333,7 +334,7 @@ onMounted(() => {
                                         </div>
 
                                         <div class="form-text" v-else>
-                                            <i class="bi bi-laptop"></i> <a href="https://nyxlib.org/installing/" target="_blank">Download the desktop application</a>
+                                            <i class="bi bi-laptop"></i> <a href="https://nyxlib.org/installation/" target="_blank">Download the desktop application</a>
                                         </div>
 
                                     </div>

@@ -7,7 +7,13 @@ import {inject} from 'vue';
 /* VARIABLES                                                                                                          */
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const configStore = inject('addon').configStore();
+const addon = inject('addon');
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const runtime = addon.runtime();
+
+const configStore = addon.configStore();
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 </script>
@@ -26,7 +32,7 @@ const configStore = inject('addon').configStore();
 
                 <div class="mb-0">
                     <label for="AD718E97" class="form-label">Nyx Gen path</label>
-                    <input class="form-control" type="text" placeholder="/usr/bin/nyx-gen" id="AD718E97" v-model="configStore.nyx_assistant.nyx_gen_path" />
+                    <input class="form-control" type="text" placeholder="/usr/bin/nyx-gen" :disabled="!runtime.isDesktop" id="AD718E97" v-model="configStore.globals.nyx_assistant.nyx_gen_path" />
                 </div>
 
             </div>
