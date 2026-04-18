@@ -39,7 +39,7 @@ const configStore = addon.configStore();
 
                 <!-- *********************************************************************************************** -->
 
-                <div class="alert alert-primary mt-1" role="alert">
+                <div class="alert alert-primary mb-0" role="alert">
                     <i class="bi bi-download"></i> <a href="https://github.com/nyxlib/nyx-gen" target="_blank">Download Nyx Gen.</a>
                 </div>
 
