@@ -166,7 +166,7 @@ onMounted(() => {
     tooltipInstance = new Tooltip(document.querySelector('#E4760D6D'), {
         title: 'Select target here',
         trigger: 'manual',
-        offset: [0, -8],
+        offset: [0, -33],
     });
 
     tooltipInstance.show();
