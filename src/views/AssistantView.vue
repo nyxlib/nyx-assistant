@@ -14,6 +14,11 @@ import NodeDescr from '../components/descrs/NodeDescr.vue';
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 const dialog = inject('dialog');
+const addon = inject('addon');
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const runtime = addon.runtime();
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -92,7 +97,7 @@ const confDup = (src, def) => {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const resetDrv = () => {
+const newDrv = () => {
 
     dialog.confirm('Loose modifications?').then((ok) => {
 
@@ -113,7 +118,7 @@ const resetDrv = () => {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const importDrv = () => {
+const openDrv = () => {
 
     dialog.open('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json']).then((file) => {
 
@@ -131,11 +136,11 @@ const importDrv = () => {
 
                 }, 500);
 
-                dialog.success();
+                dialog.success(`File ${file} opened successfully.`);
             }
             catch(e)
             {
-                dialog.error(e);
+                dialog.error(`Cannot write to file ${file}`);
             }
         }
     });
@@ -143,7 +148,36 @@ const importDrv = () => {
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-const exportDrv = () => {
+const saveDrv = () => {
+
+    if(state.path)
+    {
+        dialog.lock();
+
+        const config = confDup(state.globals, DEFAULT_GLOBALS);
+
+        runtime.write(state.path, JSON.stringify(config, null, 2)).then(() => {
+
+            dialog.success(`File ${state.path} saved successfully.`);
+            dialog.unlock();
+
+        }).catch((_) => {
+
+            dialog.error(`Cannot write to file ${state.path}`);
+            dialog.unlock();
+        });
+    }
+    else
+    {
+        saveDrvAs();
+    }
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const saveDrvAs = () => {
+
+    dialog.lock();
 
     const config = confDup(state.globals, DEFAULT_GLOBALS);
 
@@ -157,7 +191,13 @@ const exportDrv = () => {
 
         }, 500);
 
-        dialog.success();
+        dialog.success(`File ${state.path} saved successfully.`);
+        dialog.unlock();
+
+    }).catch((_) => {
+
+        dialog.error(`Cannot write to file ${state.path}`);
+        dialog.unlock();
     });
 };
 
@@ -178,16 +218,20 @@ const exportDrv = () => {
 
     <teleport to="#nyx_toolbar">
 
-        <button class="btn btn-sm btn-outline-warning me-2" type="button" @click="resetDrv">
-            <i class="bi bi-recycle"></i> Reset
+        <button class="btn btn-sm btn-outline-warning me-2" type="button" @click="newDrv">
+            <i class="bi bi-plus-lg"></i> New
         </button>
 
-        <button class="btn btn-sm btn-outline-primary me-2" type="button" @click="importDrv">
-            <i class="bi bi-upload"></i> Import
+        <button class="btn btn-sm btn-outline-primary me-2" type="button" @click="openDrv">
+            <i class="bi bi-upload"></i> Open
         </button>
 
-        <button class="btn btn-sm btn-outline-primary me-0" type="button" @click="exportDrv">
-            <i class="bi bi-download"></i> Export
+        <button class="btn btn-sm btn-outline-primary me-2" type="button" @click="saveDrv">
+            <i class="bi bi-download"></i> Save
+        </button>
+
+        <button class="btn btn-sm btn-outline-primary me-0" type="button" @click="saveDrvAs">
+            <i class="bi bi-download"></i> Save As
         </button>
 
     </teleport>
