@@ -138,15 +138,17 @@ const openDrv = () => {
 
                 }, 500);
 
-                dialog.success(`File ${file} opened successfully.`);
-                dialog.unlock();
+                dialog.success(`File ${file.name} opened successfully.`);
             }
-            catch(_)
+            catch
             {
-                dialog.error(`Cannot write to file ${file}`);
-                dialog.unlock();
+                dialog.error(`Cannot parse file ${file.name}`);
             }
         }
+
+    }).finally(() => {
+
+        dialog.unlock();
     });
 };
 
@@ -160,20 +162,21 @@ const saveDrvAs = () => {
 
     dialog.save('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json'], JSON.stringify(config, null, 2)).then((file) => {
 
-        setTimeout(() => {
+        if(file)
+        {
+            setTimeout(() => {
 
-            state.path = file.name;
+                state.path = file.name;
 
-            state.changed = false;
+                state.changed = false;
 
-        }, 500);
+            }, 500);
 
-        dialog.success(`File ${state.path} saved successfully.`);
-        dialog.unlock();
+            dialog.success(`File ${file.name} saved successfully.`);
+        }
 
-    }).catch((_) => {
+    }).finally(() => {
 
-        dialog.error(`Cannot write to file ${state.path}`);
         dialog.unlock();
     });
 };
@@ -191,11 +194,13 @@ const saveDrv = () => {
         runtime.write(state.path, JSON.stringify(config, null, 2)).then(() => {
 
             dialog.success(`File ${state.path} saved successfully.`);
-            dialog.unlock();
 
-        }).catch((_) => {
+        }).catch(() => {
 
             dialog.error(`Cannot write to file ${state.path}`);
+
+        }).finally(() => {
+
             dialog.unlock();
         });
     }
