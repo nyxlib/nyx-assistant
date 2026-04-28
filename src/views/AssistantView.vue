@@ -120,6 +120,8 @@ const newDrv = () => {
 
 const openDrv = () => {
 
+    dialog.lock();
+
     dialog.open('driver.json', 'application/json;charset=utf-8', 'JSON Files', ['json']).then((file) => {
 
         if(file)
@@ -137,40 +139,15 @@ const openDrv = () => {
                 }, 500);
 
                 dialog.success(`File ${file} opened successfully.`);
+                dialog.unlock();
             }
-            catch(e)
+            catch(_)
             {
                 dialog.error(`Cannot write to file ${file}`);
+                dialog.unlock();
             }
         }
     });
-};
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-const saveDrv = () => {
-
-    if(state.path)
-    {
-        dialog.lock();
-
-        const config = confDup(state.globals, DEFAULT_GLOBALS);
-
-        runtime.write(state.path, JSON.stringify(config, null, 2)).then(() => {
-
-            dialog.success(`File ${state.path} saved successfully.`);
-            dialog.unlock();
-
-        }).catch((_) => {
-
-            dialog.error(`Cannot write to file ${state.path}`);
-            dialog.unlock();
-        });
-    }
-    else
-    {
-        saveDrvAs();
-    }
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -199,6 +176,33 @@ const saveDrvAs = () => {
         dialog.error(`Cannot write to file ${state.path}`);
         dialog.unlock();
     });
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+const saveDrv = () => {
+
+    if(state.path)
+    {
+        dialog.lock();
+
+        const config = confDup(state.globals, DEFAULT_GLOBALS);
+
+        runtime.write(state.path, JSON.stringify(config, null, 2)).then(() => {
+
+            dialog.success(`File ${state.path} saved successfully.`);
+            dialog.unlock();
+
+        }).catch((_) => {
+
+            dialog.error(`Cannot write to file ${state.path}`);
+            dialog.unlock();
+        });
+    }
+    else
+    {
+        saveDrvAs();
+    }
 };
 
 /*--------------------------------------------------------------------------------------------------------------------*/
