@@ -140,10 +140,17 @@ onMounted(() => {
 
         response.json().then((result) => {
 
-            state.boards = result.map((board) => ({
-                value: `${board.platform}|${board.id}|${board.ram}`,
-                label: board.name,
-            }));
+            if(Object.prototype.toString.call(result) === '[object Object]')
+            {
+                state.boards = result.map((board) => ({
+                    value: `${board.platform}|${board.id}|${board.ram}`,
+                    label: board.name,
+                }));
+            }
+            else
+            {
+                state.boards = [];
+            }
 
             dialog.unlock();
 
@@ -151,6 +158,7 @@ onMounted(() => {
 
             state.boards = [];
 
+            dialog.unlock();
             dialog.error(e);
         });
 
@@ -158,6 +166,7 @@ onMounted(() => {
 
         state.boards = [];
 
+        dialog.unlock();
         dialog.error(e);
     });
 
