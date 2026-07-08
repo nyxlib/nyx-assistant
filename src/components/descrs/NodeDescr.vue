@@ -146,20 +146,23 @@ onMounted(() => {
                     value: `${board.platform}|${board.id}|${board.ram}`,
                     label: board.name,
                 }));
+
+                dialog.unlock();
             }
             else
             {
                 state.boards = [];
-            }
 
-            dialog.unlock();
+                dialog.unlock();
+                dialog.error('Cannot fetch boards list.');
+            }
 
         }).catch((e) => {
 
             state.boards = [];
 
             dialog.unlock();
-            dialog.error(e);
+            dialog.error('Cannot fetch boards list.');
         });
 
     }).catch((e) => {
@@ -167,7 +170,7 @@ onMounted(() => {
         state.boards = [];
 
         dialog.unlock();
-        dialog.error(e);
+        dialog.error('Cannot fetch boards list.');
     });
 
     /*----------------------------------------------------------------------------------------------------------------*/
